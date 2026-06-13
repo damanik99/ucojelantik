@@ -17,3 +17,13 @@ application/logs/*
 !application/logs/.htaccess
 /vendor/
 /writable
+.ftpquota
+builds
+composer.json
+composer.lock
+devloyalty.sql
+license.txt
+phpunit.xml.dist
+README.md
+spark
+.env
