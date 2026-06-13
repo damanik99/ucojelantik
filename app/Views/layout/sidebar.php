@@ -139,7 +139,7 @@
                     FROM usersgroupprogram a
                     JOIN users b ON a.users_id = b.users_id
                     JOIN program c ON a.program_id = c.program_id
-                    JOIN devloyalty.group d ON a.group_id = d.group_id
+                    JOIN `group` d ON a.group_id = d.group_id
                     JOIN privilege e ON d.group_id = e.group_id
                     JOIN page f ON e.page_id = f.page_id
                     JOIN menu g ON f.page_id = g.page_id
