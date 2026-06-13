@@ -32,7 +32,7 @@
                 </ol>
             </div>
             <div class="ml-auto pageheader-btn">
-                <a href="<?=base_url()?>/companytype/create" class="btn btn-primary btn-icon text-white mr-2">
+                <a href="<?=base_url()?>/CompanyType/create" class="btn btn-primary btn-icon text-white mr-2">
                     <span>
                         <i class="fe fe-plus"></i>
                     </span> Create Company Type
