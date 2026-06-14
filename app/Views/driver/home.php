@@ -81,14 +81,14 @@
 
                                 <?php if ($row['status_code'] == 'SDLPN') : ?>
 
-                                    <a href="<?= base_url('ShipmentTracking/arrived/'.$row['shipment_id']); ?>"
+                                    <a href="<?= base_url('shipmenttracking/arrived/'.$row['shipment_id']); ?>"
                                     class="btn btn-success btn-block">
                                         LIHAT DETAIL
                                     </a>
 
                                 <?php elseif ($row['status_code'] == 'DLVD') : ?>
 
-                                    <a href="<?= base_url('ShipmentTracking/chek-out/'.$row['shipment_id']); ?>"
+                                    <a href="<?= base_url('shipmenttracking/chekout/'.$row['shipment_id']); ?>"
                                     class="btn btn-secondary btn-block">
                                         CHECKOUT
                                     </a>
@@ -102,7 +102,7 @@
 
                                 <?php else : ?>
 
-                                    <a href="<?= base_url('ShipmentTracking/create/'.$row['shipment_id']); ?>"
+                                    <a href="<?= base_url('shipmenttracking/create/'.$row['shipment_id']); ?>"
                                     class="btn btn-primary btn-block">
                                         CHECK-IN
                                     </a>
