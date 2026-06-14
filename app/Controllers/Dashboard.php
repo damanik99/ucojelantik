@@ -46,7 +46,7 @@ class DashBoard extends BaseController
                 ->getRow();
 
             $shipment = $this->shipmentModel->getActiveShipmentDriver($driverId->driver_id);
-
+            
             $data = [
                 'title' => 'Home',
                 'programId' => $programId,

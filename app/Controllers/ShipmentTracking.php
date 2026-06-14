@@ -5,12 +5,14 @@ namespace App\Controllers;
 use App\Models\ShipmentTrackingModel;
 use App\Models\ShipmentModel;
 use App\Models\StatusModel;
+use App\Models\QualityControlModel;
 
 class ShipmentTracking extends BaseController
 {
     protected ShipmentTrackingModel $shipmentTracking;
     protected StatusModel $status;
     protected ShipmentModel $shipment;
+    protected QualityControlModel $qualityControl;
 
     public function __construct()
     {
@@ -24,6 +26,8 @@ class ShipmentTracking extends BaseController
         $this->shipmentTracking = new ShipmentTrackingModel();
         $this->shipment = new ShipmentModel();
         $this->status = new StatusModel();
+
+        $this->qualityControl = new QualityControlModel();
     }
 
     public function index()
@@ -84,7 +88,8 @@ class ShipmentTracking extends BaseController
                     'photo'       => '/image/shipmenttracking/' . $fileName,
                     'latitude'    => $this->request->getPost('latitude'),
                     'longitude'   => $this->request->getPost('longitude'),
-                    'notes'       => $this->request->getPost('address'),
+                    'location'    => $this->request->getPost('address'),
+                    'notes'       => $this->request->getPost('notes'),
                     'status_id'   => $status['status_id'],
                     'created_by'  => session()->get('users_id')
                 ];
@@ -102,6 +107,8 @@ class ShipmentTracking extends BaseController
 
                 $this->shipment->update($shipmentId, [
                     'status_id'     => $statusShipment['status_id'],
+                    'qty_checkin'   => $this->request->getPost('qty_checkin'),
+                    'unit'          => $this->request->getPost('unit'),
                     'modified_by'   => session()->get('users_id'),
                     'modified_date' => date('Y-m-d H:i:s')
                 ]);
@@ -218,6 +225,151 @@ class ShipmentTracking extends BaseController
                 ]);
 
             } catch (\Exception $e) {
+
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $e->getMessage()
+                ]);
+            }
+        }
+    }
+
+    public function checkout($shipmentId)
+    {
+        $shipmentTrack = $this->shipment->getShipmentId($shipmentId);
+
+        $data = [
+            'title' => 'Check-Out',
+            'shipmentTrack' => $shipmentTrack
+        ];
+
+        return view('ShipmentTracking/checkout', $data);
+    }
+
+    public function saveCheckout($shipmentId = null)
+    {
+        if ($this->request->getMethod() === 'post') {
+
+            try {
+
+                $statusTracking = $this->status
+                    ->where('module', 'SHIPMENT_TRACKING')
+                    ->where('status_code', 'CHCK')
+                    ->first();
+
+                if (!$statusTracking) {
+                    throw new \Exception('Status CHECKOUT tidak ditemukan.');
+                }
+
+                $statusShipment = $this->status
+                    ->where('module', 'SHIPMENT')
+                    ->where('status_code', 'SCMPL')
+                    ->first();
+
+                if (!$statusShipment) {
+                    throw new \Exception('Status COMPLETED tidak ditemukan.');
+                }
+
+                $photo = $this->request->getFile('photo');
+
+                if (!$photo->isValid()) {
+                    throw new \Exception('Photo wajib diupload.');
+                }
+
+                if (!$this->request->getPost('latitude')) {
+                    throw new \Exception('Lokasi GPS belum diperoleh.');
+                }
+
+                $fileName = $photo->getRandomName();
+
+                $uploadPath = ROOTPATH . 'public/image/shipmenttracking';
+
+                if (!is_dir($uploadPath)) {
+                    mkdir($uploadPath, 0775, true);
+                }
+
+                $photo->move($uploadPath, $fileName);
+
+                $shipmentId = $this->request->getPost('shipment_id');
+
+                /*
+                |--------------------------------------------------------------------------
+                | START TRANSACTION
+                |--------------------------------------------------------------------------
+                */
+                $this->db->transBegin();
+
+                /*
+                |--------------------------------------------------------------------------
+                | INSERT SHIPMENT TRACKING
+                |--------------------------------------------------------------------------
+                */
+                $this->shipmentTracking->insert([
+                    'shipment_id' => $shipmentId,
+                    'photo'       => '/image/shipmenttracking/' . $fileName,
+                    'latitude'    => $this->request->getPost('latitude'),
+                    'longitude'   => $this->request->getPost('longitude'),
+                    'location'    => $this->request->getPost('location'),
+                    'notes'       => $this->request->getPost('notes'),
+                    'status_id'   => $statusTracking['status_id'],
+                    'created_by'  => session()->get('users_id')
+                ]);
+
+                /*
+                |--------------------------------------------------------------------------
+                | INSERT QUALITY CONTROL
+                |--------------------------------------------------------------------------
+                */
+                $this->qualityControl->insert([
+                    'shipment_id' => $shipmentId,
+                    'qc_type'     => 'OUTGOING',
+                    'result'      => $this->request->getPost('result'),
+                    'ffa'         => $this->request->getPost('ffa'),
+                    'mi'          => $this->request->getPost('mi'),
+                    'photo'       => '/image/shipmenttracking/' . $fileName,
+                    'notes'       => $this->request->getPost('notes'),
+                    'status_id'   => $statusTracking['status_id'],
+                    'created_by'  => session()->get('users_id')
+                ]);
+
+                /*
+                |--------------------------------------------------------------------------
+                | UPDATE SHIPMENT
+                |--------------------------------------------------------------------------
+                */
+                $this->shipment->update($shipmentId, [
+                    'qty_checkout' => $this->request->getPost('qty_checkout'),
+                    'unit'         => $this->request->getPost('unit'),
+                    'arrival_at'   => date('Y-m-d H:i:s'),
+                    'status_id'    => $statusShipment['status_id'],
+                    'modified_by'  => session()->get('users_id'),
+                    'modified_date'=> date('Y-m-d H:i:s')
+                ]);
+
+                /*
+                |--------------------------------------------------------------------------
+                | COMMIT / ROLLBACK
+                |--------------------------------------------------------------------------
+                */
+                if ($this->db->transStatus() === false) {
+
+                    $this->db->transRollback();
+
+                    throw new \Exception('Gagal menyimpan data checkout.');
+                }
+
+                $this->db->transCommit();
+
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Checkout berhasil disimpan.'
+                ]);
+
+            } catch (\Exception $e) {
+
+                if ($this->db->transStatus()) {
+                    $this->db->transRollback();
+                }
 
                 return $this->response->setJSON([
                     'success' => false,

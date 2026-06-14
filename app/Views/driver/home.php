@@ -73,10 +73,7 @@
 
                             if (empty($programId)) : ?>
 
-                                <a href="javascript:void(0);"
-                                class="btn btn-secondary btn-block disabled"
-                                tabindex="-1"
-                                aria-disabled="true">
+                                <a href="javascript:void(0);" class="btn btn-default btn-block disabled" tabindex="-1" aria-disabled="true">
                                     CHECK-IN
                                 </a>
 
@@ -94,6 +91,13 @@
                                     <a href="<?= base_url('ShipmentTracking/chek-out/'.$row['shipment_id']); ?>"
                                     class="btn btn-secondary btn-block">
                                         CHECKOUT
+                                    </a>
+
+                                <?php elseif ($row['status_code'] == 'SCMPL') : ?>
+
+                                    <a href="javascript:void(0);"
+                                    class="btn btn-default btn-block" disabled>
+                                        Berhasil
                                     </a>
 
                                 <?php else : ?>

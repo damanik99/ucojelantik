@@ -103,6 +103,18 @@
                                         class="form-control"
                                         readonly>
                                 </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">quantity</label>
+                                    <input type="text" name="qty_checkin" class="form-control">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">quantity</label>
+                                    <select name="unit" class="form-control select2" >
+                                        <option value="">Pilih</option>
+                                        <option value="kg">kg</option>
+                                        <option value="kg">Liter</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <input type="hidden" name="latitude" id="latitude">
@@ -116,11 +128,7 @@
                                     Catatan (Opsional)
                                 </label>
 
-                                <textarea
-                                    class="form-control"
-                                    rows="4"
-                                    name="notes"
-                                    placeholder="Contoh: Berangkat dari gudang supplier"></textarea>
+                                <textarea class="form-control" rows="4" name="notes" placeholder="Contoh: Berangkat dari gudang supplier"></textarea>
                             </div>
 
                             <!-- BUTTON -->

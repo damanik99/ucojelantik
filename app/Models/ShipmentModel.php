@@ -22,6 +22,9 @@ class ShipmentModel extends Model
         'departure_at',
         'arrival_at',
         'status_id',
+        'qty_checkin',
+        'qty_checkout',
+        'unit',
         'created_date',
         'modified_date',
         'created_by',
@@ -86,7 +89,7 @@ class ShipmentModel extends Model
             ->join('company c', 'a.buyer_id = c.company_id')
             ->join('status d', 'a.status_id = d.status_id')
             ->where('a.driver_id', $driverId)
-            ->where('LOWER(d.status_name) !=', 'arrived')
+            ->where('LOWER(d.status_code) !=', 'SCMPL')
             ->groupStart()
                 ->where('a.departure_at IS NULL')
                 ->orWhere('DATE(a.departure_at) <=', date('Y-m-d'))
@@ -94,7 +97,7 @@ class ShipmentModel extends Model
             ->orderBy('a.shipment_id', 'DESC')
             ->get()
             ->getResultArray();
-            
+            // var_dump($data);exit;
         return $data;
     }
 

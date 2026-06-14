@@ -38,7 +38,7 @@
                             <!-- FOTO -->
                             <div class="form-group mb-4">
                                 <label class="form-label font-weight-bold">
-                                    Foto Bukti <span class="text-danger">*</span>
+                                    Foto Hasil QC Buyer <span class="text-danger">*</span>
                                 </label>
 
                                 <div class="position-relative">
@@ -68,16 +68,8 @@
                             <!-- // lokasi -->
                             <div class="row"> 
                                 <div class="col-md-12">
-                                    <label class="form-label">Supplier</label>
-                                    <input type="text" class="form-control" value="<?= $shipmentTrack['supplier'] ?>" readonly>
-                                </div>
-                                <div class="col-md-12">
                                     <label class="form-label">Buyer</label>
                                     <input type="text" class="form-control" value="<?= $shipmentTrack['buyer'] ?>" readonly>
-                                </div>
-                                <div class="col-md-12">
-                                    <label class="form-label">Location</label>
-                                    <input type="text" class="form-control" value="<?= $shipmentTrack['location'] ?>" readonly>
                                 </div>
                                 <div class="col-12 mb-2">
                                     <label class="form-label">Lokasi GPS</label>
@@ -115,6 +107,26 @@
                                         class="form-control"
                                         readonly>
                                 </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">FFA</label>
+                                    <input type="text" name="ffa" class="form-control">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">M&I</label>
+                                    <input type="text" name="mi" class="form-control">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">quantity</label>
+                                    <input type="text" name="mi" class="form-control">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">Unit</label>
+                                    <select name="unit" class="form-control select2" >
+                                        <option value="">Pilih</option>
+                                        <option value="kg">kg</option>
+                                        <option value="kg">Liter</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <input type="hidden" name="latitude" id="latitude">
@@ -141,7 +153,7 @@
                                         id="btnSubmit"
                                         class="btn btn-primary btn-block">
                                     <i class="fe fe-check-circle"></i>
-                                    SIMPAN SAMPAI BUYER
+                                    CHECK OUT
                                 </button>
                             </div>
 
@@ -272,7 +284,7 @@ $('#formArrived').submit(function(e){
 
     $.ajax({
 
-        url: "<?= base_url('/shipmenttracking/arrivedsave/') ?>",
+        url: "<?= base_url('/shipmenttracking/saveCheckout') ?>",
         type: 'POST',
         data: formData,
         processData: false,
@@ -290,8 +302,8 @@ $('#formArrived').submit(function(e){
                     title: 'Success',
                     text: response.message
                 }).then(() => {
-                    var shipmentId = "<?= $shipmentTrack['shipment_id'] ?>";
-                    window.location.href ="<?= base_url('/ShipmentTracking/checkout') ?>/" +  + shipmentId;
+
+                    window.location.href ="<?= base_url('/Dashboard') ?>";
 
                 });
 
