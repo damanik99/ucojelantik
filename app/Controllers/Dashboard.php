@@ -56,7 +56,7 @@ class DashBoard extends BaseController
 
             echo view('/driver/home', $data);
 
-        } else {
+        }  else {
 
             $data = [
                 'title' => 'Home',
