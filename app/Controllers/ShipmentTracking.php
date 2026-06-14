@@ -147,7 +147,7 @@ class ShipmentTracking extends BaseController
             'shipmentTrack' => $shipmentTrack
         ];
 
-        return view('ShipmentTracking/arrived', $data);
+        return view('shipmenttracking/arrived', $data);
     }
 
     public function arrivedsave($shipmentId = null)
@@ -243,7 +243,7 @@ class ShipmentTracking extends BaseController
             'shipmentTrack' => $shipmentTrack
         ];
 
-        return view('ShipmentTracking/checkout', $data);
+        return view('shipmenttracking/checkout', $data);
     }
 
     public function saveCheckout($shipmentId = null)
