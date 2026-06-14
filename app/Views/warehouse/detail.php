@@ -111,10 +111,8 @@ th {
                                             </span>
 
                                             <?php } ?>
-
                                         </td>
                                     </tr>
-
                                     <tr>
                                         <th>CREATED DATE</th>
                                         <td>
@@ -124,7 +122,6 @@ th {
                                             ); ?>
                                         </td>
                                     </tr>
-
                                     <tr>
                                         <th>MODIFIED DATE</th>
                                         <td>
@@ -163,7 +160,7 @@ th {
 
                         <hr>
 
-                        <a href="<?= base_url() ?>/warehouse"
+                        <a href="<?= base_url() ?>/Warehouse"
                             class="btn btn-warning">
 
                             <i class="fa fa-arrow-left mr-2"></i>

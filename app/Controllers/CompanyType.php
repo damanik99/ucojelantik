@@ -24,12 +24,12 @@ class CompanyType extends BaseController
         $data['title'] = 'Company Type';
         $data['companytypes'] = $this->companyType->findAll();
 
-        return view('companytype/index', $data);
+        return view('CompanyType/index', $data);
     }
 
     public function create()
     {
-        return view('companytype/create', [
+        return view('CompanyType/create', [
             'title' => 'Create Company Type'
         ]);
     }

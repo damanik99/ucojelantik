@@ -95,10 +95,10 @@
 
             columns: [
                 { data: "company_name" },
+                { data: "program_name" },
                 { data: "plate_number" },
                 { data: "vehicle_type" },
                 { data: "brand" },
-                { data: "capacity_weight" },
                 { data: "status_badge" },
                 { data: "created_date" },
                 { data: "action" }

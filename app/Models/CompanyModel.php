@@ -18,7 +18,7 @@ class CompanyModel extends Model
         'address',
         'latitude',
         'longitude',
-        'status',
+        'status_id',
         'created_by',
         'modified_by'
     ];

@@ -19,12 +19,15 @@ class CompanyTypeModel extends Model
 
     protected $useTimestamps = false;
 
-    public function getCompanyByType($typeCode)
+    public function getCompanyByType($typeCode, $programId)
     {
         return $this->db->table('company a')
+            ->distinct()
             ->select('a.*')
-            ->join('companytype b', 'a.company_type_id = b.type_id')
-            ->where('b.type_code', $typeCode)
+            ->join('company_program b', 'a.company_id = b.company_id')
+            ->join('companytype c', 'b.company_type_id = c.type_id')
+            ->where('c.type_code', $typeCode)
+            ->where('b.program_id', $programId)
             ->orderBy('a.company_name', 'ASC')
             ->get()
             ->getResultArray();

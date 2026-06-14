@@ -15,7 +15,7 @@ use App\Models\KelurahanModel;
 
 class Users extends BaseController
 {
-    protected $users;
+    protected UsersModel $users;
     protected $driver;
     protected $db;
     protected CompanyModel $company;
@@ -59,15 +59,19 @@ class Users extends BaseController
 
     public function create()
     {
+        $data['groupProgram'] = $this->users->getgroupProgram();
 
         $data['groups'] = $this->group
             ->findAll();
-        // var_dump($data);exit;
+        
         $data['companies'] = $this->company
-            ->join('companytype', 'company.company_type_id = companytype.type_id')
-            ->where('company.status', 'active')
-            ->where('type_name', 'Supplier')
+            ->select('company.*')
+            ->join('company_program', 'company.company_id = company_program.company_id')
+            ->join('companytype', 'company_program.company_type_id = companytype.type_id')
+            ->where('company.status_id', 'active')
+            ->where('companytype.type_name', 'Supplier')
             ->findAll();
+
         $data['provinces'] = $this->provinceModel
             ->orderBy('provinsi', 'ASC')
             ->findAll();
@@ -89,6 +93,7 @@ class Users extends BaseController
             'city_id'     => 'required',
             'district_id' => 'required',
             'village_id'  => 'required',
+            'title'       => 'required',
             'address'     => 'required',
             'group_id'   => 'required',
             'data_level' => 'required'
@@ -151,6 +156,7 @@ class Users extends BaseController
                 'district_id'   => $this->request->getPost('district_id'),
                 'village_id'    => $this->request->getPost('village_id'),
                 'address'       => $this->request->getPost('address'),
+                'title'         => $this->request->getPost('title'),
                 'active'        => 1,
                 'created_date'  => date('Y-m-d H:i:s'),
                 'modified_date' => date('Y-m-d H:i:s'),

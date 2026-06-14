@@ -43,4 +43,6 @@ class StatusModel extends Model
                     ->where('status_code', strtoupper($statusCode))
                     ->first();
     }
+
+    
 }

@@ -41,17 +41,85 @@
         </div>
         <?php }?>
         <div class="row">
-            <div class="col-md-12 col-lg-12">
+            <?php if (!empty($shipment)) : ?>
+
+            <?php foreach ($shipment as $row) : ?>
+            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
                 <div><br></div>
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Card-Header</div>
-                    </div>
                     <div class="card-body">
-                        <button type="button" class="btn btn-primary btn-block">Check In</button>
+                        <div class="col-12 col-md-12">
+                            <h2 class="mb-1  number-font"><?= $row['shipment_number'] ?></h2>
+                        </div>
+                        <div class="mt-5">
+                            <p class="mb-1 d-flex">
+                                <span class="col-4 col-md-3 fs-15 font-weight-bold mr-2">Supplier </span> 
+                                <span class="col-md-4 fs-15"><?= $row['supplier'] ?></span>
+                            </p>
+                            <p></p>
+                            <p class="mb-1 d-flex">
+                                <span class="col-4 fs-15 font-weight-bold mr-2">Buyer </span> 
+                                <span class="col-md-4 fs-15"><?= $row['buyer'] ?></span>
+                            </p>
+                            <p></p>
+                            <p class="d-flex">
+                                <span class="col-4 fs-15 font-weight-bold mr-2">Status</span> 
+                                <span class="col-md-4 fs-15"><?= $row['status'] ?></span>
+                            </p>
+                            <br>
+                        </div>
+                        <?php
+                            $programId = session()->get('program');
+
+                            if (empty($programId)) : ?>
+
+                                <a href="javascript:void(0);"
+                                class="btn btn-secondary btn-block disabled"
+                                tabindex="-1"
+                                aria-disabled="true">
+                                    CHECK-IN
+                                </a>
+
+                            <?php else : ?>
+
+                                <?php if ($row['status_code'] == 'SDLPN') : ?>
+
+                                    <a href="<?= base_url('ShipmentTracking/arrived/'.$row['shipment_id']); ?>"
+                                    class="btn btn-success btn-block">
+                                        LIHAT DETAIL
+                                    </a>
+
+                                <?php elseif ($row['status_code'] == 'DLVD') : ?>
+
+                                    <a href="<?= base_url('ShipmentTracking/chek-out/'.$row['shipment_id']); ?>"
+                                    class="btn btn-secondary btn-block">
+                                        CHECKOUT
+                                    </a>
+
+                                <?php else : ?>
+
+                                    <a href="<?= base_url('ShipmentTracking/create/'.$row['shipment_id']); ?>"
+                                    class="btn btn-primary btn-block">
+                                        CHECK-IN
+                                    </a>
+
+                                <?php endif; ?>
+
+                            <?php endif; ?>
                     </div>
                 </div>
             </div>
+            <?php endforeach; ?>
+
+            <?php else : ?>
+
+                <div class="col-md-12">
+                    <div class="alert alert-info">
+                        Tidak ada shipment aktif.
+                    </div>
+                </div>
+
+            <?php endif; ?>
         </div>
         
     </div>

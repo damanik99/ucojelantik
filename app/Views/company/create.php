@@ -17,7 +17,9 @@
 <?= $this->include('layout/body') ?>
 <!-- LAYOUT BODY -->
 
-<?php /** @var array $companyTypes */ ?>
+<?php /** @var array $companyTypes 
+ * @var array $status
+ * */ ?>
 
 <!--app-content open-->
 <div class="app-content">
@@ -93,11 +95,15 @@
                                 </div>
 
                                 <div class="col-md-6 mt-3">
-                                    <label>Status</label>
-                                    <select name="status"
-                                        class="form-control">
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
+                                    <label>Status <span class="text-danger">*</span></label>
+                                    <select name="status_id"
+                                        class="form-control select2-show-search">
+                                        <option value="">Choose Status</option>
+                                        <?php foreach ($status as $row) : ?>
+                                            <option value="<?= $row['status_id']; ?>">
+                                                <?= $row['status_name']; ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
 
@@ -194,7 +200,7 @@ toastr.success("<?php echo session()->getFlashdata('success'); ?>");
             success: function(response){
 
                 Swal.close();
-
+                      
                 if(response.status){
 
                     Swal.fire({

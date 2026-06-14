@@ -115,8 +115,12 @@ class Vehicle extends BaseController
 
         $baseQuery = "
             FROM vehicle a
-            JOIN company b
+            JOIN company_program b
                 ON a.company_id = b.company_id
+            JOIN program c
+                ON b.program_id = c.program_id
+            JOIN company d
+                ON b.company_id = d.company_id
             WHERE 1=1
         ";
 
@@ -127,7 +131,8 @@ class Vehicle extends BaseController
 
             $filter .= "
                 AND (
-                    b.company_name LIKE ?
+                    d.company_name LIKE ?
+                    OR c.name LIKE ?
                     OR a.plate_number LIKE ?
                     OR a.vehicle_type LIKE ?
                     OR a.brand LIKE ?
@@ -135,6 +140,7 @@ class Vehicle extends BaseController
                 )
             ";
 
+            $params[] = "%{$search}%";
             $params[] = "%{$search}%";
             $params[] = "%{$search}%";
             $params[] = "%{$search}%";
@@ -161,11 +167,11 @@ class Vehicle extends BaseController
         }
 
         $orderColumn = [
-            'b.company_name',
+            'd.company_name',
+            'c.name',
             'a.plate_number',
             'a.vehicle_type',
             'a.brand',
-            'a.capacity_weight',
             'a.status',
             'a.created_date'
         ];
@@ -181,7 +187,8 @@ class Vehicle extends BaseController
         $sql = "
             SELECT
                 a.*,
-                b.company_name
+                d.company_name,
+                c.name AS program_name
             {$baseQuery}
             {$filter}
             ORDER BY {$orderBy} {$orderDirection}

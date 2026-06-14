@@ -46,6 +46,7 @@ class Auth extends BaseController
                         'username'    => $user['username'],
                         'users_id'    => $user['users_id'],
                         'fullname'  =>  $user['fullname'],
+                        'title'       => $user['title'],
                         'masuk'       => true
                     ];
 

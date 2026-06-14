@@ -199,7 +199,7 @@ class Shipment extends BaseController
 
     public function create()
     {
-
+        $program_id = session()->get('program');                
         if ($this->request->getMethod() == 'post') {
             
             $validation = \Config\Services::validation();
@@ -259,8 +259,8 @@ class Shipment extends BaseController
             ]);
         }
 
-        $data['supplier'] = $this->companyType->getCompanyByType('SUPPLIER');
-        $data['buyer']    = $this->companyType->getCompanyByType('BUYER');
+        $data['supplier'] = $this->companyType->getCompanyByType('SUPPLIER', $program_id);
+        $data['buyer']    = $this->companyType->getCompanyByType('BUYER', $program_id);
         $data['driver']   = (new DriverModel())->findAll();
         $data['vehicle']  = (new VehicleModel())->findAll();
         // $data['po']       = (new PurchaseOrderModel())->findAll();
@@ -271,6 +271,30 @@ class Shipment extends BaseController
 
         return view('shipment/create', $data);
     }
+    
+    public function driver()
+    {
+        $shipmentModel = new \App\Models\ShipmentModel();
+        $driverId = session()->get('driver_id');
+        $data['shipment'] = $shipmentModel->getActiveShipmentDriver($driverId);
+        
+        return view('driver/home', $data);
+    }
+
+    public function detail($shipmentId)
+    {
+        $shipmentModel = new \App\Models\ShipmentModel();
+
+        $driverId = session()->get('driver_id');
+        $shipment = $shipmentModel->getDetailShipmentDriver($shipmentId, $driverId);
+
+        if (!$shipment) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        $data['shipment'] = $shipment;
+        return view('shipment/driver/detail', $data);
+    }
+
 
     
 }

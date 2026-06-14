@@ -68,4 +68,110 @@ class ShipmentModel extends Model
 
         return sprintf('%03d', $number) . $prefix;
     }
+
+    public function getActiveShipmentDriver($driverId)
+    {
+        $data = $this->db->table('shipment a')
+            ->select("
+                a.shipment_id,
+                a.shipment_number,
+                a.departure_at,
+                b.company_name AS supplier,
+                c.company_name AS buyer,
+                d.status_name AS status,
+                d.status_code
+            ")
+
+            ->join('company b', 'a.supplier_id = b.company_id')
+            ->join('company c', 'a.buyer_id = c.company_id')
+            ->join('status d', 'a.status_id = d.status_id')
+            ->where('a.driver_id', $driverId)
+            ->where('LOWER(d.status_name) !=', 'arrived')
+            ->groupStart()
+                ->where('a.departure_at IS NULL')
+                ->orWhere('DATE(a.departure_at) <=', date('Y-m-d'))
+            ->groupEnd()
+            ->orderBy('a.shipment_id', 'DESC')
+            ->get()
+            ->getResultArray();
+            
+        return $data;
+    }
+
+    public function getDetailShipmentDriver($shipmentId, $driverId)
+    {
+        return $this->db->table('shipment a')
+            ->select("
+                a.*,
+                b.company_name AS supplier,
+                c.company_name AS buyer,
+                d.status_name AS status
+            ")
+            
+            ->join('company b', 'a.supplier_id = b.company_id')
+            ->join('company c', 'a.buyer_id = c.company_id')
+            ->join('status d', 'a.status_id = d.status_id')
+            ->where('a.shipment_id', $shipmentId)
+            ->where('a.driver_id', $driverId)
+            ->get()
+            ->getRowArray();
+    }
+
+    public function getDetailShipment($shipmentId)
+    {
+        return $this->db->table('shipment a')
+            ->select("
+                a.*,
+                b.company_name AS supplier,
+                c.company_name AS buyer,
+                d.status_name AS status
+            ")
+            
+            ->join('company b', 'a.supplier_id = b.company_id')
+            ->join('company c', 'a.buyer_id = c.company_id')
+            ->join('status d', 'a.status_id = d.status_id')
+            ->where('a.shipment_id', $shipmentId)
+            ->get()
+            ->getRowArray();
+    }
+
+    public function getShipmentTracking($shipmentTrackId)
+    {
+        return $this->db->table('shipment_tracking a')
+            ->select("
+                a.*,
+                c.company_name AS supplier,
+                d.company_name AS buyer,
+                e.status_name AS status,
+                b.shipment_number,
+                b.shipment_id
+            ")
+            ->join('shipment b', 'a.shipment_id = b.shipment_id')
+            ->join('company c', 'b.supplier_id = c.company_id')
+            ->join('company d', 'b.buyer_id = d.company_id')
+            ->join('status e', 'a.status_id = e.status_id')
+            ->where('a.tracking_id', $shipmentTrackId)
+            ->get()
+            ->getRowArray();
+    }
+
+    public function getShipmentId($shipmentId)
+    {
+        return $this->db->table('shipment_tracking a')
+            ->select("
+                a.*,
+                c.company_name AS supplier,
+                d.company_name AS buyer,
+                e.status_name AS status,
+                b.shipment_number,
+                b.shipment_id
+            ")
+            ->join('shipment b', 'a.shipment_id = b.shipment_id')
+            ->join('company c', 'b.supplier_id = c.company_id')
+            ->join('company d', 'b.buyer_id = d.company_id')
+            ->join('status e', 'a.status_id = e.status_id')
+            ->where('a.shipment_id', $shipmentId)
+            ->get()
+            ->getRowArray();
+    }
 }

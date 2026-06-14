@@ -21,6 +21,7 @@
  * @var array $suppliers 
  *  @var array $companies
  * @var array $provinces
+ * @var array $groupProgram
  * */ ?>suppliers
 
 <!--app-content open-->
@@ -105,6 +106,17 @@
                                 <div class="col-md-6 mb-3">
                                     <label>Email <span class="text-danger">*</span></label>
                                     <input type="email" name="email" class="form-control">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label>Title <span class="text-danger">*</span></label>
+                                    <select name="title" class="form-control select2">
+                                    <option value="">Pilih Role</option>
+                                    <?php foreach ($groupProgram as $row): ?>
+                                        <option value="<?= $row['group']; ?>">
+                                            <?= esc($row['title']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label>Group <span class="text-danger">*</span></label>
@@ -352,7 +364,7 @@ toastr.success("<?php echo session()->getFlashdata('success'); ?>");
                         text: res.message
                     }).then(() => {
 
-                        window.location.href ="<?= base_url('/users') ?>";
+                        window.location.href ="<?= base_url('/Users') ?>";
 
                     });
                 }

@@ -48,7 +48,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="dataTbls" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                            <table id="companyTable" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
                                 <thead>
                                     <tr>
                                         <th>Company Name</th>
@@ -82,47 +82,40 @@
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.responsive.min.js"></script>
 
 <script>
-$(function() {
+$(document).ready(function () {
 
-    $('#dataTbls').DataTable({
-
+    $('#companyTable').DataTable({
         processing: true,
         serverSide: true,
+        responsive: true,
+        autoWidth: false,
 
         ajax: {
-            url: '<?= base_url() ?>/company/datatables',
-            type: 'POST'
+            url: "<?= base_url('/company/datatables') ?>",
+            type: "POST"
         },
 
         columns: [
+            { data: "company_name" },
+            { data: "company_type" },
+            { data: "pic_name" },
+            { data: "phone" },
+            { data: "email" },
+            { data: "status_badge" },
+            { data: "created_date" },
+            { data: "action" }
+        ],
+
+        columnDefs: [
             {
-                data: 'company_name'
+                targets: [5, 7],
+                orderable: false
             },
             {
-                data: 'company_type'
-            },
-            {
-                data: 'pic_name'
-            },
-            {
-                data: 'phone'
-            },
-            {
-                data: 'email'
-            },
-            {
-                data: 'status'
-            },
-            {
-                data: 'created_date'
-            },
-            {
-                data: 'action',
-                orderable: false,
+                targets: [5, 7],
                 searchable: false
             }
         ]
-
     });
 
 });
