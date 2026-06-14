@@ -134,7 +134,7 @@ class ShipmentTracking extends BaseController
             'shipmentDetail' => $shipmentNumber
         ];
 
-        return view('ShipmentTracking/create', $data);
+        return view('shipmenttracking/create', $data);
     }
 
     public function arrived($shipmentId)
