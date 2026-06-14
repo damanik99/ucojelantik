@@ -257,7 +257,7 @@ toastr.success("<?php echo session()->getFlashdata('success'); ?>");
                             title: 'Success',
                             text: response.message
                         }).then(() => {
-                            window.location.href = "<?= base_url('/shipment'); ?>";
+                            window.location.href = "<?= base_url('/Shipment'); ?>";
                         });
 
                     } else {
