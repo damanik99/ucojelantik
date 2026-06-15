@@ -32,7 +32,7 @@
                 </ol>
             </div>
             <div class="ml-auto pageheader-btn">
-                <a href="<?=base_url()?>/company/create" class="btn btn-primary btn-icon text-white mr-2">
+                <a href="<?=base_url()?>/QualityControl/create" class="btn btn-primary btn-icon text-white mr-2">
                     <span>
                         <i class="fe fe-plus"></i>
                     </span> Create New
@@ -44,21 +44,15 @@
             <div class="col-md-12 col-lg-12">
                 <div class="card">
                     <div class="card-header bg-primary">
-                        <h3 class="card-title text-white">DATA COMPANY</h3>
+                        <h3 class="card-title text-white">DATA QUALITY CONTROL</h3>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="companyTable" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                            <table id="tableQc" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
                                 <thead>
                                     <tr>
-                                        <th>Company Name</th>
-                                        <th>Type</th>
-                                        <th>PIC</th>
-                                        <th>Phone</th>
-                                        <th>Email</th>
-                                        <th>Status</th>
-                                        <th>Created Date</th>
-                                        <th width="120">Action</th>
+                                        <th>Shipment Number</th>
+                                        <td>001</td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -80,42 +74,3 @@
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/jquery.dataTables.min.js"></script>
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.responsive.min.js"></script>
-
-<script>
-$(document).ready(function () {
-
-    $('#companyTable').DataTable({
-        processing: true,
-        serverSide: true,
-        responsive: true,
-        autoWidth: false,
-    
-        ajax: {
-            url: "<?= base_url('/company/datatables') ?>",
-            type: "POST"
-        },
-    
-        columns: [
-            { data: "company_name" },
-            { data: "company_type" },
-            { data: "pic_name" },
-            { data: "phone" },
-            { data: "email" },
-            { data: "status_badge" },
-            { data: "created_date" },
-            { data: "action" }
-        ],
-    
-        columnDefs: [
-            {
-                targets: [5, 7],
-                orderable: false
-            },
-            {
-                targets: [5, 7],
-                searchable: false
-            }
-        ]
-    });
-});
-</script>

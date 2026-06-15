@@ -123,8 +123,7 @@
                                             <thead>
                                                 <tr>
                                                     <th width="300px" style="color: white;">COMPANY</th>
-                                                    <td>&nbsp;<?php echo $views['company']; ?>
-                                                    </td>
+                                                    <td>&nbsp;<?php echo $views['company']; ?></td>
                                                 </tr>
                                             </thead>
                                             <tbody>

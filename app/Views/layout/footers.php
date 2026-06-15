@@ -6,8 +6,8 @@
     <div class="container">
         <div class="row align-items-center flex-row-reverse">
             <div class="col-md-12 col-sm-12 text-center">
-                Copyright © 2020 - <?= date("Y"); ?> <a href="#">SURFGOLD</a>. Designed by <a href="#"> Team IT
-                    Developer SURFGOLD </a> All rights reserved.
+                Copyright © 2020 - <?= date("Y"); ?> <a href="#">DJELANTIK</a>. Designed by <a href="#"> Team IT
+                    Developer LNSOLUSI </a> All rights reserved.
             </div>
         </div>
     </div>

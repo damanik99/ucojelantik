@@ -68,10 +68,10 @@ class Users extends BaseController
             ->select('company.*')
             ->join('company_program', 'company.company_id = company_program.company_id')
             ->join('companytype', 'company_program.company_type_id = companytype.type_id')
-            ->where('company.status_id', 'active')
+            ->where('company.status_id', '15')
             ->where('companytype.type_name', 'Supplier')
             ->findAll();
-
+        
         $data['provinces'] = $this->provinceModel
             ->orderBy('provinsi', 'ASC')
             ->findAll();

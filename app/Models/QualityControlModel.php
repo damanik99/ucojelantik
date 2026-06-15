@@ -32,4 +32,18 @@ class QualityControlModel extends Model
     protected $validationRules = [];
     protected $validationMessages = [];
     protected $skipValidation = true;
+
+    function getData($shipmentId)
+    {
+        return $this->db->table('quality_control a')
+            ->select("
+                *
+            ")
+            ->join('shipment b', 'a.shipment_id = b.shipment_id')
+            ->join('company c', 'b.supplier_id = c.company_id', 'left')
+            ->where('a.shipment_id', $shipmentId)
+            ->orderBy('a.created_date', 'ASC')
+            ->get()
+            ->getResultArray();
+    }
 }
