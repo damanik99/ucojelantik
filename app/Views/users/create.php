@@ -332,6 +332,12 @@ toastr.success("<?php echo session()->getFlashdata('success'); ?>");
             document.getElementById('formCreateUser')
         );
 
+        console.log('=== FORM DATA ===');
+
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ':', pair[1]);
+        }
+
         $.ajax({
             url: "<?= base_url('/users/store') ?>",
             type: 'POST',
@@ -340,7 +346,9 @@ toastr.success("<?php echo session()->getFlashdata('success'); ?>");
             contentType: false,
             dataType: 'json',
 
-            beforeSend: function(){
+            beforeSend: function() {
+
+                console.log('=== REQUEST SENT ===');
 
                 Swal.fire({
                     title: 'Processing...',
@@ -349,39 +357,47 @@ toastr.success("<?php echo session()->getFlashdata('success'); ?>");
                         Swal.showLoading();
                     }
                 });
-
             },
 
-            success: function(res){
+            success: function(res, textStatus, xhr) {
 
                 Swal.close();
 
-                if(res.status)
-                {
+                console.log('=== SUCCESS ===');
+                console.log('Status:', xhr.status);
+                console.log('Response:', res);
+
+                if (res.status) {
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
                         text: res.message
                     }).then(() => {
 
-                        window.location.href ="<?= base_url('/Users') ?>";
+                        window.location.href =
+                            "<?= base_url('/Users') ?>";
 
                     });
-                }
-                else
-                {
+
+                } else {
+
                     let msg = '';
 
-                    if(typeof res.message === 'object')
-                    {
-                        $.each(res.message, function(key,val){
+                    if (typeof res.message === 'object') {
+
+                        $.each(res.message, function(key, val) {
+
+                            console.log('Validation Error:', key, val);
 
                             msg += val + '<br>';
 
                         });
-                    }
-                    else
-                    {
+
+                    } else {
+
+                        console.log('Message:', res.message);
+
                         msg = res.message;
                     }
 
@@ -391,19 +407,27 @@ toastr.success("<?php echo session()->getFlashdata('success'); ?>");
                         html: msg
                     });
                 }
-
             },
 
-            error: function(){
+            error: function(xhr, status, error) {
+
+                Swal.close();
+
+                console.log('=== AJAX ERROR ===');
+                console.log('Status:', xhr.status);
+                console.log('Status Text:', xhr.statusText);
+                console.log('Error:', error);
+                console.log('Response Text:', xhr.responseText);
 
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Server Error'
+                    html:
+                        '<b>Status:</b> ' + xhr.status +
+                        '<br><br><b>Error:</b><br>' +
+                        xhr.responseText
                 });
-
             }
-
         });
     });
 

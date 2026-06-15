@@ -81,6 +81,7 @@ class Users extends BaseController
 
     public function store()
     {
+
         $validation = \Config\Services::validation();
 
         $rules = [
@@ -107,10 +108,14 @@ class Users extends BaseController
             ]);
         }
 
-        $groupName = $this->request->getPost('group_name');
+        $groupId = $this->request->getPost('group_id');
+
+        $group = $this->group->find($groupId);
+
+        $groupName = $group['name'] ?? '';
         $program_id = session()->get('program');
-        // die($program_id);
-        if ($groupName == 'Driver')
+        
+        if(strtolower($groupName) == 'driver')
         {
             $driverRules = [
                 'driver_type' => 'required',
@@ -169,13 +174,14 @@ class Users extends BaseController
                 'users_id'      => $usersId,
                 'group_id'      => $this->request->getPost('group_id'),
                 'program_id'    => $program_id,
+                'data_level'    => $this->request->getPost('data_level'),
                 'created_date'  => date('Y-m-d H:i:s'),
                 'modified_date' => date('Y-m-d H:i:s'),
                 'created_by'    => session()->get('users_id'),
                 'modified_by'   => null
             ]);
-
-            if ($groupName == 'Driver')
+            
+            if (strtolower($groupName) == 'driver')
             {
                 $this->driver->insert([
                     'users_id'            => $usersId,
