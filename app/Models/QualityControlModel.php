@@ -13,6 +13,7 @@ class QualityControlModel extends Model
 
     protected $allowedFields = [
         'shipment_id',
+        'company_name',
         'qc_type',
         'result',
         'ffa',
@@ -53,15 +54,24 @@ class QualityControlModel extends Model
             ->select("
                 a.shipment_id,
                 a.shipment_number,
-                b.company_name,
-                a.departure_at
+                sp.company_name AS supplier,
+                by.company_name AS buyer,
+                sct.type_name AS type_supplier,
+                bct.type_name AS type_buyer,
+                a.departure_at,
+                a.supplier_company_program_id,
+                a.buyer_company_program_id
             ")
 
-            ->join('company b', 'a.supplier_id = b.company_id')
-            ->join('company_program cp', 'b.company_id = cp.company_id')
+            ->join('company_program scp', 'a.supplier_company_program_id = scp.company_program_id')
+            ->join('company_program bcp', 'a.buyer_company_program_id = bcp.company_program_id')
+            ->join('company sp', 'scp.company_id = sp.company_id')
+            ->join('company by', 'bcp.company_id = by.company_id')
+            ->join('companytype sct', 'scp.company_type_id = sct.type_id')
+            ->join('companytype bct', 'bcp.company_type_id = bct.type_id')
             ->join('status s', 'a.status_id = s.status_id')
             ->where('s.status_code', 'RTDT')
-            ->where('cp.company_type_id', '1')
+            ->where('sct.type_id', '1')
             ->orderBy('a.shipment_id', 'DESC')
             ->get()
             ->getResultArray();
