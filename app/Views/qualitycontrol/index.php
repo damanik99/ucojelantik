@@ -53,11 +53,12 @@
                                     <tr>
                                         <th>Shipment Number</th>
                                         <th>Company Name</th>
+                                        <th>Company Type</th>
                                         <th>RESULT</th>
                                         <th>FFA</th>
                                         <th>M & I</th>
+                                        <th>NOTES</th>
                                         <th>Created Date</th>
-                                        <th width="120">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -96,11 +97,12 @@ $(document).ready(function () {
         columns: [
             { data: 'shipment_number' },
             { data: 'company_name' },
+            { data: 'qc_type' },
             { data: 'result_badge' },
             { data: 'ffa' },
             { data: 'mi' },
-            { data: 'created_date' },
-            { data: 'action', orderable: false }
+            { data: 'notes' },
+            { data: 'created_date' }
         ]
     });
 });

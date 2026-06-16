@@ -215,7 +215,7 @@ class QualityControl extends BaseController
             'a.result',
             'a.ffa',
             'a.mi',
-            'd.status_name',
+            'a.notes',
             'a.created_date'
         ];
 
@@ -270,19 +270,19 @@ class QualityControl extends BaseController
                     </span>';
             }
 
-            $row['action'] = '
+            // $row['action'] = '
 
-                <a href="'.base_url('/qualitycontrol/view/'.$row['qc_id']).'"
-                class="badge badge-pill badge-info">
-                    <i class="fa fa-eye"></i>
-                </a>
+            //     <a href="'.base_url('/qualitycontrol/view/'.$row['qc_id']).'"
+            //     class="badge badge-pill badge-info">
+            //         <i class="fa fa-eye"></i>
+            //     </a>
 
-                <a href="'.base_url('/qualitycontrol/edit/'.$row['qc_id']).'"
-                class="badge badge-pill badge-success">
-                    <i class="fa fa-pencil"></i>
-                </a>
+            //     <a href="'.base_url('/qualitycontrol/edit/'.$row['qc_id']).'"
+            //     class="badge badge-pill badge-success">
+            //         <i class="fa fa-pencil"></i>
+            //     </a>
 
-            ';
+            // ';
 
             $data[] = $row;
         }

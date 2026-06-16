@@ -15,7 +15,7 @@
 <?= $this->include('layout/body') ?>
 <!-- MAIN END -->
 
-<?php /** @var string $title */ ?>
+<?php /** @var array<string, mixed> $view */ ?>
 
 <!--app-content open-->
 <div class="app-content">
@@ -28,7 +28,7 @@
                 </h1>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="#">Table</a></li>
-                    <li class="breadcrumb-item active" aria-current="page"><?=$title?></li>
+                    <li class="breadcrumb-item active" aria-current="page">View</li>
                 </ol>
             </div>
             <div class="ml-auto pageheader-btn">
@@ -49,12 +49,20 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="tableQc" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
-                                <thead>
+                                <tbody>
                                     <tr>
-                                        <th>Shipment Number</th>
-                                        <td>001</td>
+                                        <th width="300px">Shipment Number</th>
+                                        <td><?= $view['shipment_number'] ?></td>
                                     </tr>
-                                </thead>
+                                    <tr>
+                                        <th width="300px">Company Name</th>
+                                        <td><?= $view['company_name'] ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th width="300px">Company Name</th>
+                                        <td><?= $view['company_name'] ?></td>
+                                    </tr>
+                                </tbody>
                                 <tbody>
                                 </tbody>
                             </table>
