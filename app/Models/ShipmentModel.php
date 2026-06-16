@@ -15,8 +15,8 @@ class ShipmentModel extends Model
     protected $allowedFields = [
         'shipment_number',
         'purchase_order_id',
-        'supplier_id',
-        'buyer_id',
+        'supplier_company_program_id',
+        'buyer_company_program_id',
         'driver_id',
         'vehicle_id',
         'departure_at',
@@ -74,31 +74,50 @@ class ShipmentModel extends Model
 
     public function getActiveShipmentDriver($driverId)
     {
-        $data = $this->db->table('shipment a')
+        return $this->db->table('shipment a')
             ->select("
                 a.shipment_id,
                 a.shipment_number,
                 a.departure_at,
-                b.company_name AS supplier,
-                c.company_name AS buyer,
-                d.status_name AS status,
-                d.status_code
+
+                s.company_name AS supplier,
+                b.company_name AS buyer,
+
+                st.status_name AS status,
+                st.status_code,
+
+                sp.name AS supplier_program,
+                sct.type_name AS supplier_company_type,
+
+                bp.name AS buyer_program,
+                bct.type_name AS buyer_company_type
             ")
 
-            ->join('company b', 'a.supplier_id = b.company_id')
-            ->join('company c', 'a.buyer_id = c.company_id')
-            ->join('status d', 'a.status_id = d.status_id')
+            ->join('status st', 'a.status_id = st.status_id')
+
+            // Supplier Company Program
+            ->join('company_program scp', 'a.supplier_company_program_id = scp.company_program_id', 'left')
+            ->join('company s', 'scp.company_id = s.company_id', 'left')
+            ->join('program sp', 'scp.program_id = sp.program_id', 'left')
+            ->join('companytype sct', 'scp.company_type_id = sct.type_id', 'left')
+
+            // Buyer Company Program
+            ->join('company_program bcp', 'a.buyer_company_program_id = bcp.company_program_id', 'left')
+            ->join('company b', 'bcp.company_id = b.company_id', 'left')
+            ->join('program bp', 'bcp.program_id = bp.program_id', 'left')
+            ->join('companytype bct', 'bcp.company_type_id = bct.type_id', 'left')
+
             ->where('a.driver_id', $driverId)
-            ->where('LOWER(d.status_code) !=', 'SCMPL')
+            ->where('LOWER(st.status_code) !=', 'scmpl')
+
             ->groupStart()
                 ->where('a.departure_at IS NULL')
                 ->orWhere('DATE(a.departure_at) <=', date('Y-m-d'))
             ->groupEnd()
+
             ->orderBy('a.shipment_id', 'DESC')
             ->get()
             ->getResultArray();
-            // var_dump($data);exit;
-        return $data;
     }
 
     public function getDetailShipmentDriver($shipmentId, $driverId)
@@ -108,14 +127,28 @@ class ShipmentModel extends Model
                 a.*,
                 b.company_name AS supplier,
                 c.company_name AS buyer,
-                d.status_name AS status
+                d.status_name AS status,
+
+                sp.name AS supplier_program,
+                sct.type_name AS supplier_company_type,
+
+                bp.name AS buyer_program,
+                bct.type_name AS buyer_company_type
             ")
-            
-            ->join('company b', 'a.supplier_id = b.company_id')
-            ->join('company c', 'a.buyer_id = c.company_id')
-            ->join('status d', 'a.status_id = d.status_id')
+
+            ->join('company_program scp', 'a.supplier_company_program_id = scp.company_program_id', 'left')
+            ->join('company b', 'scp.company_id = b.company_id', 'left')
+            ->join('program sp', 'scp.program_id = sp.program_id', 'left')
+            ->join('companytype sct', 'scp.company_type_id = sct.type_id', 'left')
+
+            ->join('company_program bcp', 'a.buyer_company_program_id = bcp.company_program_id', 'left')
+            ->join('company c', 'bcp.company_id = c.company_id', 'left')
+            ->join('program bp', 'bcp.program_id = bp.program_id', 'left')
+            ->join('companytype bct', 'bcp.company_type_id = bct.type_id', 'left')
+
             ->where('a.shipment_id', $shipmentId)
             ->where('a.driver_id', $driverId)
+
             ->get()
             ->getRowArray();
     }
@@ -127,12 +160,25 @@ class ShipmentModel extends Model
                 a.*,
                 b.company_name AS supplier,
                 c.company_name AS buyer,
-                d.status_name AS status
+                d.status_name AS status,
+                sp.name AS supplier_program,
+                sct.type_name AS supplier_company_type,
+                bp.name AS buyer_program,
+                bct.type_name AS buyer_company_type
             ")
-            
-            ->join('company b', 'a.supplier_id = b.company_id')
-            ->join('company c', 'a.buyer_id = c.company_id')
+
             ->join('status d', 'a.status_id = d.status_id')
+
+            ->join('company_program scp', 'a.supplier_company_program_id = scp.company_program_id', 'left')
+            ->join('company b', 'scp.company_id = b.company_id', 'left')
+            ->join('program sp', 'scp.program_id = sp.program_id', 'left')
+            ->join('companytype sct', 'scp.company_type_id = sct.type_id', 'left')
+
+            ->join('company_program bcp', 'a.buyer_company_program_id = bcp.company_program_id', 'left')
+            ->join('company c', 'bcp.company_id = c.company_id', 'left')
+            ->join('program bp', 'bcp.program_id = bp.program_id', 'left')
+            ->join('companytype bct', 'bcp.company_type_id = bct.type_id', 'left')
+
             ->where('a.shipment_id', $shipmentId)
             ->get()
             ->getRowArray();
@@ -147,12 +193,27 @@ class ShipmentModel extends Model
                 d.company_name AS buyer,
                 e.status_name AS status,
                 b.shipment_number,
-                b.shipment_id
+                b.shipment_id,
+
+                sp.name AS supplier_program,
+                sct.type_name AS supplier_company_type,
+
+                bp.name AS buyer_program,
+                bct.type_name AS buyer_company_type
             ")
-            ->join('shipment b', 'a.shipment_id = b.shipment_id')
-            ->join('company c', 'b.supplier_id = c.company_id')
-            ->join('company d', 'b.buyer_id = d.company_id')
-            ->join('status e', 'a.status_id = e.status_id')
+
+            // Supplier
+            ->join('company_program scp', 'b.supplier_company_program_id = scp.company_program_id', 'left')
+            ->join('company c', 'scp.company_id = c.company_id', 'left')
+            ->join('program sp', 'scp.program_id = sp.program_id', 'left')
+            ->join('companytype sct', 'scp.company_type_id = sct.company_type_id', 'left')
+
+            // Buyer
+            ->join('company_program bcp', 'b.buyer_company_program_id = bcp.company_program_id', 'left')
+            ->join('company d', 'bcp.company_id = d.company_id', 'left')
+            ->join('program bp', 'bcp.program_id = bp.program_id', 'left')
+            ->join('companytype bct', 'bcp.company_type_id = bct.company_type_id', 'left')
+
             ->where('a.tracking_id', $shipmentTrackId)
             ->get()
             ->getRowArray();
@@ -163,16 +224,37 @@ class ShipmentModel extends Model
         return $this->db->table('shipment_tracking a')
             ->select("
                 a.*,
-                c.company_name AS supplier,
-                d.company_name AS buyer,
-                e.status_name AS status,
-                b.shipment_number,
-                b.shipment_id
+
+                s.company_name AS supplier,
+                b.company_name AS buyer,
+
+                st.status_name AS status,
+
+                sh.shipment_number,
+                sh.shipment_id,
+
+                sp.name AS supplier_program,
+                sct.type_name AS supplier_company_type,
+
+                bp.name AS buyer_program,
+                bct.type_name AS buyer_company_type
             ")
-            ->join('shipment b', 'a.shipment_id = b.shipment_id')
-            ->join('company c', 'b.supplier_id = c.company_id')
-            ->join('company d', 'b.buyer_id = d.company_id')
-            ->join('status e', 'a.status_id = e.status_id')
+
+            ->join('shipment sh', 'a.shipment_id = sh.shipment_id')
+            ->join('status st', 'a.status_id = st.status_id')
+
+            // Supplier Company Program
+            ->join('company_program scp', 'sh.supplier_company_program_id = scp.company_program_id', 'left')
+            ->join('company s', 'scp.company_id = s.company_id', 'left')
+            ->join('program sp', 'scp.program_id = sp.program_id', 'left')
+            ->join('companytype sct', 'scp.company_type_id = sct.type_id', 'left')
+
+            // Buyer Company Program
+            ->join('company_program bcp', 'sh.buyer_company_program_id = bcp.company_program_id', 'left')
+            ->join('company b', 'bcp.company_id = b.company_id', 'left')
+            ->join('program bp', 'bcp.program_id = bp.program_id', 'left')
+            ->join('companytype bct', 'bcp.company_type_id = bct.type_id', 'left')
+
             ->where('a.shipment_id', $shipmentId)
             ->get()
             ->getRowArray();

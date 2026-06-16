@@ -58,6 +58,7 @@
                                         <th>Full Name</th>
                                         <th>Phone</th>
                                         <th>Address</th>
+                                        <th>Title</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -96,6 +97,7 @@
             { data: 'fullname' },
             { data: 'phone' },
             { data: 'address' },
+            { data: 'title' },
             { data: 'status' },
             { data: 'action' }
         ],

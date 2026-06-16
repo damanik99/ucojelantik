@@ -59,18 +59,26 @@ class Users extends BaseController
 
     public function create()
     {
-        $data['groupProgram'] = $this->users->getgroupProgram();
+        $program_id = session()->get('program');
 
+        $data['groupProgram'] = $this->users->getgroupProgram();
         $data['groups'] = $this->group
             ->findAll();
         
-        $data['companies'] = $this->company
-            ->select('company.*')
-            ->join('company_program', 'company.company_id = company_program.company_id')
-            ->join('companytype', 'company_program.company_type_id = companytype.type_id')
-            ->where('company.status_id', '15')
-            ->where('companytype.type_name', 'Supplier')
-            ->findAll();
+        $data['companies'] = $this->db->table('company_program a')
+            ->select('
+                b.company_program_id,
+                c.*
+            ')
+            ->join('company_program b', 'a.company_program_id = b.company_program_id')
+            ->join('company c', 'b.company_id = c.company_id')
+            ->join('companytype d', 'b.company_type_id = d.type_id')
+            ->where('c.status_id', '15')
+            ->where('d.type_name', 'Supplier')
+            ->where('b.program_id', $program_id)
+            ->orderBy('c.company_name', 'ASC')
+            ->get()
+            ->getResultArray();
         
         $data['provinces'] = $this->provinceModel
             ->orderBy('provinsi', 'ASC')
@@ -119,7 +127,6 @@ class Users extends BaseController
         {
             $driverRules = [
                 'driver_type' => 'required',
-                'driver_name' => 'required',
                 'license_number' => 'required'
             ];
 
@@ -134,13 +141,13 @@ class Users extends BaseController
             if (
                 $this->request->getPost('driver_type') == 'SUPPLIER'
                 &&
-                empty($this->request->getPost('supplier_id'))
+                empty($this->request->getPost('company_program_id'))
             )
             {
                 return $this->response->setJSON([
                     'status' => false,
                     'message' => [
-                        'supplier_id' => 'Supplier wajib dipilih'
+                        'company_program_id' => 'Supplier wajib dipilih'
                     ]
                 ]);
             }
@@ -185,9 +192,9 @@ class Users extends BaseController
             {
                 $this->driver->insert([
                     'users_id'            => $usersId,
-                    'supplier_id'         => $this->request->getPost('supplier_id'),
+                    'company_program_id'  => $this->request->getPost('company_program_id'),
                     'driver_type'         => $this->request->getPost('driver_type'),
-                    'driver_name'         => $this->request->getPost('driver_name'),
+                    'driver_name'         => $this->request->getPost('fullname'),
                     'license_number'      => $this->request->getPost('license_number'),
                     'license_type'        => $this->request->getPost('license_type'),
                     'license_expiry_date' => $this->request->getPost('license_expiry_date'),
@@ -347,7 +354,7 @@ class Users extends BaseController
             $status = $row['active']
                 ? '<span class="badge badge-success">Active</span>'
                 : '<span class="badge badge-danger">Inactive</span>';
-
+                
             $row['address_full'] = $address;
             $row['status_badge'] = $status;
 
@@ -368,6 +375,7 @@ class Users extends BaseController
                 'username'      => $row['username'],
                 'fullname'      => $row['fullname'],
                 'phone'         => $row['phone'],
+                'title'         => $row['title'],
                 'address'       => $row['address_full'],
                 'status'        => $row['status_badge'],
                 'action'        => $row['action']

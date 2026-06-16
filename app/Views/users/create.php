@@ -180,12 +180,12 @@
                                             Supplier <span class="text-danger">*</span>
                                         </label>
 
-                                        <select name="supplier_id" class="form-control">
+                                        <select name="company_program_id" class="form-control">
                                             <option value="">
                                                 -- Select Supplier --
                                             </option>
                                             <?php foreach ($companies as $company): ?>
-                                                <option value="<?= $company['company_id']; ?>">
+                                                <option value="<?= $company['company_program_id']; ?>">
                                                     <?= esc($company['company_name']); ?>
                                                 </option>
                                             <?php endforeach; ?>

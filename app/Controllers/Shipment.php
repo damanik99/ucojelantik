@@ -48,10 +48,14 @@ class Shipment extends BaseController
 
         $baseQuery = "
             FROM shipment a
-            LEFT JOIN company b
-                ON a.supplier_id = b.company_id
-            LEFT JOIN company c
-                ON a.buyer_id = c.company_id
+            LEFT JOIN company_program b
+                ON a.supplier_company_program_id = b.company_program_id
+            LEFT JOIN company_program c
+                ON a.buyer_company_program_id = c.company_program_id
+            LEFT JOIN company cp
+                ON b.company_id = cp.company_id
+            LEFT JOIN company cpb
+                ON c.company_id = cpb.company_id
             LEFT JOIN driver d
                 ON a.driver_id = d.driver_id
             LEFT JOIN vehicle e
@@ -69,8 +73,8 @@ class Shipment extends BaseController
             $filter .= "
                 AND (
                     a.shipment_number LIKE ?
-                    OR b.company_name LIKE ?
-                    OR c.company_name LIKE ?
+                    OR cp.company_name LIKE ?
+                    OR cpb.company_name LIKE ?
                     OR d.driver_name LIKE ?
                     OR e.plate_number LIKE ?
                     OR f.status_name LIKE ?
@@ -102,8 +106,8 @@ class Shipment extends BaseController
 
         $orderColumn = [
             'a.shipment_number',
-            'b.company_name',
-            'c.company_name',
+            'cp.company_name',
+            'cpb.company_name',
             'd.driver_name',
             'e.plate_number',
             'f.status_name',
@@ -121,8 +125,8 @@ class Shipment extends BaseController
         $sql = "
             SELECT
                 a.*,
-                b.company_name AS supplier_name,
-                c.company_name AS buyer_name,
+                cp.company_name AS supplier_name,
+                cpb.company_name AS buyer_name,
                 d.driver_name,
                 e.plate_number,
                 f.status_name
@@ -209,12 +213,12 @@ class Shipment extends BaseController
                     'label' => 'Shipment Number',
                     'rules' => 'required|is_unique[shipment.shipment_number]'
                 ],
-                'supplier_id' => [
-                    'label' => 'Supplier',
+                'supplier_company_program_id' => [
+                    'label' => 'supplier_company_program_id',
                     'rules' => 'required'
                 ],
-                'buyer_id' => [
-                    'label' => 'Buyer',
+                'buyer_company_program_id' => [
+                    'label' => 'buyer_company_program_id',
                     'rules' => 'required'
                 ],
                 'driver_id' => [
@@ -239,18 +243,18 @@ class Shipment extends BaseController
             }
 
             $shipmentNumber = $this->shipment->generateShipmentNumber();
-            
+            // var_dump($shipmentNumber);exit;
             $this->shipment->insert([
-                'shipment_number'  => $shipmentNumber,
-                'purchase_order_id'=> $this->request->getPost('purchase_order_id'),
-                'supplier_id'      => $this->request->getPost('supplier_id'),
-                'buyer_id'         => $this->request->getPost('buyer_id'),
-                'driver_id'        => $this->request->getPost('driver_id'),
-                'vehicle_id'       => $this->request->getPost('vehicle_id'),
-                'departure_at'     => $this->request->getPost('departure_at'),
-                'arrival_at'       => $this->request->getPost('arrival_at'),
-                'status_id'        => $this->request->getPost('status_id'),
-                'created_by'       => session()->get('users_id')
+                'shipment_number'               => $shipmentNumber,
+                'purchase_order_id'             => $this->request->getPost('purchase_order_id'),
+                'supplier_company_program_id'   => $this->request->getPost('supplier_company_program_id'),
+                'buyer_company_program_id'      => $this->request->getPost('buyer_company_program_id'),
+                'driver_id'                     => $this->request->getPost('driver_id'),
+                'vehicle_id'                    => $this->request->getPost('vehicle_id'),
+                'departure_at'                  => $this->request->getPost('departure_at'),
+                'arrival_at'                    => $this->request->getPost('arrival_at'),
+                'status_id'                     => $this->request->getPost('status_id'),
+                'created_by'                    => session()->get('users_id')
             ]);
 
             return $this->response->setJSON([
@@ -264,7 +268,7 @@ class Shipment extends BaseController
         $data['driver']   = (new DriverModel())->findAll();
         $data['vehicle']  = (new VehicleModel())->findAll();
         // $data['po']       = (new PurchaseOrderModel())->findAll();
-
+        
         $data['status'] = (new StatusModel())
             ->where('module', 'SHIPMENT')
             ->findAll();
@@ -295,6 +299,38 @@ class Shipment extends BaseController
         return view('shipment/driver/detail', $data);
     }
 
+    // driver
+    public function get_driver($company_program_id)
+    {
+        $driver = $this->db->table('driver d')
+            ->select('d.driver_id, d.driver_name')
+            ->join('company_program cp', 'cp.company_program_id = d.company_program_id')
+            ->where('cp.company_program_id', $company_program_id)
+            ->get()->getResultArray();
 
+        echo '<option value="">Select Driver</option>';
+
+        foreach($driver as $row){
+            echo '<option value="'.$row['driver_id'].'">'.$row['driver_name'].'</option>';
+        }
+    }
+
+    // vehicle
+    public function get_vehicle($company_program_id)
+    {
+        $vehicle = $this->db->table('vehicle v')
+            ->select('v.vehicle_id, v.plate_number')
+            ->join('company_program cp', 'cp.company_program_id = v.company_program_id')
+            ->where('cp.company_program_id', $company_program_id)
+            ->get()
+            ->getResultArray();
+
+        echo '<option value="">Select Vehicle</option>';
+
+        foreach($vehicle as $row){
+            echo '<option value="'.$row['vehicle_id'].'">'.$row['plate_number'].'</option>';
+        }
+    }
+    
     
 }

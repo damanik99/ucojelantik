@@ -21,14 +21,16 @@ class CompanyTypeModel extends Model
 
     public function getCompanyByType($typeCode, $programId)
     {
-        return $this->db->table('company a')
-            ->distinct()
-            ->select('a.*')
-            ->join('company_program b', 'a.company_id = b.company_id')
-            ->join('companytype c', 'b.company_type_id = c.type_id')
+        return $this->db->table('company_program a')
+            ->select("
+                a.company_program_id, company_type_id,
+                b.*
+            ")
+            ->join('company b', 'a.company_id = b.company_id')
+            ->join('companytype c', 'a.company_type_id = c.type_id')
             ->where('c.type_code', $typeCode)
-            ->where('b.program_id', $programId)
-            ->orderBy('a.company_name', 'ASC')
+            ->where('a.program_id', $programId)
+            ->orderBy('b.company_name', 'ASC')
             ->get()
             ->getResultArray();
     }

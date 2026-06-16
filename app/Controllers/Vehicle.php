@@ -36,10 +36,10 @@ class Vehicle extends BaseController
         if ($this->request->getMethod() === 'post') {
 
             $rules = [
-                'company_id' => [
+                'company_program_id' => [
                     'rules'  => 'required|integer',
                     'errors' => [
-                        'required' => 'Company must be selected'
+                        'required' => 'Company Program must be selected'
                     ]
                 ],
                 'plate_number' => [
@@ -69,9 +69,11 @@ class Vehicle extends BaseController
                     'errors' => $this->validator->getErrors()
                 ]);
             }
+            // $cp = $this->request->getPost('company_program_id');
+            // var_dump($cp);exit;
 
             $this->vehicle->insert([
-                'company_id'        => $this->request->getPost('company_id'),
+                'company_program_id'=> $this->request->getPost('company_program_id'),
                 'plate_number'      => strtoupper($this->request->getPost('plate_number')),
                 'vehicle_type'      => $this->request->getPost('vehicle_type'),
                 'capacity_weight'   => $this->request->getPost('capacity_weight'),
@@ -88,14 +90,17 @@ class Vehicle extends BaseController
             return $this->response->setJSON([
                 'status'   => true,
                 'message'  => 'Data kendaraan berhasil disimpan',
-                'redirect' => base_url('/vehicle')
+                'redirect' => base_url('/Vehicle')
             ]);
         }
 
-        $dataCompany = $this->company
-            ->where('is_deleted', 0)
-            ->findAll();
-
+        $dataCompany = $this->db->table('company_program a')
+            ->select('b.company_id, a.company_program_id, d.type_id, b.company_name')
+            ->join('company b', 'a.company_id = b.company_id')
+            ->join('program c', 'a.program_id = c.program_id')
+            ->join('companytype d', 'a.company_type_id = d.type_id')
+            ->get()->getResultArray();
+// var_dump($dataCompany);exit;
        $data = [
             'title' => 'Vehicle',
             'company' => $dataCompany
@@ -116,7 +121,7 @@ class Vehicle extends BaseController
         $baseQuery = "
             FROM vehicle a
             JOIN company_program b
-                ON a.company_id = b.company_id
+                ON a.company_program_id = b.company_program_id
             JOIN program c
                 ON b.program_id = c.program_id
             JOIN company d

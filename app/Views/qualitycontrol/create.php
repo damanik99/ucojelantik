@@ -18,6 +18,7 @@
 <!-- LAYOUT BODY -->
 
 <?php /** @var array $shipments
+ * @var array $companyType
  * */ ?>
 
 <!--app-content open-->
@@ -44,98 +45,72 @@
 
                         <form id="qcForm" enctype="multipart/form-data">
                             <div class="row">
-
                                 <div class="col-md-6">
-                                    <label class="form-label">Supplier*</label>
-                                    <select
-                                        name="shipment_id"
-                                        class="form-control select2"
-                                        required>
-
-                                        <option value="">Pilih Shipment</option>
-
-                                        <?php foreach ($shipments as $row) : ?>
-
-                                            <option value="<?= $row['shipment_id']; ?>">
-
-                                                <?= $row['shipment_number']; ?>
-                                                -
-                                                <?= $row['company_name']; ?>
-
-                                                <?php if(!empty($row['delivery_date'])) : ?>
-                                                    (<?= date('d-m-Y', strtotime($row['delivery_date'])); ?>)
-                                                <?php endif; ?>
-
-                                            </option>
-
+                                    <label class="form-label">Company Type <span class="text-danger">*</span></label>
+                                    <select id="type_id" name="type_id" class="form-control select2" required>
+                                        <option value="">Pilih Jenis</option>
+                                        <?php foreach ($companyType as $row) : ?>
+                                        <option value="<?= $row['type_id']; ?>"><?= $row['type_name']; ?></option>
                                         <?php endforeach; ?>
-
                                     </select>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">FFA (%)</label>
+                                    <label class="form-label">Shipment <span class="text-danger">*</span></label>
+                                    <select name="shipment_id" class="form-control select2" required>
+
+                                        <option value="">Pilih Shipment</option>
+                                        <?php foreach ($shipments as $row) : ?>
+                                            <option value="<?= $row['shipment_id']; ?>">
+                                                <?= $row['shipment_number']; ?>
+                                                <?php if(!empty($row['departure_at'])) : ?>
+                                                    (<?= date('d-m-Y', strtotime($row['departure_at'])); ?>)
+                                                <?php endif; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">FFA (%) <span class="text-danger">*</span></label>
                                     <input type="number"
                                         step="0.01"
                                         name="ffa"
-                                        class="form-control">
+                                        class="form-control" required>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">M&I (%)</label>
+                                    <label class="form-label">M&I (%) <span class="text-danger">*</span></label>
                                     <input type="number"
                                         step="0.01"
                                         name="mi"
-                                        class="form-control">
+                                        class="form-control" required>
                                 </div>
 
-                                <div class="col-md-6">
-                                    <label class="form-label">Hasil *</label>
-                                    <select name="result" class="form-control"
-                                        required>
+                                <div class="col-md-12">
+                                    <label class="form-label">Hasil <span class="text-danger">*</span></label>
+                                    <select name="result" class="form-control" required>
                                         <option value="">Pilih</option>
-                                        <option value="PASSED">OK</option>
-                                        <option value="FAILED">NOT OK</option>
+                                        <option value="in_spec">IN SPEC</option>
+                                        <option value="out_spec">OUT SPEC</option>
                                     </select>
                                 </div>
 
                                 <div class="col-md-12 mt-3">
-                                    <label class="form-label">Photo *</label>
-
-                                    <input type="file"
-                                        name="photo"
-                                        accept="image/*"
-                                        capture="environment"
-                                        class="form-control">
+                                    <label class="form-label">Photo</label>
+                                    <input type="file" name="photo" accept="image/*" capture="environment" class="form-control">
                                 </div>
 
                                 <div class="col-md-12 mt-3">
                                     <label>Notes</label>
-
-                                    <textarea
-                                        name="notes"
-                                        rows="4"
-                                        class="form-control"></textarea>
+                                    <textarea name="notes" rows="4" class="form-control"></textarea>
                                 </div>
-
                             </div>
-
                             <div class="text-center mt-5">
-
-                                <a href="<?= base_url('/shipmenttracking') ?>"
-                                    class="btn btn-warning">
-                                    Cancel
-                                </a>
-
-                                <button type="submit"
-                                    class="btn btn-primary">
-                                    Save
-                                </button>
-
+                                <a href="<?= base_url('/shipmenttracking') ?>" class="btn btn-warning">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Save</button>
                             </div>
-
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -178,6 +153,13 @@ $('#qcForm').submit(function(e){
 
     let formData = new FormData(this);
 
+
+    console.log('=== FORM DATA ===');
+
+    for (let pair of formData.entries()) {
+        console.log(pair[0] + ':', pair[1]);
+    }    
+                                          
     $.ajax({
         url: "<?= base_url('qualitycontrol/save') ?>",
         type: "POST",
@@ -185,6 +167,8 @@ $('#qcForm').submit(function(e){
         processData: false,
         contentType: false,
         beforeSend: function(){
+
+           console.log('=== REQUEST SENT ===');
 
             Swal.fire({
                 title: 'Saving...',
@@ -196,7 +180,11 @@ $('#qcForm').submit(function(e){
             });
 
         },
-        success: function(response){
+        success: function(response, textStatus, xhr){
+
+            console.log('=== SUCCESS ===');
+            console.log('Status:', xhr.status);
+            console.log('Response:', response);
 
             if(response.status){
 
@@ -221,7 +209,8 @@ $('#qcForm').submit(function(e){
                         errors += value + '<br>';
                     });
 
-                }else{
+                } else {
+                    console.log('Message:', response.message);
                     errors = response.message;
                 }
 

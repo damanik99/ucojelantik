@@ -11,7 +11,7 @@ class DriverModel extends Model
 
     protected $allowedFields = [
         'users_id',
-        'supplier_id',
+        'company_program_id',
         'driver_type',
         'driver_name',
         'license_number',

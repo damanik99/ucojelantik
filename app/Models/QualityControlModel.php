@@ -46,4 +46,27 @@ class QualityControlModel extends Model
             ->get()
             ->getResultArray();
     }
+
+    function getDataShipment()
+    {
+        $result = $this->db->table('shipment a')
+            ->select("
+                a.shipment_id,
+                a.shipment_number,
+                b.company_name,
+                a.departure_at
+            ")
+
+            ->join('company b', 'a.supplier_id = b.company_id')
+            ->join('company_program cp', 'b.company_id = cp.company_id')
+            ->join('status s', 'a.status_id = s.status_id')
+            ->where('s.status_code', 'RTDT')
+            ->where('cp.company_type_id', '1')
+            ->orderBy('a.shipment_id', 'DESC')
+            ->get()
+            ->getResultArray();
+
+        return $result;
+    }
+
 }

@@ -12,7 +12,7 @@ class VehicleModel extends Model
     protected $useSoftDeletes   = false;
 
     protected $allowedFields = [
-        'company_id',
+        'company_program_id',
         'plate_number',
         'vehicle_type',
         'capacity_weight',

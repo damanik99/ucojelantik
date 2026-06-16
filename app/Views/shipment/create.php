@@ -84,11 +84,11 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Supplier <span class="text-danger">*</span></label>
-                                        <select name="supplier_id"
+                                        <select name="supplier_company_program_id" id="supplier_company_program_id"
                                                 class="form-control select2-show-search">
                                             <option value="">Select Supplier</option>
                                             <?php foreach ($supplier as $row) : ?>
-                                                <option value="<?= $row['company_id']; ?>">
+                                                <option value="<?= $row['company_program_id']; ?>">
                                                     <?= $row['company_name']; ?>
                                                 </option>
                                             <?php endforeach; ?>
@@ -99,11 +99,11 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Buyer <span class="text-danger">*</span></label>
-                                        <select name="buyer_id"
+                                        <select name="buyer_company_program_id"
                                                 class="form-control select2-show-search">
                                             <option value="">Select Buyer</option>
                                             <?php foreach ($buyer as $row) : ?>
-                                                <option value="<?= $row['company_id']; ?>">
+                                                <option value="<?= $row['company_program_id']; ?>">
                                                     <?= $row['company_name']; ?>
                                                 </option>
                                             <?php endforeach; ?>
@@ -113,30 +113,22 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Driver <span class="text-danger">*</span></label>
+                                        <label>Driver</label>
                                         <select name="driver_id"
+                                                id="driver_id"
                                                 class="form-control select2-show-search">
                                             <option value="">Select Driver</option>
-                                            <?php foreach ($driver as $row) : ?>
-                                                <option value="<?= $row['driver_id']; ?>">
-                                                    <?= $row['driver_name']; ?>
-                                                </option>
-                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Vehicle <span class="text-danger">*</span></label>
+                                        <label>Vehicle</label>
                                         <select name="vehicle_id"
+                                                id="vehicle_id"
                                                 class="form-control select2-show-search">
                                             <option value="">Select Vehicle</option>
-                                            <?php foreach ($vehicle as $row) : ?>
-                                                <option value="<?= $row['vehicle_id']; ?>">
-                                                    <?= $row['plate_number']; ?>
-                                                </option>
-                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -226,63 +218,107 @@ toastr.success("<?php echo session()->getFlashdata('success'); ?>");
 </script>
 
 <script>
-    $(document).ready(function () {
+$('#supplier_company_program_id').change(function () {
 
-        $('.select2-show-search').select2({
-            width: '100%'
+    let company_program_id = $(this).val();
+
+    $('#driver_id').html('<option value="">Loading...</option>');
+    $('#vehicle_id').html('<option value="">Loading...</option>');
+
+    if(company_program_id != ''){
+
+        // Driver
+        $.get("<?= base_url('shipment/get_driver/') ?>/" + company_program_id, function(res){
+
+            $('#driver_id').html(res);
+            console.log(res);
+            if(driver_id != ''){
+                $('#driver_id').val(driver_id).trigger('change');
+            }
+
         });
 
-        $('#shipmentForm').submit(function(e) {
-            e.preventDefault();
+        // Vehicle
+        $.get("<?= base_url('shipment/get_vehicle/') ?>/" + company_program_id, function(res){
 
-            Swal.fire({
-                title: 'Please Wait...',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
+            $('#vehicle_id').html(res);
+             console.log(res);
+            if(vehicle_id != ''){
+                $('#vehicle_id').val(vehicle_id).trigger('change');
+            }
 
-            $.ajax({
-                url: "<?= base_url('/shipment/create'); ?>",
-                type: "POST",
-                data: $(this).serialize(),
-                dataType: "json",
-                success: function(response) {
+        });
 
-                    if (response.success == true) {
+    }else{
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: response.message
-                        }).then(() => {
-                            window.location.href = "<?= base_url('/Shipment'); ?>";
-                        });
+        $('#driver_id').html('<option value="">Select Driver</option>');
+        $('#vehicle_id').html('<option value="">Select Vehicle</option>');
+    }
 
-                    } else {
+});
 
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            html: response.message
-                        });
 
-                    }
+$(document).ready(function () {
 
-                },
-                error: function() {
+    $('.select2-show-search').select2({
+        width: '100%'
+    });
+
+    $('#shipmentForm').submit(function(e) {
+        e.preventDefault();
+
+        let formData = $(this).serialize();
+
+        console.log(formData);
+        Swal.fire({
+            title: 'Please Wait...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        $.ajax({
+            url: "<?= base_url('/shipment/create'); ?>",
+            type: "POST",
+            data: $(this).serialize(),
+            dataType: "json",
+            success: function(response) {
+                console.log(response);
+                console.log(typeof response); 
+                if (response.success == true) {
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message
+                    }).then(() => {
+                        window.location.href = "<?= base_url('/Shipment'); ?>";
+                    });
+
+                } else {
 
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'Internal Server Error'
+                        html: response.message
                     });
 
                 }
-            });
 
+            },
+            error: function() {
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Internal Server Error'
+                });
+
+            }
         });
 
     });
+
+});
 </script>

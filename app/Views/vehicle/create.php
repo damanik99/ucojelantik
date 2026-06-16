@@ -53,10 +53,10 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Company <span class="text-danger">*</span></label>
-                                        <select name="company_id" class="form-control select2-show-search">
+                                        <select name="company_program_id" class="form-control select2-show-search">
                                             <option value="">Choose Company</option>
                                             <?php foreach ($company as $row) : ?>
-                                                <option value="<?= $row['company_id']; ?>">
+                                                <option value="<?= $row['company_program_id']; ?>">
                                                     <?= $row['company_name']; ?>
                                                 </option>
                                             <?php endforeach; ?>

@@ -3,14 +3,27 @@
 namespace App\Controllers;
 
 use App\Models\QualityControlModel;
+use App\Models\CompanyTypeModel;
+use App\Models\ShipmentModel;
 
 class QualityControl extends BaseController
 {
     protected QualityControlModel $qcModel;
+    protected CompanyTypeModel $companyType;
+    protected ShipmentModel $shipment;
 
     public function __construct()
     {
+        $session = \Config\Services::session();
+        if ($session->get('masuk') != true) {
+            session()->setFlashdata('message', '<div class="alert alert-danger" role="alert">Maaf! Anda tidak memiliki hak akses ke sini! </div>');
+            header('Location: '.base_url('auth'));
+            exit();
+        }
+
         $this->qcModel = new QualityControlModel();
+        $this->companyType = new CompanyTypeModel();
+        $this->shipment = new ShipmentModel();
     }
 
     public function index() 
@@ -24,21 +37,14 @@ class QualityControl extends BaseController
 
     public function create()
     {
-        $data['shipments'] = $this->db->table('shipment a')
-            ->select("
-                a.shipment_id,
-                a.shipment_number,
-                b.company_name
-            ")
+        $companyType = $this->companyType->where('status', 'active')->findAll();
 
-            ->join('company b', 'a.supplier_id = b.company_id')
-            ->join('company_program cp', 'b.company_id = cp.company_id')
-            ->join('status s', 'a.status_id = s.status_id')
-            ->where('s.status_code', 'RTDT')
-            ->where('cp.company_type_id', '1')
-            ->orderBy('a.shipment_id', 'DESC')
-            ->get()
-            ->getResultArray();
+        $getDataShipment = $this->qcModel->getDataShipment();
+        
+        $data = [
+            'shipments' => $getDataShipment,
+            'companyType' => $companyType
+        ];
         
         return view('qualitycontrol/create', $data);
     }
@@ -52,11 +58,12 @@ class QualityControl extends BaseController
             ]);
         }
 
+        // var_dump('test');exit;
+
         $rules = [
             'shipment_id' => 'required',
-            // 'qc_type'     => 'required',
+            'type_id'     => 'required',
             'result'      => 'required',
-            'photo'       => 'uploaded[photo]|max_size[photo,4096]|is_image[photo]'
         ];
 
         if (!$this->validate($rules)) {
@@ -69,33 +76,42 @@ class QualityControl extends BaseController
 
         try 
         {
+            $type_id = $this->request->getPost('type_id');
+            $shipmentId = $this->request->getPost('shipment_id');
             $photo = $this->request->getFile('photo');
-
-            if (!$photo->isValid()) {
-                throw new \Exception('Photo wajib diupload.');
-            }
-
-            $extension = $photo->getExtension();
-
-            $randomCode = strtoupper(substr(bin2hex(random_bytes(4)), 0, 8));
-            $photoName = 'BYR' . date('Ymd') . $randomCode . '.' . $extension;
-
-            if (!is_dir(ROOTPATH . 'public/upload/image/qc')) {
-                mkdir(
+            if ($photo->isValid()) {
+                $extension = $photo->getExtension();
+    
+                $randomCode = strtoupper(substr(bin2hex(random_bytes(4)), 0, 8));
+                $photoName = 'BYR' . date('Ymd') . $randomCode . '.' . $extension;
+                if (!is_dir(ROOTPATH . 'public/upload/image/qc')) {
+                    mkdir(
+                        ROOTPATH . 'public/upload/image/qc',
+                        0775,
+                        true
+                    );
+                }
+    
+                $photo->move(
                     ROOTPATH . 'public/upload/image/qc',
-                    0775,
-                    true
+                    $photoName
                 );
             }
+            
 
-            $photo->move(
-                ROOTPATH . 'public/upload/image/qc',
-                $photoName
-            );
+            // $getTypeId = $this->db->table('shipment')->where('shipment_id', $shipmentId)->get()->getRowArray();
+            $getTypeId = $this->shipment->getDetailShipment($shipmentId);
+            // var_dump($getTypeId);exit;
+            if ($getTypeId['supplier_id'] == '1') {
+                $qc_type = $type_id;
+            } else {
+                $buyer = $getTypeId['supplier_id'];
+            }
 
             $this->qcModel->insert([
                 'shipment_id' => $this->request->getPost('shipment_id'),
-                // 'qc_type'     => $this->request->getPost('qc_type'),
+                'company_name'=> $getTypeId['supplier'],
+                'qc_type'     => $qc_type, 
                 'result'      => $this->request->getPost('result'),
                 'ffa'         => $this->request->getPost('ffa'),
                 'mi'          => $this->request->getPost('mi'),
@@ -230,18 +246,18 @@ class QualityControl extends BaseController
 
         foreach ($query->getResultArray() as $row) {
 
-            if ($row['result'] == 'PASSED') {
+            if ($row['result'] == 'in_spec') {
 
                 $row['result_badge'] =
                     '<span class="badge badge-success">
-                        PASSED
+                        In Spec
                     </span>';
 
-            } elseif ($row['result'] == 'FAILED') {
+            } elseif ($row['result'] == 'out_spec') {
 
                 $row['result_badge'] =
                     '<span class="badge badge-danger">
-                        FAILED
+                        Out Spec
                     </span>';
 
             } else {
