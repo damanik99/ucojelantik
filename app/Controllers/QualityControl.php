@@ -76,9 +76,12 @@ class QualityControl extends BaseController
 
         try 
         {
-            $type_id = $this->request->getPost('type_id');
+            $typeId = $this->request->getPost('type_id');
             $shipmentId = $this->request->getPost('shipment_id');
+
             $photo = $this->request->getFile('photo');
+
+            $photoName = "";
             if ($photo->isValid()) {
                 $extension = $photo->getExtension();
     
@@ -98,19 +101,20 @@ class QualityControl extends BaseController
                 );
             }
             
+            // get data shipment model
+            $getDataShipment = $this->shipment->getDetailShipment($shipmentId);
 
-            // $getTypeId = $this->db->table('shipment')->where('shipment_id', $shipmentId)->get()->getRowArray();
-            $getTypeId = $this->shipment->getDetailShipment($shipmentId);
-            // var_dump($getTypeId);exit;
-            if ($getTypeId['supplier_id'] == '1') {
-                $qc_type = $type_id;
+            $getTypeId = $this->companyType->where('type_id', $typeId)->get()->getRowArray();
+            $qc_type = "";
+            if ($getTypeId['type_id'] == '1') {
+                $qc_type = $getTypeId['type_name'];
             } else {
-                $buyer = $getTypeId['supplier_id'];
+                $qc_type = $getTypeId['type_name'];
             }
 
             $this->qcModel->insert([
                 'shipment_id' => $this->request->getPost('shipment_id'),
-                'company_name'=> $getTypeId['supplier'],
+                'company_name'=> $getDataShipment['supplier'],
                 'qc_type'     => $qc_type, 
                 'result'      => $this->request->getPost('result'),
                 'ffa'         => $this->request->getPost('ffa'),
@@ -159,8 +163,6 @@ class QualityControl extends BaseController
             FROM quality_control a
             JOIN shipment b
                 ON a.shipment_id = b.shipment_id
-            JOIN company c
-                ON b.supplier_id = c.company_id
             LEFT JOIN status d
                 ON a.status_id = d.status_id
             WHERE 1=1
@@ -174,7 +176,7 @@ class QualityControl extends BaseController
             $filter .= "
                 AND (
                     b.shipment_number LIKE ?
-                    OR c.company_name LIKE ?
+                    OR a.company_name LIKE ?
                     OR a.qc_type LIKE ?
                     OR a.result LIKE ?
                     OR d.status_name LIKE ?
@@ -208,7 +210,7 @@ class QualityControl extends BaseController
 
         $orderColumn = [
             'b.shipment_number',
-            'c.company_name',
+            'a.company_name',
             'a.qc_type',
             'a.result',
             'a.ffa',
@@ -229,7 +231,7 @@ class QualityControl extends BaseController
             SELECT
                 a.*,
                 b.shipment_number,
-                c.company_name,
+                a.company_name,
                 d.status_code,
                 d.status_name
             {$baseQuery}
