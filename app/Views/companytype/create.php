@@ -32,10 +32,8 @@
                 </ol>
             </div>
             <div class="ml-auto pageheader-btn">
-                <a href="<?=base_url()?>/company/create" class="btn btn-primary btn-icon text-white mr-2">
-                    <span>
-                        <i class="fe fe-plus"></i>
-                    </span> Create Company
+                <a href="<?=base_url()?>/company/create" class="btn btn-radius btn-primary-light btn-icon mr-2">
+                    <i class="fa fa-plus mr-2"></i>Create Company
                 </a>
             </div>
         </div>
@@ -45,7 +43,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                        <div class="card-status bg-blue br-tr-7 br-tl-7"></div>
+                        <div class="card-status bg-teal br-tr-7 br-tl-7"></div>
                         <div class="card-body">
                             <form id="companyTypeForm">
 
@@ -101,9 +99,8 @@
                                         <i class="fa fa-window-close"></i>
                                         Cancel
                                     </a>
-                                    <button type="submit"
-                                        class="btn btn-primary">
-                                        <i class="fa fa-save"></i>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-save mr-2"></i>
                                         Save
                                     </button>
                                 </div>

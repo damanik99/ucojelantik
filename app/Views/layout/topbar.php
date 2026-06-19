@@ -2,8 +2,8 @@
 <div class="app-header header">
     <div class="container-fluid">
         <div class="d-flex">
-            <a class="header-brand d-md-none" href="<?= base_url() ?>dashboard/index">
-                <img src="<?= base_url() ?>/teamplate/assets/images/logoheader/logo_header.png"
+            <a class="header-brand ml-auto d-md-none" href="#">
+                <img src="<?= base_url() ?>/teamplate/assets/images/logoheader/logo_djelantikWeb.png"
                     class="header-brand-img mobile-icon" alt="logo">
                 <img src="<?= base_url() ?>/teamplate/assets/images/brand/logo.png"
                     class="header-brand-img desktop-logo mobile-logo" alt="logo">
@@ -14,55 +14,7 @@
                     <path d="M21 11.01L3 11v2h18zM3 16h12v2H3zM21 6H3v2.01L21 8z" />
                 </svg>
             </a><!-- sidebar-toggle-->
-            <div class="header-search d-none d-md-flex">
-                <form class="form-inline">
-                    <div class="search-element">
-                        <!-- <select class="form-control" name="programid" id="programid" onchange="setValue()">
-                            <option value="" selected='selected' id='nameprogram'> -->
-                        <?php // if(empty(session()->get('nameprogram')))
-                                        // {
-                                        //         echo '-- Select Program --';
-                                        // }
-                                        // else
-                                        // {
-                                        //         echo session()->get('nameprogram');
-                                        // } 
-                                ?>
-                        <!-- </option> -->
-                        <?php
-
-                                        // $db         = \Config\Database::connect();
-                                        // $id         = session()->get('users_id');
-                                        // $admin      = session()->get('first_name');
-                                        
-                                        // if($admin=='Super Admin')
-                                        // {
-                                        //         $programall  = $db->query("SELECT c.program_id,c.name,e.picture FROM users a,usersgroupprogram b,program c,devloyalty.group d,CLIENT e
-                                        //                                 WHERE a.users_id=b.users_id AND b.program_id=c.program_id AND b.group_id=d.group_id  AND e.`client_id`=c.client_id
-                                        //                                 GROUP BY b.program_id ORDER BY c.name ASC");
-                                        
-                                        //         foreach ($programall->getResult() as $all) 
-                                        //         {
-                                        //                 echo "<option value='$all->program_id'>$all->name</option>";
-                                        //         }
-
-                                        // }
-                                        // else
-                                        // {  
-                                        //         $programid  = $db->query("SELECT c.program_id,c.name,e.picture FROM users a,usersgroupprogram b,program c,devloyalty.group d,CLIENT e
-                                        //                         WHERE a.users_id=b.users_id AND b.program_id=c.program_id AND b.group_id=d.group_id AND e.`client_id`=c.client_id
-                                        //                         AND a.users_id='$id' GROUP BY b.program_id ORDER BY c.name ASC");
-                                        //         foreach ($programid->getResult() as $h) 
-                                        //         {
-                                        //                 echo "<option value='$h->program_id'>$h->name</option>";
-                                        //         }
-                                        // }
-                                ?>
-                        <!-- </select> -->
-                    </div>
-                </form>
-            </div>
-            <div class="d-flex ml-auto header-right-icons header-search-icon">
+            <div class="d-flex ml-auto header-right-icons">
                 <button class="navbar-toggler navresponsive-toggler d-md-none" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -73,21 +25,10 @@
                             d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
                     </svg>
                 </button>
-                <div class="dropdown d-none d-lg-flex">
-                    <a class="nav-link icon full-screen-link nav-link-bg">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"
-                            class="fullscreen-button">
-                            <path d="M0 0h24v24H0V0z" fill="none" />
-                            <circle cx="12" cy="12" opacity=".3" r="3" />
-                            <path
-                                d="M7 12c0 2.76 2.24 5 5 5s5-2.24 5-5-2.24-5-5-5-5 2.24-5 5zm8 0c0 1.65-1.35 3-3 3s-3-1.35-3-3 1.35-3 3-3 3 1.35 3 3zM3 19c0 1.1.9 2 2 2h4v-2H5v-4H3v4zM3 5v4h2V5h4V3H5c-1.1 0-2 .9-2 2zm18 0c0-1.1-.9-2-2-2h-4v2h4v4h2V5zm-2 14h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4z" />
-                        </svg>
-                    </a>
-                </div><!-- FULL-SCREEN -->
                 <div class="dropdown profile-1">
                     <a href="#" data-toggle="dropdown" class="nav-link pl-2 pr-2  leading-none d-flex">
                         <span>
-                            <img src="<?= base_url() ?>/teamplate/assets/images/users/usernophoto.png"
+                            <img src="<?= base_url() ?>/teamplate/assets/images/users/profile.png"
                                 alt="profile-user" class="avatar  mr-xl-3 profile-user brround cover-image">
                         </span>
                         <div class="text-center mt-1 d-none d-xl-block">

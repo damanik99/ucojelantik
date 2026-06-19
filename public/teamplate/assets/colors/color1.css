@@ -252,7 +252,7 @@ timeline__item:after {
 	padding: 5px;
 }
 .breadcrumb-item.active {
-	color: #525ce5;
+	color: #1caf9f;
 }
 .breadcrumb-item1 a {
 	color: #525ce5;

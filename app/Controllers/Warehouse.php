@@ -154,23 +154,16 @@ class Warehouse extends BaseController
 
             $row['action'] = '
 
-                <a href="'.base_url().'/warehouse/detail/'.$row['warehouse_id'].'"
-                    class="badge badge-pill badge-primary"
+                <a href="javascript:void(0);"
+                    class="btn bg-gray-dark btn-sm text-white mb-2 mb-xl-1 btnDetail" data-id="'.$row['warehouse_id'].'"
                     title="Detail">
                     <i class="fa fa-eye"></i>
                 </a>
 
                 <a href="'.base_url().'/warehouse/edit/'.$row['warehouse_id'].'"
-                    class="badge badge-pill badge-success"
+                    class="btn btn-cyan btn-sm text-white mb-2 mb-xl-1"
                     title="Edit">
                     <i class="fa fa-pencil"></i>
-                </a>
-
-                <a href="javascript:void(0)"
-                    onclick="deleteData('.$row['warehouse_id'].')"
-                    class="badge badge-pill badge-danger"
-                    title="Delete">
-                    <i class="fa fa-trash"></i>
                 </a>
 
             ';

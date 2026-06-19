@@ -86,5 +86,25 @@ class BaseController extends Controller
         //     ->setBody($csv);
     }
 
+    protected function checkSession()
+    {
+        if (!session()->get('masuk')) {
+            return redirect()->to('/auth');
+        }
+
+        $expired = config('App')->sessionExpiration;
+
+        // cek timeout
+        if ((time() - session('last_activity')) > $expired) {
+
+            session()->destroy();
+
+            return redirect()->to('/auth');
+        }
+
+        // update aktivitas terakhir
+        session()->set('last_activity', time());
+    }
+
 
 }

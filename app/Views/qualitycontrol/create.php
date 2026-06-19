@@ -46,7 +46,7 @@
                         <form id="qcForm" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="form-label">Company Type <span class="text-danger">*</span></label>
+                                    <label class="form-label">Company Type<span class="text-danger">*</span></label>
                                     <select id="type_id" name="type_id" class="form-control select2" required>
                                         <option value="">Pilih Jenis</option>
                                         <?php foreach ($companyType as $row) : ?>

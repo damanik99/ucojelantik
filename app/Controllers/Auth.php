@@ -21,7 +21,7 @@ class Auth extends BaseController
     {
         // Cek apakah sesi sudah ada
         if (session()->get('masuk')) {
-            return redirect()->to('/dashboard');
+            return redirect()->to('/Dashboard');
         }
 
         $data = [
@@ -50,6 +50,22 @@ class Auth extends BaseController
                         'masuk'       => true
                     ];
 
+                    if ($user['title'] == "DRIVER") {
+
+                        $driverId = $this->db->table('driver a')
+                            ->select("a.driver_id")
+                            ->join('users b', 'a.users_id = b.users_id')
+                            ->where('a.users_id', $user['users_id'])
+                            ->get()
+                            ->getRow();
+                        // var_dump($driverId);exit;
+                        if (!$driverId) {
+                            $this->session->setFlashdata('message', '<div class="alert alert-danger" role="alert">
+                            Akun Driver Tidak Terdaftar</div>');
+                            return redirect()->to('/auth/');
+                        }
+                    }
+
                     $this->session->set($data);
                     $username = $user['username'];
                     if ($user['username'] == "$username") {
@@ -57,11 +73,12 @@ class Auth extends BaseController
                     }
 
                 } else {
-                    $this->session->setFlashdata('message', '<div class="alert alert-danger" role="alert">Password Salah</div>');
+                    $this->session->setFlashdata('message', '<div class="alert alert-danger" role="alert">Username & Password wrong</div>');
                     return redirect()->to('/auth');
                 }
             } else {
-                $this->session->setFlashdata('message', '<div class="alert alert-danger" role="alert">Username ini belum di aktivasi oleh admin! Silahkan kontak admin </div>');
+                $this->session->setFlashdata('message', '<div class="alert alert-danger" role="alert">Username & Password wrong
+                </div>');
                 return redirect()->to('/auth');
             }
         } else {

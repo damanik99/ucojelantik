@@ -45,6 +45,11 @@ class DashBoard extends BaseController
                 ->get()
                 ->getRow();
 
+            // if (!$driverId) {
+            //     $this->session->setFlashdata('message', '<div class="alert alert-danger" role="alert">
+            //     Akun Driver Tidak Terdaftar</div>');
+            //     return redirect()->to('/auth/');
+            // }
             $shipment = $this->shipmentModel->getActiveShipmentDriver($driverId->driver_id);
             
             $data = [

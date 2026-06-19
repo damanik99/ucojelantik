@@ -16,7 +16,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="<?= base_url() ?>/teamplate/assets/images/brand/favicon.ico" />
 
     <!-- TITLE -->
-    <title>LOYALTY</title>
+    <title>DJELANTIK</title>
 
     <!-- BOOTSTRAP CSS -->
     <link href="<?= base_url() ?>/teamplate/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />

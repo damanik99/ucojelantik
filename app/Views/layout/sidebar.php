@@ -1,21 +1,21 @@
 <style>
 /* Memberikan margin dan padding yang tepat pada elemen select */
-.custom-select {
+.custom-selectxs {
     width: 100% !important;
     /* Memastikan lebar dropdown penuh dengan lebar kontainer */
-    max-width: 100%;
+    /* max-width: 100%; */
     /* Menjamin dropdown tidak melebihi lebar kontainer */
     padding: 10px 15px;
     /* Memberikan jarak antara teks dan border */
     margin: 10px 0;
     /* Menambahkan margin atas dan bawah untuk jarak antar elemen */
-    background-color: #f0ebeb;
+    background-color: #ffffff;
     /* Warna latar belakang dropdown */
     color: #fff;
     /* Warna teks putih */
     border: 1px solid #555;
     /* Warna border dropdown */
-    border-radius: 5px;
+    border-radius: 7px;
     /* Membuat sudut dropdown lebih melengkung */
     font-size: 14px;
     /* Ukuran font yang lebih sesuai */
@@ -24,7 +24,7 @@
 }
 
 /* Menambahkan efek saat dropdown mendapatkan fokus */
-.custom-select:focus {
+.custom-selectxs:focus {
     border-color: #007bff;
     /* Warna border saat fokus */
     outline: none;
@@ -34,13 +34,13 @@
 }
 
 /* Menata pilihan dropdown */
-.custom-select option {
-    background-color: #1a1a1a;
+.custom-selectxs option {
+    line-height: 1.5;
     color: #fff;
 }
 
 /* Menambahkan hover pada pilihan dropdown */
-.custom-select option:hover {
+.custom-selectxs option:hover {
     background-color: #007bff;
     /* Warna saat hover */
     color: #fff;
@@ -59,14 +59,14 @@
     <div class="side-header">
         <?php $program_id = session()->get('program'); ?>
         <a class="header-brand1" href="<?= base_url() ?>/Dashboard">
-            <img src="<?php base_url() ?>/teamplate/assets/images/logoheader/logo_header.png" class="header-brand-img light-logo1"
+            <img src="<?php base_url() ?>/teamplate/assets/images/logoheader/logo_djelantikWeb.png" class="header-brand-img light-logo1"
             id="logochange" alt="logo">
         </a>
     </div>
 
     <ul class="side-menu">
         <form class="form-inline">
-            <select class="form-control custom-select formMargin" name="programid" id="programid" onchange="setValue()">
+            <select class="form-control custom-selectxs formMargin" name="programid" id="programid" onchange="setValue()">
                 <option value="" selected='selected' id='nameprogram'>
                     <?php
                         $nameProgram = session()->get('nameprogram') ?: '-- Select Program --';

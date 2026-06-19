@@ -24,28 +24,29 @@
         <!-- PAGE-HEADER -->
         <div class="page-header">
             <div>
-                <h1 class="page-title">
-                </h1>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="#">Table</a></li>
                     <li class="breadcrumb-item active" aria-current="page"><?=$title?></li>
                 </ol>
+                <h1 class="page-title">Data Warehose</h1>
             </div>
             <div class="ml-auto pageheader-btn">
-                <a href="<?=base_url()?>/company/create" class="btn btn-primary btn-icon text-white mr-2">
+                <a href="<?=base_url()?>/Warehouse/create" class="btn btn-success-light btn-icon mr-2">
                     <span>
-                        <i class="fe fe-plus"></i>
-                    </span> Create
+                        <i class="fa fa-plus mr-2"></i>
+                    </span> Create New
                 </a>
             </div>
         </div>
+
         <!-- PAGE-HEADER END -->
         <div class="row">
             <div class="col-md-12 col-lg-12">
                 <div class="card">
-                    <div class="card-header bg-primary">
+                    <div class="card-status bg-teal br-tr-7 br-tl-7"></div>
+                    <!-- <div class="card-header bg-teal">
                         <h3 class="card-title text-white">DATA WAREHOUSE</h3>
-                    </div>
+                    </div> -->
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="dataTbls" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
@@ -57,7 +58,7 @@
                                         <th>Address</th>
                                         <th width="10%">Status</th>
                                         <th width="15%">Created Date</th>
-                                        <th width="15%">Action</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -65,6 +66,37 @@
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modalDetailWareHouse" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-header bg-teal">
+                        <h5 class="modal-title text-white">
+                            <i class="fa fa-building mr-2"></i>
+                            Warehose
+                        </h5>
+
+                        <button type="button" class="close text-white" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="text-center py-5" id="loadingDetail">
+                            <i class="fa fa-spinner fa-spin fa-2x"></i>
+                            <br>
+                            Loading...
+                        </div>
+
+                        <div id="detailWareContent"></div>
+
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -82,46 +114,80 @@
 
 
 <script>
-    $(function () {
 
-        $('#dataTbls').DataTable({
+$(function () {
 
-            processing: true,
-            serverSide: true,
+    $('#dataTbls').DataTable({
 
-            ajax: {
-                url: '<?= base_url() ?>/warehouse/datatables',
-                type: 'POST'
+        processing: true,
+        serverSide: true,
+
+        ajax: {
+            url: '<?= base_url() ?>/warehouse/datatables',
+            type: 'POST'
+        },
+
+        columns: [
+            {
+                data: 'no',
+                orderable: false
             },
-
-            columns: [
-                {
-                    data: 'no',
-                    orderable: false
-                },
-                {
-                    data: 'warehouse_code'
-                },
-                {
-                    data: 'warehouse_name'
-                },
-                {
-                    data: 'address'
-                },
-                {
-                    data: 'status'
-                },
-                {
-                    data: 'created_date'
-                },
-                {
-                    data: 'action',
-                    orderable: false,
-                    searchable: false
-                }
-            ]
-
-        });
+            {
+                data: 'warehouse_code'
+            },
+            {
+                data: 'warehouse_name'
+            },
+            {
+                data: 'address'
+            },
+            {
+                data: 'status'
+            },
+            {
+                data: 'created_date'
+            },
+            {
+                data: 'action',
+                orderable: false,
+                searchable: false
+            }
+        ]
 
     });
+
+});
+
+$(document).on('click', '.btnDetail', function () {
+
+let id = $(this).data('id');
+
+$("#detailCompanyContent").html("");
+$("#loadingDetail").show();
+
+$("#modalDetailWareHouse").modal("show");
+
+$.ajax({
+    url: "<?= base_url('/warehouse/detail')?>/" + id,
+    type: "GET",
+    success: function(response){
+
+        $("#loadingDetail").hide();
+        $("#detailWareContent").html(response);
+
+    },
+    error:function(){
+
+        $("#loadingDetail").hide();
+
+        $("#detailCompanyContent").html(`
+            <div class="alert alert-danger">
+                Failed to load company detail.
+            </div>
+        `);
+
+    }
+});
+
+});
 </script>

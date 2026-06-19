@@ -65,7 +65,7 @@
                 <!-- CONTAINER OPEN -->
                 <div class="col col-login mx-auto">
                     <div class="text-center">
-                        <img src="<?= base_url() ?>/teamplate/assets/images/jelantik_logo.png" class="header-brand-img" alt="">
+                        <img src="<?= base_url() ?>/teamplate/assets/images/jelantik_logo_login.png" class="header-brand-img" alt="">
                     </div>
                 </div>
 

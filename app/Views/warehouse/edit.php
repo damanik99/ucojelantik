@@ -101,18 +101,12 @@
                             </div>
 
                             <div class="form-actions text-center mt-5">
-                                <a class="btn btn-warning mr-1"
-                                    href="<?= base_url() ?>/warehouse">
-                                    <i class="fa fa-window-close"></i>
-                                    Cancel
+                                <a class="btn btn-warning mr-1" href="<?= base_url() ?>/Warehouse">
+                                    <i class="fa fa-window-close"></i> Cancel
                                 </a>
 
-                                <button
-                                    type="submit"
-                                    id="submitBtn"
-                                    class="btn btn-primary">
-                                    <i class="fa fa-save"></i>
-                                    Save
+                                <button type="submit" id="submitBtn" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> Save
                                 </button>
                             </div>
                         </div>

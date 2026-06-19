@@ -30,14 +30,13 @@
                 <!-- <h1 class="page-title">ITEM ADD</h1> -->
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="<?= base_url() ?>/Company">Index</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Create New Company</li>
+                    <li class="breadcrumb-item active" aria-current="page">Create</li>
                 </ol>
+                <h1 class="page-title">Create New Company</h1>
             </div>
             <div class="ml-auto pageheader-btn">
-                <a href="<?=base_url()?>/CompanyType/create" class="btn btn-primary btn-icon text-white mr-2">
-                    <span>
-                        <i class="fe fe-plus"></i>
-                    </span> Create Company Type
+                <a href="<?=base_url()?>/CompanyType/create" class="btn btn-radius btn-primary-light btn-icon mr-2">
+                    <i class="fa fa-plus mr-2"></i>Create Company Type
                 </a>
             </div>
         </div>
@@ -47,7 +46,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-status bg-blue br-tr-7 br-tl-7"></div>
+                    <div class="card-status bg-teal br-tr-7 br-tl-7"></div>
                     <div class="card-body">
                         <form id="companyForm">
                             <div class="row">
@@ -131,13 +130,13 @@
                             </div>
 
                             <div class="text-center mt-5">
-                                <a href="<?= base_url('/company') ?>"
-                                    class="btn btn-warning">
+                                <a href="<?= base_url('/company') ?>" class="btn btn-default-light">
+                                    <i class="fa fa-window-close mr-2"></i>
                                     Cancel
                                 </a>
 
-                                <button type="submit"
-                                    class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save mr-2"></i>
                                     Save
                                 </button>
                             </div>
@@ -218,16 +217,23 @@ toastr.success("<?php echo session()->getFlashdata('success'); ?>");
 
                     let msg = '';
 
-                    $.each(response.message, function(key,val){
-                        msg += val + '<br>';
-                    });
+                    if (response.errors) {
+
+                        $.each(response.errors, function(key, val) {
+                            msg += val + '<br>';
+                        });
+
+                    } else {
+
+                        msg = response.message;
+
+                    }
 
                     Swal.fire({
                         icon: 'error',
                         title: 'Validation',
                         html: msg
                     });
-
                 }
 
             },

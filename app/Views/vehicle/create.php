@@ -28,15 +28,15 @@
         <!-- PAGE HEADER -->
         <div class="page-header">
             <div>
-                <h1 class="page-title"><?= $title ?></h1>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="<?= base_url() ?>/Vehicle">Vehicle</a>
                     </li>
                     <li class="breadcrumb-item active">
-                        Create New Vehicle
+                        Create
                     </li>
                 </ol>
+                <h1 class="page-title"><?= $title ?></h1>
             </div>
         </div>
         <!-- PAGE HEADER END -->
@@ -46,7 +46,7 @@
             <div class="col-md-12">
 
                 <div class="card">
-                    <div class="card-status bg-blue br-tr-7 br-tl-7"></div>
+                    <div class="card-status bg-teal br-tr-7 br-tl-7"></div>
                     <form id="vehicleForm" action="<?= base_url('/vehicle/create'); ?>" method="post">
                         <div class="card-body">
                             <div class="row">
@@ -74,13 +74,17 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Vehicle Type <span class="text-danger">*</span></label>
-                                        <input type="text" name="vehicle_type" class="form-control">
+                                        <select name="vehicle_type" class="form-control select2-show-search">
+                                            <option value="">-- Select Type --</option>
+                                            <option value="tangki">Mobil Tangki</option>
+                                            <option value="pickup">Mobil Pickup</option>
+                                        </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Brand</label>
+                                        <label>Merk</label>
                                         <input type="text" name="brand" class="form-control">
                                     </div>
                                 </div>
@@ -133,12 +137,13 @@
                             </div>
 
                             <div class="text-center mt-5">
-                                <a href="<?= base_url('/vehicle') ?>"
-                                class="btn btn-warning">
+                                <a href="<?= base_url('/Vehicle') ?>" class="btn btn-default-light">
+                                    <i class="fa fa-window-close"></i>
                                     Cancel
                                 </a>
 
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-teal">
+                                    <i class="fa fa-save"></i>
                                     Save
                                 </button>                                
                             </div>

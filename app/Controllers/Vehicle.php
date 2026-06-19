@@ -226,15 +226,17 @@ class Vehicle extends BaseController
             }
 
             $row['action'] = '
-                <a href="'.base_url().'/vehicle/edit/'.$row['vehicle_id'].'"
-                class="badge badge-pill badge-success">
-                    <i class="fa fa-pencil"></i>
-                </a>
 
                 <a href="javascript:void(0)"
                 onclick="deleteData('.$row['vehicle_id'].')"
-                class="badge badge-pill badge-danger">
-                    <i class="fa fa-trash"></i>
+                class="btn bg-gray-dark btn-sm text-white mb-2 mb-xl-1 btnDetail"
+                data-original-title="View">
+                    <i class="fa fa-eye"></i>
+                </a>
+
+                <a href="'.base_url().'/vehicle/edit/'.$row['vehicle_id'].'"
+                class="btn btn-cyan btn-sm text-white mb-2 mb-xl-1"  data-toggle="tooltip" data-original-title="Edit">
+                    <i class="fa fa-pencil"></i>
                 </a>
             ';
 

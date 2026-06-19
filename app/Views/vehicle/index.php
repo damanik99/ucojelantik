@@ -21,16 +21,16 @@
         <!-- PAGE-HEADER -->
         <div class="page-header">
             <div>
-                <h1 class="page-title"><?=$title?></h1>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="#">Table</a></li>
                     <li class="breadcrumb-item active" aria-current="page"><?=$title?></li>
                 </ol>
+                <h1 class="page-title">Data Vehicle</h1>
             </div>
             <div class="ml-auto pageheader-btn">
-                <a href="<?=base_url()?>/vehicle/create" class="btn btn-primary btn-icon text-white">
+                <a href="<?=base_url()?>/Vehicle/create" class="btn btn-success-light btn-icon mr-2">
                     <span>
-                        <i class="fe fe-plus"></i>
+                        <i class="fa fa-plus mr-2"></i>
                     </span> CREATE
                 </a>
             </div>
@@ -40,9 +40,7 @@
         <div class="row">
             <div class="col-md-12 col-lg-12">
                 <div class="card">
-                    <div class="card-header bg-primary">
-                        <h3 class="card-title text-white">DATA VEHICLE</h3>
-                    </div>
+                    <div class="card-status bg-teal br-tr-7 br-tl-7"></div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="vehicleTable" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
@@ -78,6 +76,10 @@
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/jquery.dataTables.min.js"></script>
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.responsive.min.js"></script>
+
+<!-- BOOTSTRAP JS -->
+<script src="<?= base_url() ?>/teamplate/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="<?= base_url() ?>/teamplate/assets/plugins/bootstrap/js/popper.min.js"></script>
 
 <script>
     $(document).ready(function () {

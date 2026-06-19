@@ -3,6 +3,8 @@
 <!-- MAIN END -->
 
 <!-- CSS -->
+ <!--- FONT-ICONS CSS -->
+<link href="../../assets/css/icons.css" rel="stylesheet"/>
 <!-- INTERNAL  DATA TABLE CSS-->
 <link href="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.bootstrap4.min.css" rel="stylesheet" />
 <link href="<?= base_url() ?>/teamplate/assets/plugins/datatable/responsivebootstrap4.min.css" rel="stylesheet" />
@@ -24,28 +26,26 @@
         <!-- PAGE-HEADER -->
         <div class="page-header">
             <div>
-                <h1 class="page-title">
-                </h1>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="#">Table</a></li>
                     <li class="breadcrumb-item active" aria-current="page"><?=$title?></li>
                 </ol>
+                <h1 class="page-title">Data Company</h1>
             </div>
             <div class="ml-auto pageheader-btn">
-                <a href="<?=base_url()?>/company/create" class="btn btn-primary btn-icon text-white mr-2">
+                <a href="<?=base_url()?>/Company/create" class="btn btn-success-light btn-icon mr-2">
                     <span>
-                        <i class="fe fe-plus"></i>
+                        <i class="fa fa-plus mr-2"></i>
                     </span> Create New
                 </a>
             </div>
         </div>
+        
         <!-- PAGE-HEADER END -->
         <div class="row">
             <div class="col-md-12 col-lg-12">
                 <div class="card">
-                    <div class="card-header bg-primary">
-                        <h3 class="card-title text-white">DATA COMPANY</h3>
-                    </div>
+                    <div class="card-status bg-teal br-tr-7 br-tl-7"></div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="companyTable" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
@@ -58,7 +58,7 @@
                                         <th>Email</th>
                                         <th>Status</th>
                                         <th>Created Date</th>
-                                        <th width="120">Action</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -66,6 +66,37 @@
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modalDetailCompany" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-header bg-teal">
+                        <h5 class="modal-title text-white">
+                            <i class="fa fa-building mr-2"></i>
+                            Company Detail
+                        </h5>
+
+                        <button type="button" class="close text-white" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="text-center py-5" id="loadingDetail">
+                            <i class="fa fa-spinner fa-spin fa-2x"></i>
+                            <br>
+                            Loading...
+                        </div>
+
+                        <div id="detailCompanyContent"></div>
+
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -117,5 +148,38 @@ $(document).ready(function () {
             }
         ]
     });
+});
+
+$(document).on('click', '.btnDetail', function () {
+
+    let id = $(this).data('id');
+
+    $("#detailCompanyContent").html("");
+    $("#loadingDetail").show();
+
+    $("#modalDetailCompany").modal("show");
+
+    $.ajax({
+        url: "<?= base_url('/company/detail')?>/" + id,
+        type: "GET",
+        success: function(response){
+
+            $("#loadingDetail").hide();
+            $("#detailCompanyContent").html(response);
+
+        },
+        error:function(){
+
+            $("#loadingDetail").hide();
+
+            $("#detailCompanyContent").html(`
+                <div class="alert alert-danger">
+                    Failed to load company detail.
+                </div>
+            `);
+
+        }
+    });
+
 });
 </script>
