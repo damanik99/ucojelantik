@@ -152,7 +152,7 @@ $(document).on('click', '.btnDetail', function () {
     $("#modalDetailVehicle").modal("show");
 
     $.ajax({
-        url: "<?= base_url('/vehicle/detail')?>/" + id,
+        url: "<?= base_url('/Vehicle/detail')?>/" + id,
         type: "GET",
         success: function(response){
 
