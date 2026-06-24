@@ -11,6 +11,9 @@
 <!-- INTERNAL SELECT2 CSS -->
 <link href="<?= base_url() ?>/teamplate/assets/plugins/select2/select2.min.css" rel="stylesheet" />
 
+<!-- INTERNAL  DATE PICKER CSS-->
+ <link href="<?= base_url() ?>/teamplate/assets/plugins/date-picker/spectrum.css" rel="stylesheet"/>
+
 <!-- CSS END -->
 
 <!-- LAYOUT BODY -->
@@ -36,11 +39,12 @@
                     <li class="breadcrumb-item"><a href="<?= base_url() ?>/Company">Index</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Create New Company</li>
                 </ol>
+                <h1 class="page-title">Create Shipment</h1>
             </div>
             <div class="ml-auto pageheader-btn">
-                <a href="<?=base_url()?>/companytype/create" class="btn btn-primary btn-icon text-white mr-2">
+                <a href="<?=base_url()?>/Companytype/create" class="btn btn-success-light btn-icon mr-2">
                     <span>
-                        <i class="fe fe-plus"></i>
+                        <i class="fa fa-plus mr-2"></i>
                     </span> Create Company Type
                 </a>
             </div>
@@ -51,13 +55,13 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-status bg-blue br-tr-7 br-tl-7"></div>
+                    <div class="card-status bg-teal br-tr-7 br-tl-7"></div>
                     <form id="shipmentForm" method="post">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Shipment Number <span class="text-danger">*</span></label>
+                                        <label class="form-label">Shipment Number <span class="text-danger">*</span></label>
                                         <input type="text"
                                             name="shipment_number"
                                             class="form-control"
@@ -68,7 +72,7 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Purchase Order</label>
+                                        <label class="form-label">Purchase Order</label>
                                         <select name="purchase_order_id"
                                                 class="form-control select2-show-search">
                                             <option value="">Select Purchase Order</option>
@@ -83,7 +87,7 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Supplier <span class="text-danger">*</span></label>
+                                        <label class="form-label">Supplier <span class="text-danger">*</span></label>
                                         <select name="supplier_company_program_id" id="supplier_company_program_id"
                                                 class="form-control select2-show-search">
                                             <option value="">Select Supplier</option>
@@ -98,9 +102,9 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Buyer <span class="text-danger">*</span></label>
+                                        <label class="form-label">Buyer <span class="text-danger">*</span></label>
                                         <select name="buyer_company_program_id"
-                                                class="form-control select2-show-search">
+                                                class="form-control select2-show-search" required>
                                             <option value="">Select Buyer</option>
                                             <?php foreach ($buyer as $row) : ?>
                                                 <option value="<?= $row['company_program_id']; ?>">
@@ -113,21 +117,17 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Driver</label>
-                                        <select name="driver_id"
-                                                id="driver_id"
-                                                class="form-control select2-show-search">
-                                            <option value="">Select Driver</option>
+                                        <label class="form-label">Driver <span class="text-danger">*</span></label>
+                                        <select name="driver_id" id="driver_id" class="form-control select2-show-search" required>
+                                            <option value="">--Select Driver--</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Vehicle</label>
-                                        <select name="vehicle_id"
-                                                id="vehicle_id"
-                                                class="form-control select2-show-search">
+                                        <label class="form-label">Vehicle</label>
+                                        <select name="vehicle_id" id="vehicle_id" class="form-control select2-show-search">
                                             <option value="">Select Vehicle</option>
                                         </select>
                                     </div>
@@ -135,27 +135,40 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Departure Date</label>
-                                        <input type="date"
-                                            name="departure_at"
-                                            class="form-control">
+                                        <label class="form-label">Departure Date</label>
+                                        <div class="wd-200 mg-b-30">
+											<div class="input-group">
+												<div class="input-group-prepend">
+													<div class="input-group-text">
+														<i class="fa fa-calendar tx-16 lh-0 op-6"></i>
+													</div>
+												</div>
+                                                <input class="form-control fc-datepicker" placeholder="MM/DD/YYYY" type="text" id="departure" required>
+											</div>
+										</div>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Arrival Date</label>
-                                        <input type="date"
-                                            name="arrival_at"
-                                            class="form-control">
+                                        <label class="form-label">Arrival Date</label>
+                                        <div class="wd-200 mg-b-30">
+											<div class="input-group">
+												<div class="input-group-prepend">
+													<div class="input-group-text">
+														<i class="fa fa-calendar tx-16 lh-0 op-6"></i>
+													</div>
+												</div>
+                                                <input class="form-control fc-datepicker" placeholder="MM/DD/YYYY" type="text" id="arrival" required>
+											</div>
+										</div>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Status <span class="text-danger">*</span></label>
-                                        <select name="status_id"
-                                                class="form-control select2-show-search">
+                                        <label class="form-label">Status <span class="text-danger">*</span></label>
+                                        <select name="status_id" class="form-control select2-show-search" required>
                                             <option value="">Select Status</option>
                                             <?php foreach ($status as $row) : ?>
                                                 <option value="<?= $row['status_id']; ?>">
@@ -169,8 +182,8 @@
                             </div>
 
                             <div class="text-center mt-5">
-                                <a href="<?= base_url('/Shipment'); ?>" class="btn btn-warning">Cancel</a>
-                                <button type="submit" class="btn btn-primary">Save</button>
+                                <a href="<?= base_url('/Shipment'); ?>" class="btn btn-default-light">Cancel</a>
+                                <button type="submit" class="btn btn-teal">Save</button>
                             </div>
 
                         </div>
@@ -178,9 +191,7 @@
                     </form>
                 </div>
             </div>
-            <!-- COL END -->
         </div>
-        <!-- ROW-1 CLOSED -->
     </div>
 
 </div>
@@ -218,6 +229,21 @@ toastr.success("<?php echo session()->getFlashdata('success'); ?>");
 </script>
 
 <script>
+
+$('#departure').datepicker({
+    showOtherMonths: true,
+    selectOtherMonths: true,
+    dateFormat: 'yy-mm-dd',
+    minDate: 0
+});
+
+$('#arrival').datepicker({
+    showOtherMonths: true,
+    selectOtherMonths: true,
+    dateFormat: 'yy-mm-dd',
+    minDate: 0
+});
+
 $('#supplier_company_program_id').change(function () {
 
     let company_program_id = $(this).val();
@@ -228,24 +254,31 @@ $('#supplier_company_program_id').change(function () {
     if(company_program_id != ''){
 
         // Driver
-        $.get("<?= base_url('shipment/get_driver/') ?>/" + company_program_id, function(res){
+        $.get("<?= base_url('shipment/get_driver/') ?>/" + company_program_id, function(response){
+            let option = '<option value=""> -- Select Driver -- </option>';
 
-            $('#driver_id').html(res);
-            console.log(res);
-            if(driver_id != ''){
-                $('#driver_id').val(driver_id).trigger('change');
-            }
+            $.each(response, function(i,row){
+
+                option += '<option value="'+row.driver_id+'">'+ row.driver_name+'</option>';
+
+            });
+
+            $('#driver_id').html(option);
 
         });
 
         // Vehicle
-        $.get("<?= base_url('shipment/get_vehicle/') ?>/" + company_program_id, function(res){
+        $.get("<?= base_url('shipment/get_vehicle/') ?>/" + company_program_id, function(response){
+            let option = '<option value=""> -- Select Driver -- </option>';
 
-            $('#vehicle_id').html(res);
-             console.log(res);
-            if(vehicle_id != ''){
-                $('#vehicle_id').val(vehicle_id).trigger('change');
-            }
+            $.each(response, function(i,row){
+
+                option += '<option value="'+row.vehicle_id+'">'+ row.plate_number+' - '+row.brand+'</option>';
+
+            });
+
+            $('#vehicle_id').html(option);
+            
 
         });
 
@@ -298,10 +331,16 @@ $(document).ready(function () {
 
                 } else {
 
+                    let errorMsg = '';
+
+                    $.each(response.message, function(key, value) {
+                        errorMsg += value + '<br>';
+                    });
+
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        html: response.message
+                        html: errorMsg
                     });
 
                 }

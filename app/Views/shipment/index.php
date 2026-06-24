@@ -30,22 +30,23 @@
                     <li class="breadcrumb-item"><a href="#">Table</a></li>
                     <li class="breadcrumb-item active" aria-current="page"><?=$title?></li>
                 </ol>
+                <h1 class="page-title">Data Shipment</h1>
             </div>
             <div class="ml-auto pageheader-btn">
-                <a href="<?=base_url()?>/shipment/create" class="btn btn-primary btn-icon text-white mr-2">
+                <div class="ml-auto pageheader-btn">
+                <a href="<?=base_url()?>/Shipment/create" class="btn btn-success-light btn-icon mr-2">
                     <span>
-                        <i class="fe fe-plus"></i>
-                    </span> Create New
+                        <i class="fa fa-plus mr-2"></i>
+                    </span> New Create
                 </a>
+            </div>
             </div>
         </div>
         <!-- PAGE-HEADER END -->
         <div class="row">
             <div class="col-md-12 col-lg-12">
                 <div class="card">
-                    <div class="card-header bg-primary">
-                        <h3 class="card-title text-white">DATA SHIPMENT</h3>
-                    </div>
+                    <div class="card-status bg-teal br-tr-7 br-tl-7"></div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="shipmentTable" class="table table-bordered border-t0 key-buttons text-nowrap w-100">

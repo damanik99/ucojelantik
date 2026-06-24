@@ -44,9 +44,6 @@
             <div class="col-md-12 col-lg-12">
                 <div class="card">
                     <div class="card-status bg-teal br-tr-7 br-tl-7"></div>
-                    <!-- <div class="card-header bg-teal">
-                        <h3 class="card-title text-white">DATA WAREHOUSE</h3>
-                    </div> -->
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="dataTbls" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
@@ -160,34 +157,34 @@ $(function () {
 
 $(document).on('click', '.btnDetail', function () {
 
-let id = $(this).data('id');
+    let id = $(this).data('id');
 
-$("#detailCompanyContent").html("");
-$("#loadingDetail").show();
+    $("#detailCompanyContent").html("");
+    $("#loadingDetail").show();
 
-$("#modalDetailWareHouse").modal("show");
+    $("#modalDetailWareHouse").modal("show");
 
-$.ajax({
-    url: "<?= base_url('/warehouse/detail')?>/" + id,
-    type: "GET",
-    success: function(response){
+    $.ajax({
+        url: "<?= base_url('/warehouse/detail')?>/" + id,
+        type: "GET",
+        success: function(response){
 
-        $("#loadingDetail").hide();
-        $("#detailWareContent").html(response);
+            $("#loadingDetail").hide();
+            $("#detailWareContent").html(response);
 
-    },
-    error:function(){
+        },
+        error:function(){
 
-        $("#loadingDetail").hide();
+            $("#loadingDetail").hide();
 
-        $("#detailCompanyContent").html(`
-            <div class="alert alert-danger">
-                Failed to load company detail.
-            </div>
-        `);
+            $("#detailCompanyContent").html(`
+                <div class="alert alert-danger">
+                    Failed to load company detail.
+                </div>
+            `);
 
-    }
-});
+        }
+    });
 
 });
 </script>

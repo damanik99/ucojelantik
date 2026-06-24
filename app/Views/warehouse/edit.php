@@ -20,9 +20,10 @@
         <div class="page-header">
             <div>
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="<?= base_url() ?>/member">Index</a></li>
+                    <li class="breadcrumb-item"><a href="<?= base_url() ?>/Warehose">Index</a></li>
                     <li class="breadcrumb-item active" aria-current="page"><?= $title ?></li>
                 </ol>
+                <h1 class="page-title">Vehicle</h1>
             </div>
         </div>
         <!-- PAGE-HEADER END -->
@@ -30,9 +31,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header bg-primary br-tr-3 br-tl-3">
-                        <h3 class="mb-0 card-title">EDIT DATA MEMBER</h3>
-                    </div>
+                    <div class="card-status bg-teal br-tr-7 br-tl-7"></div>
                     <form id="warehouseEdit" method="post" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="row">
@@ -101,11 +100,11 @@
                             </div>
 
                             <div class="form-actions text-center mt-5">
-                                <a class="btn btn-warning mr-1" href="<?= base_url() ?>/Warehouse">
+                                <a class="btn btn-default-light mr-1" href="<?= base_url() ?>/Warehouse">
                                     <i class="fa fa-window-close"></i> Cancel
                                 </a>
 
-                                <button type="submit" id="submitBtn" class="btn btn-primary">
+                                <button type="submit" id="submitBtn" class="btn btn-teal">
                                     <i class="fa fa-save"></i> Save
                                 </button>
                             </div>
@@ -176,7 +175,7 @@ $('#warehouseEdit').submit(function(e) {
                 }).then(function(){
 
                     window.location.href =
-                        '<?= base_url('/warehouse'); ?>';
+                        '<?= base_url('/Warehouse'); ?>';
 
                 });
 

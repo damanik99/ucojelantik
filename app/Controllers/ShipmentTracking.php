@@ -221,7 +221,7 @@ class ShipmentTracking extends BaseController
 
                 return $this->response->setJSON([
                     'success' => true,
-                    'message' => 'Check-In berhasil disimpan.'
+                    'message' => 'Sudah sampai di buyer berhasil disimpan.'
                 ]);
 
             } catch (\Exception $e) {

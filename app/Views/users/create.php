@@ -35,6 +35,7 @@
                     <li class="breadcrumb-item"><a href="<?= base_url() ?>/Users">Index</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Create New Users</li>
                 </ol>
+                <h1 class="page-title">Create Users/Driver</h1>
             </div>
         </div>
         <!-- PAGE-HEADER END -->
@@ -43,30 +44,30 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-status bg-blue br-tr-7 br-tl-7"></div>
+                    <div class="card-status bg-teal br-tr-7 br-tl-7"></div>
                     <div class="card-body">
                         <form id="formCreateUser">
                             <?= csrf_field(); ?>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label>Username <span class="text-danger">*</span></label>
+                                    <label class="form-label">Username <span class="text-danger">*</span></label>
                                     <input type="text" name="username" class="form-control">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label>Password <span class="text-danger">*</span></label>
+                                    <label class="form-label">Password <span class="text-danger">*</span></label>
                                     <input type="password" name="password" class="form-control">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label>Full Name <span class="text-danger">*</span></label>
+                                    <label class="form-label">Full Name <span class="text-danger">*</span></label>
                                     <input type="text"name="fullname" class="form-control">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label>Phone <span class="text-danger">*</span></label>
+                                    <label class="form-label">Phone <span class="text-danger">*</span></label>
                                     <input type="text" name="phone" class="form-control">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label>Province <span class="text-danger">*</span></label>
+                                    <label class="form-label">Province <span class="text-danger">*</span></label>
                                     <select name="province_id" id="province_id" class="form-control select2-show-search">
                                         <option value="">-- Select Province --</option>
                                         <?php foreach ($provinces as $row): ?>
@@ -78,37 +79,37 @@
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label>City <span class="text-danger">*</span></label>
+                                    <label class="form-label">City <span class="text-danger">*</span></label>
                                     <select name="city_id" id="city_id" class="form-control select2-show-search">
                                         <option value="">-- Select City --</option>
                                     </select>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label>District <span class="text-danger">*</span></label>
+                                    <label class="form-label">District <span class="text-danger">*</span></label>
                                     <select name="district_id" id="district_id" class="form-control select2-show-search">
                                         <option value="">-- Select District --</option>
                                     </select>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label>Village <span class="text-danger">*</span></label>
+                                    <label class="form-label">Village <span class="text-danger">*</span></label>
                                     <select name="village_id" id="village_id" class="form-control select2-show-search">
                                         <option value="">-- Select Village --</option>
                                     </select>
                                 </div>
 
                                 <div class="col-md-12 mb-3">
-                                    <label>Address <span class="text-danger">*</span></label>
+                                    <label class="form-label">Address <span class="text-danger">*</span></label>
                                     <textarea name="address" rows="3" class="form-control"></textarea>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label>Email <span class="text-danger">*</span></label>
+                                    <label class="form-label">Email <span class="text-danger">*</span></label>
                                     <input type="email" name="email" class="form-control">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label>Title <span class="text-danger">*</span></label>
+                                    <label class="form-label">Title <span class="text-danger">*</span></label>
                                     <select name="title" class="form-control select2">
                                     <option value="">Pilih Role</option>
                                     <?php foreach ($groupProgram as $row): ?>
@@ -119,7 +120,7 @@
                                 </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label>Group <span class="text-danger">*</span></label>
+                                    <label class="form-label">Group <span class="text-danger">*</span></label>
                                     <select name="group_id" id="group_id" class="form-control select2">
                                         <option value="">
                                             -- Select Group --
@@ -134,7 +135,7 @@
 
                                 <!-- Data Level -->
                                 <div class="col-md-6 mb-3">
-                                    <label>
+                                    <label class="form-label">
                                         Data Level
                                         <span class="text-danger">*</span>
                                     </label>
@@ -159,7 +160,7 @@
                                 <div class="row">
                                     <!-- Driver Type -->
                                     <div class="col-md-6">
-                                        <label>Driver Type
+                                        <label class="form-label">Driver Type
                                             <span class="text-danger">*</span>
                                         </label>
 
@@ -176,7 +177,7 @@
                                         </select>
                                     </div>
                                     <div class="col-md-6 mb-3" id="supplierSection" style="display:none;">
-                                        <label>
+                                        <label class="form-label">
                                             Supplier <span class="text-danger">*</span>
                                         </label>
 
@@ -193,18 +194,16 @@
 
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label>
+                                        <label class="form-label">
                                             Driver Name
                                             <span class="text-danger">*</span>
                                         </label>
-                                        <input
-                                            type="text"
-                                            name="driver_name"
+                                        <input type="text" name="driver_name"
                                             class="form-control">
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label>
+                                        <label class="form-label">
                                             License Number
                                             <span class="text-danger">*</span>
                                         </label>
@@ -215,7 +214,7 @@
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label>License Type</label>
+                                        <label class="form-label">License Type</label>
                                         <select name="license_type" class="form-control">
                                             <option value="">
                                                 -- Select License Type --
@@ -228,7 +227,7 @@
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label>
+                                        <label class="form-label">
                                             License Expiry Date
                                         </label>
                                         <input
@@ -240,8 +239,14 @@
                             </div>
                             <hr>
                             <div class="text-center mt-5">
-                                <a href="<?= base_url('users'); ?>" class="btn btn-warning">Cancel</a>
-                                <button type="button" id="btnSave" class="btn btn-primary">Save</button>
+                                <a href="<?= base_url('users'); ?>" class="btn btn-default-light">
+                                    <i class="fa fa-window-close"></i>
+                                    Cancel
+                                </a>
+                                <button type="button" id="btnSave" class="btn btn-teal">
+                                    <i class="fa fa-save"></i>
+                                    Save
+                                </button>
                             </div>
                         </form>
                     </div>

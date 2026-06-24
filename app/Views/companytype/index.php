@@ -30,11 +30,12 @@
                     <li class="breadcrumb-item"><a href="#">Table</a></li>
                     <li class="breadcrumb-item active" aria-current="page"><?=$title?></li>
                 </ol>
+                <h1 class="page-title">Data Company Type</h1>
             </div>
             <div class="ml-auto pageheader-btn">
-                <a href="<?=base_url()?>/companytype/create" class="btn btn-primary btn-icon text-white mr-2">
+                <a href="<?=base_url()?>/companytype/create" class="btn btn-success-light btn-icon mr-2">
                     <span>
-                        <i class="fe fe-plus"></i>
+                        <i class="fa fa-plus mr-2"></i>
                     </span> Create New
                 </a>
             </div>
@@ -43,19 +44,17 @@
         <div class="row">
             <div class="col-md-12 col-lg-12">
                 <div class="card">
-                    <div class="card-header bg-primary">
-                        <h3 class="card-title text-white">DATA COMPANY TYPE</h3>
-                    </div>
+                    <div class="card-status bg-teal br-tr-7 br-tl-7"></div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="dataTbls" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
                                 <thead>
                                     <tr>
-                                        <th class="wd-15p">TYPE NAME</th>
-                                        <th class="wd-15p">DESCRIPTION</th>
-                                        <th class="wd-20p">STATUS</th>
-                                        <th class="wd-10p">CREATED DATE</th>
-                                        <th class="wd-25p">ACTION</th>
+                                        <th>TYPE NAME</th>
+                                        <th>DESCRIPTION</th>
+                                        <th width="10%">STATUS</th>
+                                        <th width="20%">CREATED DATE</th>
+                                        <th width="10%">ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody>

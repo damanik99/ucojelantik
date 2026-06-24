@@ -28,4 +28,16 @@ class VehicleModel extends Model
     ];
 
     protected $useTimestamps = false;
+
+    public function getDataVehicle($id)
+    {
+        $data = $this->db->table('vehicle a')
+                ->select('a.*, c.company_name')
+                ->join('company_program b', 'a.company_program_id = b.company_program_id')
+                ->join('company c', 'b.company_id = c.company_id')
+                ->where('a.vehicle_id', $id)
+                ->get()->getRowArray();
+
+        return $data;
+    }
 }

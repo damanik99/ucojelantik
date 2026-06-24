@@ -31,7 +31,7 @@
                 <a href="<?=base_url()?>/Vehicle/create" class="btn btn-success-light btn-icon mr-2">
                     <span>
                         <i class="fa fa-plus mr-2"></i>
-                    </span> CREATE
+                    </span> Create New
                 </a>
             </div>
         </div>
@@ -43,17 +43,17 @@
                     <div class="card-status bg-teal br-tr-7 br-tl-7"></div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="vehicleTable" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                            <table id="vehicleTable" class="table table-striped table-bordered text-nowrap w-100">
                                 <thead>
                                     <tr>
                                         <th>Company</th>
                                         <th>Plate Number</th>
                                         <th>Vehicle Type</th>
-                                        <th>Brand</th>
+                                        <th>Mer</th>
                                         <th>Capacity Weight</th>
-                                        <th>Status</th>
+                                        <th >Status</th>
                                         <th>Created Date</th>
-                                        <th width="100">Action</th>
+                                        <th width="120">Action</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -62,8 +62,37 @@
                 </div>
             </div>
         </div>
-        <!-- ROW-4 CLOSED-->
 
+        <!-- Modal -->
+        <div class="modal fade" id="modalDetailVehicle" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-header bg-teal">
+                        <h5 class="modal-title text-white">
+                            <i class="fa fa-truck mr-2"></i>
+                            Vehicle
+                        </h5>
+
+                        <button type="button" class="close text-white" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="text-center py-5" id="loadingDetail">
+                            <i class="fa fa-spinner fa-spin fa-2x"></i>
+                            <br>
+                            Loading...
+                        </div>
+
+                        <div id="detailVehicleContent"></div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
 
     </div>
 </div>
@@ -77,46 +106,72 @@
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.responsive.min.js"></script>
 
-<!-- BOOTSTRAP JS -->
-<script src="<?= base_url() ?>/teamplate/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="<?= base_url() ?>/teamplate/assets/plugins/bootstrap/js/popper.min.js"></script>
-
 <script>
     $(document).ready(function () {
 
         $('#vehicleTable').DataTable({
             processing: true,
             serverSide: true,
-            responsive: true,
-            autoWidth: false,
+            // responsive: true,
+            // autoWidth: false,
 
             ajax: {
                 url: "<?= base_url('/vehicle/datatables') ?>",
                 type: "POST"
             },
 
+            "order": [
+                [0, 'desc']
+            ],
+
             columns: [
                 { data: "company_name" },
-                { data: "program_name" },
                 { data: "plate_number" },
                 { data: "vehicle_type" },
                 { data: "brand" },
+                { data: "capacity_weight" },
                 { data: "status_badge" },
                 { data: "created_date" },
-                { data: "action" }
-            ],
-
-            columnDefs: [
-                {
-                    targets: [5, 7],
-                    orderable: false
-                },
-                {
-                    targets: [5, 7],
+                { 
+                    data: "action",
+                    orderable: false,
                     searchable: false
                 }
             ]
         });
 
     });
+
+$(document).on('click', '.btnDetail', function () {
+
+    let id = $(this).data('id');
+
+    $("#detailCompanyContent").html("");
+    $("#loadingDetail").show();
+
+    $("#modalDetailVehicle").modal("show");
+
+    $.ajax({
+        url: "<?= base_url('/vehicle/detail')?>/" + id,
+        type: "GET",
+        success: function(response){
+
+            $("#loadingDetail").hide();
+            $("#detailVehicleContent").html(response);
+
+        },
+        error:function(){
+
+            $("#loadingDetail").hide();
+
+            $("#detailCompanyContent").html(`
+                <div class="alert alert-danger">
+                    Failed to load company detail.
+                </div>
+            `);
+
+        }
+    });
+
+});
 </script>

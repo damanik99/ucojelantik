@@ -35,7 +35,7 @@
                 <h1 class="page-title">Create New Company</h1>
             </div>
             <div class="ml-auto pageheader-btn">
-                <a href="<?=base_url()?>/CompanyType/create" class="btn btn-radius btn-primary-light btn-icon mr-2">
+                <a href="<?=base_url()?>/CompanyType/create" class="btn btn-radius btn-success-light btn-icon mr-2">
                     <i class="fa fa-plus mr-2"></i>Create Company Type
                 </a>
             </div>
@@ -51,7 +51,7 @@
                         <form id="companyForm">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label>Company Type *</label>
+                                    <label class="form-label">Company Type *</label>
                                     <select name="company_type_id"
                                         class="form-control select2"
                                         required>
@@ -73,28 +73,28 @@
                                 </div>
 
                                 <div class="col-md-6 mt-3">
-                                    <label>PIC Name</label>
+                                    <label class="form-label">PIC Name</label>
                                     <input type="text"
                                         name="pic_name"
                                         class="form-control">
                                 </div>
 
                                 <div class="col-md-6 mt-3">
-                                    <label>Phone</label>
+                                    <label class="form-label">Phone</label>
                                     <input type="text"
                                         name="phone"
                                         class="form-control">
                                 </div>
 
                                 <div class="col-md-6 mt-3">
-                                    <label>Email</label>
+                                    <label class="form-label">Email</label>
                                     <input type="email"
                                         name="email"
                                         class="form-control">
                                 </div>
 
                                 <div class="col-md-6 mt-3">
-                                    <label>Status <span class="text-danger">*</span></label>
+                                    <label class="form-label">Status <span class="text-danger">*</span></label>
                                     <select name="status_id"
                                         class="form-control select2-show-search">
                                         <option value="">Choose Status</option>
@@ -107,21 +107,21 @@
                                 </div>
 
                                 <div class="col-md-12 mt-3">
-                                    <label>Address</label>
+                                    <label class="form-label">Address</label>
                                     <textarea
                                         name="address"
                                         class="form-control"></textarea>
                                 </div>
 
                                 <div class="col-md-6 mt-3">
-                                    <label>Latitude</label>
+                                    <label class="form-label">Latitude</label>
                                     <input type="text"
                                         name="latitude"
                                         class="form-control">
                                 </div>
 
                                 <div class="col-md-6 mt-3">
-                                    <label>Longitude</label>
+                                    <label class="form-label">Longitude</label>
                                     <input type="text"
                                         name="longitude"
                                         class="form-control">
@@ -130,13 +130,13 @@
                             </div>
 
                             <div class="text-center mt-5">
-                                <a href="<?= base_url('/company') ?>" class="btn btn-default-light">
+                                <a href="<?= base_url('/Company') ?>" class="btn btn-default-light">
                                     <i class="fa fa-window-close mr-2"></i>
                                     Cancel
                                 </a>
 
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-save mr-2"></i>
+                                <button type="submit" class="btn btn-teal">
+                                    <i class="fa fa-save"></i>
                                     Save
                                 </button>
                             </div>

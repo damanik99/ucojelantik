@@ -17,7 +17,7 @@
 <?= $this->include('layout/body') ?>
 <!-- LAYOUT BODY -->
 
-<?php /** @var array $companyTypes */ ?>
+<?php /** @var array<string, mixed> $row */ ?>
 
 <!--app-content open-->
 <div class="app-content">
@@ -30,12 +30,6 @@
                     <li class="breadcrumb-item"><a href="<?= base_url() ?>/Companytype">Index</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Create New</li>
                 </ol>
-                <h1 class="page-title">Create Company Type</h1>
-            </div>
-            <div class="ml-auto pageheader-btn">
-                <a href="<?=base_url()?>/company/create" class="btn btn-radius btn-success-light btn-icon mr-2">
-                    <i class="fa fa-plus mr-2"></i>Create Company
-                </a>
             </div>
         </div>
         <!-- PAGE-HEADER END -->
@@ -56,7 +50,7 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <input type="text" name="type_name" class="form-control" placeholder="Example : Supplier"
-                                                maxlength="50">
+                                                value="<?= $row['type_name'] ?>" maxlength="100">
                                         </div>
                                     </div>
 
@@ -65,12 +59,11 @@
                                             <label class="form-label">
                                                 Status
                                             </label>
-                                            <select name="status"
-                                                class="form-control">
-                                                <option value="active">
+                                            <select name="status" class="form-control">
+                                                <option value="active" <?= $row['status'] == 'active' ? 'selected' : ''; ?>>
                                                     Active
                                                 </option>
-                                                <option value="inactive">
+                                                <option value="inactive" <?= $row['status'] == 'inactive' ? 'selected' : ''; ?>>
                                                     Inactive
                                                 </option>
                                             </select>
@@ -82,18 +75,19 @@
                                             <label class="form-label">
                                                 Description
                                             </label>
-                                            <textarea name="description" rows="4" class="form-control" placeholder="Description"></textarea>
+                                            <textarea name="description" rows="4" class="form-control" placeholder="Description"><?= $row['description'] ?></textarea>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-actions text-center mt-5">
-                                    <a href="<?= base_url() ?>/Companytype" class="btn btn-default-light">
+                                    <a href="<?= base_url() ?>/Companytype"
+                                        class="btn btn-warning">
                                         <i class="fa fa-window-close"></i>
                                         Cancel
                                     </a>
                                     <button type="submit" class="btn btn-teal">
-                                        <i class="fa fa-save"></i>
+                                        <i class="fa fa-save mr-2"></i>
                                         Save
                                     </button>
                                 </div>
@@ -147,7 +141,7 @@ $('#companyTypeForm').submit(function(e) {
 
     $.ajax({
 
-        url: "<?= base_url('/companytype/store') ?>",
+        url: "<?= base_url('/companytype/update/'.$row['type_id']) ?>",
         type: "POST",
         data: $(this).serialize(),
         dataType: "json",
@@ -177,7 +171,7 @@ $('#companyTypeForm').submit(function(e) {
                 }).then(() => {
 
                     window.location.href =
-                        "<?= base_url('/company') ?>";
+                        "<?= base_url('/Companytype') ?>";
 
                 });
 

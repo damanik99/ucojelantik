@@ -299,7 +299,7 @@ class Shipment extends BaseController
         return view('shipment/driver/detail', $data);
     }
 
-    // driver
+    // Dropdown driver
     public function get_driver($company_program_id)
     {
         $driver = $this->db->table('driver d')
@@ -308,28 +308,19 @@ class Shipment extends BaseController
             ->where('cp.company_program_id', $company_program_id)
             ->get()->getResultArray();
 
-        echo '<option value="">Select Driver</option>';
-
-        foreach($driver as $row){
-            echo '<option value="'.$row['driver_id'].'">'.$row['driver_name'].'</option>';
-        }
+        return $this->response->setJSON($driver);
     }
 
-    // vehicle
+    // Dropdown vehicle
     public function get_vehicle($company_program_id)
     {
         $vehicle = $this->db->table('vehicle v')
-            ->select('v.vehicle_id, v.plate_number')
+            ->select('v.vehicle_id, v.plate_number, v.brand')
             ->join('company_program cp', 'cp.company_program_id = v.company_program_id')
             ->where('cp.company_program_id', $company_program_id)
-            ->get()
-            ->getResultArray();
-
-        echo '<option value="">Select Vehicle</option>';
-
-        foreach($vehicle as $row){
-            echo '<option value="'.$row['vehicle_id'].'">'.$row['plate_number'].'</option>';
-        }
+            ->get()->getResultArray();
+        
+            return $this->response->setJSON($vehicle);
     }
     
     

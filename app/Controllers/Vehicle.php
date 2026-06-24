@@ -69,8 +69,6 @@ class Vehicle extends BaseController
                     'errors' => $this->validator->getErrors()
                 ]);
             }
-            // $cp = $this->request->getPost('company_program_id');
-            // var_dump($cp);exit;
 
             $this->vehicle->insert([
                 'company_program_id'=> $this->request->getPost('company_program_id'),
@@ -100,7 +98,7 @@ class Vehicle extends BaseController
             ->join('program c', 'a.program_id = c.program_id')
             ->join('companytype d', 'a.company_type_id = d.type_id')
             ->get()->getResultArray();
-// var_dump($dataCompany);exit;
+
        $data = [
             'title' => 'Vehicle',
             'company' => $dataCompany
@@ -137,10 +135,10 @@ class Vehicle extends BaseController
             $filter .= "
                 AND (
                     d.company_name LIKE ?
-                    OR c.name LIKE ?
                     OR a.plate_number LIKE ?
                     OR a.vehicle_type LIKE ?
                     OR a.brand LIKE ?
+                    OR a.capacity_weight LIKE ?
                     OR a.status LIKE ?
                 )
             ";
@@ -173,10 +171,10 @@ class Vehicle extends BaseController
 
         $orderColumn = [
             'd.company_name',
-            'c.name',
             'a.plate_number',
             'a.vehicle_type',
             'a.brand',
+            'a.capacity_weight',
             'a.status',
             'a.created_date'
         ];
@@ -227,9 +225,8 @@ class Vehicle extends BaseController
 
             $row['action'] = '
 
-                <a href="javascript:void(0)"
-                onclick="deleteData('.$row['vehicle_id'].')"
-                class="btn bg-gray-dark btn-sm text-white mb-2 mb-xl-1 btnDetail"
+                <a href="javascript:void(0);"
+                class="btn bg-gray-dark btn-sm text-white mb-2 mb-xl-1 btnDetail" data-id="'.$row['vehicle_id'].'"
                 data-original-title="View">
                     <i class="fa fa-eye"></i>
                 </a>
@@ -249,5 +246,125 @@ class Vehicle extends BaseController
             "recordsFiltered" => $totalFiltered,
             "data" => $data
         ]);
+    }
+
+    public function detail($id)
+    {
+        $views = $this->vehicle->getDataVehicle($id);
+        // var_dump($views);exit;
+        $data = [
+            'title' => 'Vehicle Detail',
+            'views' => $views,
+        ];
+
+        return view(
+            'Vehicle/detail', $data
+        );
+    }
+
+    public function edit($id)
+    {
+        if ($this->request->getMethod() === 'get') {
+            $dataCompany = $this->company->datacompany();
+            $datavehicle = $this->vehicle->getDataVehicle($id);
+            // var_dump($datavehicle);exit;
+            $data = [
+                'title' => 'Vehicle Detail',
+                'vehicle' => $datavehicle,
+                'company' => $dataCompany
+            ];
+    
+            return view(
+                'Vehicle/edit', $data
+            );
+        }
+
+        $rules = [
+            'company_program_id' => [
+                'rules'  => 'required|integer',
+                'errors' => [
+                    'required' => 'Company Program must be selected'
+                ]
+            ],
+            'plate_number' => [
+                'rules'  => 'required',
+                'errors' => [
+                    'required'  => 'License plate number is required',
+                ]
+            ],
+            'vehicle_type' => [
+                'rules'  => 'required',
+                'errors' => [
+                    'required' => 'Vehicle type is required'
+                ]
+            ],
+            'status' => [
+                'rules'  => 'required',
+                'errors' => [
+                    'required' => 'Status is required to be selected'
+                ]
+            ]
+        ];
+
+        if (!$this->validate($rules)) {
+            return $this->response->setJSON([
+                'status' => false,
+                'errors' => $this->validator->getErrors()
+            ]);
+        }
+
+        $db = db_connect();
+        $db->transBegin();
+        try {
+
+            $vehicle = $this->vehicle->find($id);
+            
+            if (!$vehicle) {
+                throw new \Exception('Vehicle not found.');
+            }
+            
+            $fields = [
+                'company_program_id',
+                'plate_number',
+                'vehicle_type',
+                'brand',
+                'capacity_weight',
+                'capacity_volume',
+                'stnk_expiry_date',
+                'kir_expiry_date',
+                'status',
+            ];
+
+            $updateData = [];
+            foreach ($fields as $field) {
+
+                $newValue = $this->request->getPost($field);
+                // var_dump($newValue);exit;
+                if ((string)$vehicle[$field] !== (string)$newValue) {
+                    $updateData[$field] = $newValue;
+                }
+            }
+
+            if (!empty($updateData)) {
+
+                $updateData['modified_by'] = session()->get('user_id');
+
+                $this->vehicle->update($id, $updateData);
+            }
+
+            $db->transCommit();
+
+            return $this->response->setJSON([
+                'status'  => true,
+                'message' => 'Company successfully updated.'
+            ]);
+
+        } catch (\Throwable $e) {
+            
+           $db->transRollback();
+
+            throw $e;
+        }
+
     }
 }

@@ -46,4 +46,17 @@ class CompanyModel extends Model
 
         return $detail;
     }
+
+    public function datacompany()
+    {
+        $dataCompany = $this->db->table('company_program a')
+            ->select('b.company_id, a.company_program_id, d.type_id, b.company_name')
+            ->join('company b', 'a.company_id = b.company_id')
+            ->join('program c', 'a.program_id = c.program_id')
+            ->join('companytype d', 'a.company_type_id = d.type_id')
+            ->get()->getResultArray();
+        return $dataCompany;
+    }
+
+    
 }

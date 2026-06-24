@@ -251,8 +251,7 @@ class Warehouse extends BaseController
             ->first();
 
         return view(
-            'warehouse/detail',
-            $data
+            'warehouse/detail', $data
         );
     }
 

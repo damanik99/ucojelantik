@@ -24,17 +24,16 @@
         <!-- PAGE-HEADER -->
         <div class="page-header">
             <div>
-                <h1 class="page-title">
-                </h1>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="#">Table</a></li>
                     <li class="breadcrumb-item active" aria-current="page"><?=$title?></li>
                 </ol>
+                <h1 class="page-title">Data Quality Control</h1>
             </div>
             <div class="ml-auto pageheader-btn">
-                <a href="<?=base_url()?>/QualityControl/create" class="btn btn-primary btn-icon text-white mr-2">
+                <a href="<?=base_url()?>/QualityControl/create" class="btn btn-success-light btn-icon mr-2">
                     <span>
-                        <i class="fe fe-plus"></i>
+                        <i class="fa fa-plus mr-2"></i>
                     </span> Create New
                 </a>
             </div>
@@ -43,9 +42,7 @@
         <div class="row">
             <div class="col-md-12 col-lg-12">
                 <div class="card">
-                    <div class="card-header bg-primary">
-                        <h3 class="card-title text-white">DATA QUALITY CONTROL</h3>
-                    </div>
+                    <div class="card-status bg-teal br-tr-7 br-tl-7"></div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="tableQc" class="table table-striped table-bordered text-nowrap w-100">

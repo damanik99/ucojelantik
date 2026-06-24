@@ -73,8 +73,12 @@ class CompanyType extends BaseController
 
     public function edit($id)
     {
-        $data['title'] = 'Edit Company Type';
-        $data['row'] = $this->companyType->find($id);
+        $row = $this->companyType->find($id);
+
+        $data = [
+            'title' => 'Edit Company Type',
+            'row' => $row,
+        ];
 
         return view('companytype/edit', $data);
     }
@@ -210,14 +214,8 @@ class CompanyType extends BaseController
 
             $row['action'] = '
                 <a href="'.base_url().'/companytype/edit/'.$row['type_id'].'"
-                class="badge badge-pill badge-success">
+                class="btn btn-cyan btn-sm text-white mb-2 mb-xl-1">
                     <i class="fa fa-pencil"></i>
-                </a>
-
-                <a href="javascript:void(0)"
-                onclick="deleteData('.$row['type_id'].')"
-                class="badge badge-pill badge-danger">
-                    <i class="fa fa-trash"></i>
                 </a>
             ';
 

@@ -52,7 +52,7 @@
     <link href="<?= base_url() ?>/teamplate/assets/plugins/date-picker/spectrum.css" rel="stylesheet" />
 
     <!-- INTERNAL  DATA TABLE CSS-->
-    <link href="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <!-- <link href="<?//= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.bootstrap4.min.css" rel="stylesheet" /> -->
 
     <!-- TOASTR CSS -->
     <link rel="stylesheet" type="text/css"

@@ -36,7 +36,7 @@
                         Create
                     </li>
                 </ol>
-                <h1 class="page-title"><?= $title ?></h1>
+                <h1 class="page-title">Create Vehicle</h1>
             </div>
         </div>
         <!-- PAGE HEADER END -->
@@ -52,7 +52,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Company <span class="text-danger">*</span></label>
+                                        <label class="form-label">Company <span class="text-danger">*</span></label>
                                         <select name="company_program_id" class="form-control select2-show-search">
                                             <option value="">Choose Company</option>
                                             <?php foreach ($company as $row) : ?>
@@ -66,14 +66,14 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Plate Number <span class="text-danger">*</span></label>
+                                        <label class="form-label">Plate Number <span class="text-danger">*</span></label>
                                         <input type="text" name="plate_number" class="form-control">
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Vehicle Type <span class="text-danger">*</span></label>
+                                        <label class="form-label">Vehicle Type <span class="text-danger">*</span></label>
                                         <select name="vehicle_type" class="form-control select2-show-search">
                                             <option value="">-- Select Type --</option>
                                             <option value="tangki">Mobil Tangki</option>
@@ -84,21 +84,21 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Merk</label>
+                                        <label class="form-label">Merk</label>
                                         <input type="text" name="brand" class="form-control">
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Capacity Weight</label>
+                                        <label class="form-label">Capacity Weight</label>
                                         <input type="number" step="0.01" name="capacity_weight" class="form-control">
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Capacity Volume</label>
+                                        <label class="form-label">Capacity Volume</label>
                                         <input type="number"
                                             step="0.01"
                                             name="capacity_volume"
@@ -108,7 +108,7 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>STNK Expiry Date</label>
+                                        <label class="form-label">STNK Expiry Date</label>
                                         <input type="date"
                                             name="stnk_expiry_date"
                                             class="form-control">
@@ -117,14 +117,14 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>KIR Expiry Date</label>
+                                        <label class="form-label">KIR Expiry Date</label>
                                         <input type="date" name="kir_expiry_date" class="form-control">
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Status <span class="text-danger">*</span></label>
+                                        <label class="form-label">Status <span class="text-danger">*</span></label>
                                         <select name="status" class="form-control select2-show-search">
                                             <option value="">Choose Status</option>
                                             <option value="available">Available</option>

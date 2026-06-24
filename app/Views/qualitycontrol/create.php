@@ -40,7 +40,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-status bg-blue br-tr-7 br-tl-7"></div>
+                    <div class="card-status bg-teal br-tr-7 br-tl-7"></div>
                     <div class="card-body">
 
                         <form id="qcForm" enctype="multipart/form-data">
@@ -102,13 +102,19 @@
                                 </div>
 
                                 <div class="col-md-12 mt-3">
-                                    <label>Notes</label>
+                                    <label class="form-label">Notes</label>
                                     <textarea name="notes" rows="4" class="form-control"></textarea>
                                 </div>
                             </div>
                             <div class="text-center mt-5">
-                                <a href="<?= base_url('/shipmenttracking') ?>" class="btn btn-warning">Cancel</a>
-                                <button type="submit" class="btn btn-primary">Save</button>
+                                <a href="<?= base_url('/Qualitycontrol') ?>" class="btn btn-default-light">
+                                    <i class="fa fa-window-close"></i>
+                                    Cancel
+                                </a>
+                                <button type="submit" class="btn btn-teal">
+                                    <i class="fa fa-save"></i>
+                                    Save
+                                </button>
                             </div>
                         </form>
                     </div>
