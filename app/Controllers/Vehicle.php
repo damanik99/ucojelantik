@@ -231,7 +231,7 @@ class Vehicle extends BaseController
                     <i class="fa fa-eye"></i>
                 </a>
 
-                <a href="'.base_url().'/vehicle/edit/'.$row['vehicle_id'].'"
+                <a href="'.base_url().'/Vehicle/edit/'.$row['vehicle_id'].'"
                 class="btn btn-cyan btn-sm text-white mb-2 mb-xl-1"  data-toggle="tooltip" data-original-title="Edit">
                     <i class="fa fa-pencil"></i>
                 </a>
@@ -258,7 +258,7 @@ class Vehicle extends BaseController
         ];
 
         return view(
-            'Vehicle/detail', $data
+            'vehicle/detail', $data
         );
     }
 
@@ -275,7 +275,7 @@ class Vehicle extends BaseController
             ];
     
             return view(
-                'Vehicle/edit', $data
+                'vehicle/edit', $data
             );
         }
 
@@ -320,7 +320,7 @@ class Vehicle extends BaseController
             $vehicle = $this->vehicle->find($id);
             
             if (!$vehicle) {
-                throw new \Exception('Vehicle not found.');
+                throw new \Exception('vehicle not found.');
             }
             
             $fields = [
