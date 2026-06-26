@@ -118,7 +118,12 @@
         $db = \Config\Database::connect();
         $parentmenu = $db->query("SELECT * FROM menu WHERE parent_id IS NULL OR parent_id = ' '");
 
-        $menuview = '';
+        $menuview ='<li class="slide">
+                        <a class="side-menu__item" href='.base_url('Dashboard').'>
+                            &nbsp;&nbsp;
+                           <span class="side-menu__label">DASHBOARD</span>
+                        </a>
+                    </li>';
 
         foreach ($parentmenu->getResult() as $menu) {
             if ($admin == 'Super Admin') {
