@@ -58,8 +58,6 @@ class QualityControl extends BaseController
             ]);
         }
 
-        // var_dump('test');exit;
-
         $rules = [
             'shipment_id' => 'required',
             'type_id'     => 'required',

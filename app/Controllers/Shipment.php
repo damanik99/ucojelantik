@@ -173,20 +173,14 @@ class Shipment extends BaseController
             $row['status_badge'] = $statusBadge;
 
             $row['action'] = '
-                <a href="'.base_url('/shipment/view/'.$row['shipment_id']).'"
-                class="badge badge-pill badge-info">
+                <a href="javascript:void(0);"
+                class="btn bg-gray-dark btn-sm text-white mb-2 mb-xl-1 btnDetail" data-id="'.$row['shipment_id'].'">
                     <i class="fa fa-eye"></i>
                 </a>
 
-                <a href="'.base_url('/shipment/edit/'.$row['shipment_id']).'"
-                class="badge badge-pill badge-success">
+                <a href="javascript:void(0);" class="btn btn-cyan btn-sm text-white mb-2 mb-xl-1 btn-edit-shipment"
+                data-id="'.$row['shipment_id'].'" data-url="'.base_url('/shipment/edit/'.$row['shipment_id']).'">
                     <i class="fa fa-pencil"></i>
-                </a>
-
-                <a href="javascript:void(0)"
-                onclick="deleteData('.$row['shipment_id'].')"
-                class="badge badge-pill badge-danger">
-                    <i class="fa fa-trash"></i>
                 </a>
             ';
 
@@ -199,6 +193,18 @@ class Shipment extends BaseController
             "recordsFiltered" => $totalFiltered,
             "data" => $data
         ]);
+    }
+    
+    // View Data Shipment
+    public function detailShipment($id)
+    {
+        $dataShipment = $this->shipment->getDetailShipment($id);
+        // var_dump($dataShipment);exit;   
+        $data = [
+            'views' => $dataShipment,
+        ];
+
+        return view('shipment/detail', $data);
     }
 
     public function create()
@@ -243,7 +249,7 @@ class Shipment extends BaseController
             }
 
             $shipmentNumber = $this->shipment->generateShipmentNumber();
-            // var_dump($shipmentNumber);exit;
+            
             $this->shipment->insert([
                 'shipment_number'               => $shipmentNumber,
                 'purchase_order_id'             => $this->request->getPost('purchase_order_id'),
@@ -285,6 +291,7 @@ class Shipment extends BaseController
         return view('driver/home', $data);
     }
 
+    // Driver
     public function detail($shipmentId)
     {
         $shipmentModel = new \App\Models\ShipmentModel();
@@ -295,6 +302,7 @@ class Shipment extends BaseController
         if (!$shipment) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
+
         $data['shipment'] = $shipment;
         return view('shipment/driver/detail', $data);
     }
@@ -322,6 +330,122 @@ class Shipment extends BaseController
         
             return $this->response->setJSON($vehicle);
     }
+
+    public function checkEditAccess($id)
+    {
+        $dataShipment = $this->shipment->getDetailShipment($id);
+
+        if ($dataShipment['status_code'] == 'RTDT') {
+            return $this->response->setJSON([
+                'success' => true
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Operation "Berhasil". Unable to access the shipment edit page.'
+        ]);
+    }
     
+    public function edit($id)
+    {
+        $dataShipment = $this->shipment->getDetailShipment($id);
+        
+        if ($dataShipment['status_code'] == 'RTDT') {
+
+            $program_id = session()->get('program');
+
+            $supplier = $this->companyType->getCompanyByType('SUPPLIER', $program_id);
+            $buyer    = $this->companyType->getCompanyByType('BUYER', $program_id);
+            $driver   = (new DriverModel())->findAll();
+            $vehicle  = (new VehicleModel())->findAll();
+            $status = (new StatusModel())->where('module', 'SHIPMENT')->findAll();
+            
+            if ($this->request->getMethod() == 'post') 
+            {
+                if (!$this->request->isAJAX()) {
+                    return redirect()->back();
+                }
+
+                $shipment = $this->shipment->find($id);
+
+                if (!$shipment) {
+                    return $this->response->setJSON([
+                        'success' => false,
+                        'message' => 'Shipment not found.'
+                    ]);
+                }
+
+                $fields = [
+                    'shipment_number',
+                    'purchase_order_id',
+                    'supplier_company_program_id',
+                    'buyer_company_program_id',
+                    'driver_id',
+                    'vehicle_id',
+                    'departure_at',
+                    'arrival_at',
+                ];
+
+                $updateData = [];
+                // var_dump($updateData);exit;
+                foreach ($fields as $field) {
+
+                    $newValue = trim((string) $this->request->getPost($field));
+                    $oldValue = trim((string) ($shipment[$field] ?? ''));
+
+                    if ($oldValue !== $newValue) {
+                        $updateData[$field] = $newValue;
+                    }
+                }
+
+                // Selalu update modified_by jika ada perubahan
+                if (!empty($updateData)) {
+
+                    $updateData['modified_by'] = session()->get('user_id');
+
+                    if (!$this->shipment->update($id, $updateData)) {
+
+                        return $this->response->setJSON([
+                            'success' => false,
+                            'message' => 'Failed to update shipment.'
+                        ]);
+                    }
+
+                    return $this->response->setJSON([
+                        'success' => true,
+                        'message' => 'Shipment updated successfully.'
+                    ]);
+                }
+
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'No changes detected.'
+                ]);
+            }
+
+            $data = [
+                'title' => 'Edit Shipment',
+                'edit' => $dataShipment,
+                'buyer' => $buyer,
+                'driver' => $driver,
+                'vehicle' => $vehicle,
+                'supplier' => $supplier,
+                'status' => $status
+            ];
+
+            return view('shipment/edit', $data);
+            
+        }
+        else
+        {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Shipment Status "Berhasil". Unable to access the shipment edit page.'
+            ]);
+        }
+
+        
+    }
     
 }

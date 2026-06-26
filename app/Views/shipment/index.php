@@ -59,7 +59,7 @@
                                         <th>VEHICLE</th>
                                         <th>STATUS</th>
                                         <th>CREATED DATE</th>
-                                        <th width="120">ACTION</th>
+                                        <th>ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -70,6 +70,38 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modalDetailShpment" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-header bg-teal">
+                        <h5 class="modal-title text-white">
+                            <i class="fa fa-truck mr-2"></i>
+                            Shipment
+                        </h5>
+
+                        <button type="button" class="close text-white" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="text-center py-5" id="loadingDetail">
+                            <i class="fa fa-spinner fa-spin fa-2x"></i>
+                            <br>
+                            Loading...
+                        </div>
+
+                        <div id="detailShipment"></div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -81,47 +113,130 @@
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/jquery.dataTables.min.js"></script>
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.responsive.min.js"></script>
+<!-- SWEET ALERT -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    $(document).ready(function () {
+$(document).ready(function () {
 
-        $('#shipmentTable').DataTable({
-            processing: true,
-            serverSide: true,
-            responsive: true,
-            autoWidth: false,
-            order: [[6, 'desc']],
+    $('#shipmentTable').DataTable({
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        autoWidth: false,
+        order: [[6, 'desc']],
 
-            ajax: {
-                url: "<?= base_url('/shipment/datatables'); ?>",
-                type: "POST"
-            },
+        ajax: {
+            url: "<?= base_url('/shipment/datatables'); ?>",
+            type: "POST"
+        },
 
-            columns: [
-                { data: 'shipment_number' },
-                { data: 'supplier_name' },
-                { data: 'buyer_name' },
-                { data: 'driver_name' },
-                { data: 'plate_number' },
-                { data: 'status_badge' },
-                { data: 'created_date' },
-                { data: 'action' }
-            ],
+        columns: [
+            { data: 'shipment_number' },
+            { data: 'supplier_name' },
+            { data: 'buyer_name' },
+            { data: 'driver_name' },
+            { data: 'plate_number' },
+            { data: 'status_badge' },
+            { data: 'created_date' },
+            { data: 'action' }
+        ],
 
-            columnDefs: [
-                {
-                    targets: [5,7],
-                    orderable: false
-                }
-            ],
-
-            createdRow: function(row, data, dataIndex) {
-
-                $('td:eq(5)', row).html(data.status_badge);
-                $('td:eq(7)', row).html(data.action);
-
+        columnDefs: [
+            {
+                targets: [5,7],
+                orderable: false
             }
-        });
+        ],
 
+        createdRow: function(row, data, dataIndex) {
+
+            $('td:eq(5)', row).html(data.status_badge);
+            $('td:eq(7)', row).html(data.action);
+
+        }
     });
+
+});
+
+$(document).on('click', '.btnDetail', function () {
+
+    let id = $(this).data('id');
+
+    $("#detailShipment").html("");
+    $("#loadingDetail").show();
+
+    $("#modalDetailShpment").modal("show");
+
+    $.ajax({
+        url: "<?= base_url('/shipment/detailShipment')?>/" + id,
+        type: "GET",
+        success: function(response){
+
+            $("#loadingDetail").hide();
+            $("#detailShipment").html(response);
+
+        },
+        error:function(){
+
+            $("#loadingDetail").hide();
+
+            $("#detailCompanyContent").html(`
+                <div class="alert alert-danger">
+                    Failed to load company detail.
+                </div>
+            `);
+
+        }
+    });
+
+});
+
+const base_url = "<?= base_url(); ?>";
+
+$(document).on('click', '.btn-edit-shipment', function () {
+
+    let id = $(this).data('id');
+    let url = $(this).data('url');
+
+    Swal.fire({
+        title: 'Please wait...',
+        text: 'Checking shipment access.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    $.ajax({
+        url: base_url + '/shipment/checkEditAccess/' + id,
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+
+            if (response.success) {
+                window.location.href = "<?= base_url('/shipment/edit')?>/" + id;
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Shipment Status "Berhasil"',
+                    text: 'Unable to access the shipment edit page.',
+                    confirmButtonText: 'OK'
+                });
+            }
+        },
+        error: function () {
+            
+            Swal.close();
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An unexpected error occurred.'
+            });
+        }
+    });
+
+});
 </script>

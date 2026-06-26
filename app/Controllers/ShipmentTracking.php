@@ -338,7 +338,7 @@ class ShipmentTracking extends BaseController
                 |--------------------------------------------------------------------------
                 */
                 $this->shipment->update($shipmentId, [
-                    'qty_checkout' => $this->request->getPost('qty_checkout'),
+                    'qty_checkout' => $this->request->getPost('qtycheckout'),
                     'unit'         => $this->request->getPost('unit'),
                     'arrival_at'   => date('Y-m-d H:i:s'),
                     'status_id'    => $statusShipment['status_id'],

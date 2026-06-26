@@ -21,11 +21,12 @@
 <!-- LAYOUT BODY -->
 
 <?php /** @var array $po
- * @var array $buyer
+ * @var array $edit
  * @var array $supplier
  * @var array $driver
  * @var array $vehicle
  * @var array $status
+ * @var array $buyer
  * */ ?>
 
 <!--app-content open-->
@@ -36,17 +37,10 @@
             <div>
                 <!-- <h1 class="page-title">ITEM ADD</h1> -->
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="<?= base_url() ?>/Company">Index</a></li>
+                    <li class="breadcrumb-item"><a href="<?= base_url() ?>/Shipment">Index</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Create New Company</li>
                 </ol>
                 <h1 class="page-title">Create Shipment</h1>
-            </div>
-            <div class="ml-auto pageheader-btn">
-                <a href="<?=base_url()?>/Companytype/create" class="btn btn-success-light btn-icon mr-2">
-                    <span>
-                        <i class="fa fa-plus mr-2"></i>
-                    </span> Create Company Type
-                </a>
             </div>
         </div>
         <!-- PAGE-HEADER END -->
@@ -62,10 +56,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-label">Shipment Number <span class="text-danger">*</span></label>
-                                        <input type="text"
-                                            name="shipment_number"
-                                            class="form-control"
-                                            value="Auto Generate"
+                                        <input type="text" name="shipment_number" class="form-control" value="<?= $edit['shipment_number'] ?>"
                                             readonly>
                                     </div>
                                 </div>
@@ -92,7 +83,8 @@
                                                 class="form-control select2-show-search">
                                             <option value="">Select Supplier</option>
                                             <?php foreach ($supplier as $row) : ?>
-                                                <option value="<?= $row['company_program_id']; ?>">
+                                                <option value="<?= $row['company_program_id']; ?>" 
+                                                <?= $row['company_name'] == $edit['supplier'] ? 'selected' : ''; ?>>
                                                     <?= $row['company_name']; ?>
                                                 </option>
                                             <?php endforeach; ?>
@@ -107,7 +99,8 @@
                                                 class="form-control select2-show-search" required>
                                             <option value="">Select Buyer</option>
                                             <?php foreach ($buyer as $row) : ?>
-                                                <option value="<?= $row['company_program_id']; ?>">
+                                                <option value="<?= $row['company_program_id']; ?>"
+                                                    <?= $row['company_name'] == $edit['buyer'] ? 'selected' : ''; ?>>
                                                     <?= $row['company_name']; ?>
                                                 </option>
                                             <?php endforeach; ?>
@@ -143,7 +136,9 @@
 														<i class="fa fa-calendar tx-16 lh-0 op-6"></i>
 													</div>
 												</div>
-                                                <input name="departure_at" class="form-control fc-datepicker" placeholder="MM/DD/YYYY" type="text" id="departure" required>
+                                                <input name="departure_at" class="form-control fc-datepicker" 
+                                                value="<?= date('Y/m/d', strtotime($edit['departure_at'])) ?>"
+                                                placeholder="YYYY/MM/DD" type="text" id="departure" required>
 											</div>
 										</div>
                                     </div>
@@ -159,26 +154,13 @@
 														<i class="fa fa-calendar tx-16 lh-0 op-6"></i>
 													</div>
 												</div>
-                                                <input name="arrival_at" class="form-control fc-datepicker" placeholder="MM/DD/YYYY" type="text" id="arrival" required>
+                                                <input name="arrival_at" class="form-control fc-datepicker" 
+                                                value="<?= date('Y/m/d', strtotime($edit['arrival_at'])) ?>"
+                                                placeholder="YYYY/MM/DD" type="text" id="arrival" required>
 											</div>
 										</div>
                                     </div>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">Status <span class="text-danger">*</span></label>
-                                        <select name="status_id" class="form-control select2-show-search" required>
-                                            <option value="">Select Status</option>
-                                            <?php foreach ($status as $row) : ?>
-                                                <option value="<?= $row['status_id']; ?>">
-                                                    <?= $row['status_name']; ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
-
                             </div>
 
                             <div class="text-center mt-5">
@@ -244,22 +226,23 @@ $('#arrival').datepicker({
     minDate: 0
 });
 
-$('#supplier_company_program_id').change(function () {
-
-    let company_program_id = $(this).val();
-
+function loadSupplierData(company_program_id)
+{
     $('#driver_id').html('<option value="">Loading...</option>');
     $('#vehicle_id').html('<option value="">Loading...</option>');
 
-    if(company_program_id != ''){
+    if (company_program_id != '') {
 
         // Driver
         $.get("<?= base_url('shipment/get_driver/') ?>/" + company_program_id, function(response){
-            let option = '<option value=""> -- Select Driver -- </option>';
 
-            $.each(response, function(i,row){
+            let option = '<option value="">-- Select Driver --</option>';
 
-                option += '<option value="'+row.driver_id+'">'+ row.driver_name+'</option>';
+            $.each(response, function(i, row){
+
+                let selected = (row.driver_id == "<?= $edit['driver_id']; ?>") ? 'selected' : '';
+
+                option += '<option value="'+row.driver_id+'" '+selected+'>'+row.driver_name+'</option>';
 
             });
 
@@ -269,23 +252,42 @@ $('#supplier_company_program_id').change(function () {
 
         // Vehicle
         $.get("<?= base_url('shipment/get_vehicle/') ?>/" + company_program_id, function(response){
-            let option = '<option value=""> -- Select Driver -- </option>';
 
-            $.each(response, function(i,row){
+            let option = '<option value="">-- Select Vehicle --</option>';
 
-                option += '<option value="'+row.vehicle_id+'">'+ row.plate_number+' - '+row.brand+'</option>';
+            $.each(response, function(i, row){
+
+                let selected = (row.vehicle_id == "<?= $edit['vehicle_id']; ?>") ? 'selected' : '';
+
+                option += '<option value="'+row.vehicle_id+'" '+selected+'>'+row.plate_number+' - '+row.brand+'</option>';
 
             });
 
             $('#vehicle_id').html(option);
-            
 
         });
 
-    }else{
+    } else {
 
-        $('#driver_id').html('<option value="">Select Driver</option>');
-        $('#vehicle_id').html('<option value="">Select Vehicle</option>');
+        $('#driver_id').html('<option value="">-- Select Driver --</option>');
+        $('#vehicle_id').html('<option value="">-- Select Vehicle --</option>');
+    }
+}
+
+// Ketika supplier berubah
+$('#supplier_company_program_id').on('change', function () {
+
+    loadSupplierData($(this).val());
+
+});
+
+// Ketika halaman edit pertama kali dibuka
+$(document).ready(function () {
+
+    let company_program_id = $('#supplier_company_program_id').val();
+
+    if (company_program_id != '') {
+        loadSupplierData(company_program_id);
     }
 
 });
@@ -312,7 +314,7 @@ $(document).ready(function () {
         });
 
         $.ajax({
-            url: "<?= base_url('/shipment/create'); ?>",
+            url: "<?= base_url('/shipment/edit/'.$edit['shipment_id']); ?>",
             type: "POST",
             data: $(this).serialize(),
             dataType: "json",
@@ -360,4 +362,5 @@ $(document).ready(function () {
     });
 
 });
+
 </script>

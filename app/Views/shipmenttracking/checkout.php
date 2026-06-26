@@ -53,12 +53,7 @@
                                         <i class="fe fe-camera fs-20"></i>
                                     </label>
 
-                                    <input type="file"
-                                        id="photo"
-                                        name="photo"
-                                        accept="image/*"
-                                        capture="environment"
-                                        class="d-none">
+                                    <input type="file" id="photo" name="photo" accept="image/*" capture="environment" class="d-none">
                                 </div>
 
                                 <small class="text-muted">
@@ -116,8 +111,8 @@
                                     <input type="text" name="mi" class="form-control">
                                 </div>
                                 <div class="col-md-12">
-                                    <label class="form-label">quantity</label>
-                                    <input type="text" name="mi" class="form-control">
+                                    <label class="form-label">Volume</label>
+                                    <input type="text" name="qtycheckout" class="form-control">
                                 </div>
                                 <div class="col-md-12">
                                     <label class="form-label">Unit</label>
@@ -139,11 +134,7 @@
                                 <label class="form-label font-weight-bold">
                                     Catatan (Opsional)
                                 </label>
-
-                                <textarea
-                                    class="form-control"
-                                    rows="4"
-                                    name="notes"
+                                <textarea class="form-control" rows="4" name="notes"
                                     placeholder="Contoh: Berangkat dari gudang supplier"></textarea>
                             </div>
 

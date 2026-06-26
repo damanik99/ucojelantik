@@ -164,7 +164,10 @@ class ShipmentModel extends Model
                 sp.name AS supplier_program,
                 sct.type_name AS supplier_company_type,
                 bp.name AS buyer_program,
-                bct.type_name AS buyer_company_type
+                bct.type_name AS buyer_company_type,
+                dv.driver_name,
+                vh.plate_number,
+                d.status_code
             ")
 
             ->join('status d', 'a.status_id = d.status_id')
@@ -178,6 +181,9 @@ class ShipmentModel extends Model
             ->join('company c', 'bcp.company_id = c.company_id', 'left')
             ->join('program bp', 'bcp.program_id = bp.program_id', 'left')
             ->join('companytype bct', 'bcp.company_type_id = bct.type_id', 'left')
+
+            ->join('driver dv', 'a.driver_id = dv.driver_id')
+            ->join('vehicle vh', 'a.vehicle_id = vh.vehicle_id')
 
             ->where('a.shipment_id', $shipmentId)
             ->get()
