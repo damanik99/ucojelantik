@@ -167,7 +167,7 @@ $('#qcForm').submit(function(e){
     }    
                                           
     $.ajax({
-        url: "<?= base_url('qualityControl/save') ?>",
+        url: "<?= base_url('QualityControl/save') ?>",
         type: "POST",
         data: formData,
         processData: false,
