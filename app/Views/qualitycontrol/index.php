@@ -88,7 +88,7 @@ $(document).ready(function () {
         autoWidth: false,
 
         ajax: {
-            url: "<?= base_url('qualitycontrol/datatables') ?>",
+            url: "<?= base_url('qualityControl/datatables') ?>",
             type: "POST"
         },
         columns: [
