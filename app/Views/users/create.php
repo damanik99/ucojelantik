@@ -22,7 +22,7 @@
  *  @var array $companies
  * @var array $provinces
  * @var array $groupProgram
- * */ ?>suppliers
+ * */ ?>
 
 <!--app-content open-->
 <div class="app-content">

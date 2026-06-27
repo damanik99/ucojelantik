@@ -37,8 +37,8 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                         <a class="dropdown-item"
-                            href="<?=base_url()?>/user/editprofile/<?=session()->get('users_id')?>">
-                            <i class="dropdown-icon mdi mdi-account-outline"></i> My Profile
+                            href="<?=base_url()?>/users/editprofile/<?=session()->get('users_id')?>">
+                            <i class="dropdown-icon mdi mdi-account-outline"></i> Update Password
                         </a>
                         <a class="dropdown-item" href="<?= base_url() ?>/auth/logout">
                             <i class="dropdown-icon mdi  mdi-logout-variant"></i> Sign out

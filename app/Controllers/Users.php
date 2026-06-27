@@ -421,4 +421,50 @@ class Users extends BaseController
         return $this->response->setJSON($data);
     }
     // end get region
+
+    public function editprofile($id)
+    {
+        $userModel = new UsersModel();
+
+        $users = $userModel->find($id);
+
+        if (!$users) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        if ($this->request->getMethod() === 'post') {
+
+            $rules = [
+                'password' => 'required|min_length[6]',
+                'confirm_password' => 'required|matches[password]',
+            ];
+
+            if (!$this->validate($rules)) {
+
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => $this->validator->getErrors()
+                ]);
+
+            }
+
+            $userModel->update($id, [
+                'password' => password_hash(
+                    $this->request->getPost('password'),
+                    PASSWORD_DEFAULT
+                )
+            ]);
+
+            return $this->response->setJSON([
+                'status' => true,
+                'message' => 'Password berhasil diubah.'
+            ]);
+        }
+
+        $data = [
+            'users' => $users
+        ];
+
+        echo view('profile/index', $data);
+    }
 }

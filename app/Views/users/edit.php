@@ -19,6 +19,11 @@
 <?php echo $this->include('layout/body'); ?>
 <!-- MAIN END -->
 
+<?php /** @var array $users 
+ * @var string $title
+ * 
+ */ ?>
+
 <!--app-content open-->
 <div class="app-content">
     <div class="side-app">

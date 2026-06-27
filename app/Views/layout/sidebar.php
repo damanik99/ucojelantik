@@ -36,7 +36,7 @@
 /* Menata pilihan dropdown */
 .custom-selectxs option {
     line-height: 1.5;
-    color: #fff;
+    color: #0c0c0c;
 }
 
 /* Menambahkan hover pada pilihan dropdown */
