@@ -407,7 +407,7 @@
     display: table;
     margin: 0 auto; }
   .side-header .header-brand-img.desktop-logo {
-    max-height: 2.5rem;
+    max-height: 34px;
     text-align: center;
     display: none;
     margin-right: 0;
