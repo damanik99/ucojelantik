@@ -316,11 +316,11 @@ class Users extends BaseController
         ];
 
         $orderDirection =
-            $request->getPost('order')[0]['dir'] ?? 'DESC';
+            $request->getPost('order')[5]['dir'] ?? 'DESC';
 
         $orderBy =
             $orderColumn[
-                $request->getPost('order')[0]['column'] ?? 5
+                $request->getPost('order')[5]['column'] ?? 5
             ];
 
         $sql = "
