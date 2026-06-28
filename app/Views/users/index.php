@@ -67,7 +67,37 @@
                 </div>
             </div>
         </div>
-        <!-- ROW-4 CLOSED-->
+
+        <!-- Modal -->
+        <div class="modal fade" id="modalDetailUsers" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-header bg-teal">
+                        <h5 class="modal-title text-white">
+                            <i class="fa fa-building mr-2"></i>
+                            Users
+                        </h5>
+
+                        <button type="button" class="close text-white" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="text-center py-5" id="loadingDetail">
+                            <i class="fa fa-spinner fa-spin fa-2x"></i>
+                            <br>
+                            Loading...
+                        </div>
+
+                        <div id="detailUsersContent"></div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
 
 
     </div>
@@ -83,27 +113,61 @@
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.responsive.min.js"></script>
 
 <script>
-    $('#datatables').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: "<?= base_url('/users/datatables') ?>" ,
-            type: 'POST'
+$('#datatables').DataTable({
+    processing: true,
+    serverSide: true,
+    ajax: {
+        url: "<?= base_url('/users/datatables') ?>" ,
+        type: 'POST'
+    },
+    columns: [
+        { data: 'username' },
+        { data: 'fullname' },
+        { data: 'phone' },
+        { data: 'address' },
+        { data: 'title' },
+        { data: 'status' },
+        { data: 'action' }
+    ],
+    columnDefs: [
+        {
+            targets: [4,5],
+            orderable: false
+        }
+    ]
+});
+
+$(document).on('click', '.btnDetail', function () {
+    
+    let id = $(this).data('id');
+
+    $("#detailUsersContent").html("");
+    $("#loadingDetail").show();
+
+    $("#modalDetailUsers").modal("show");
+// alert('test');
+    $.ajax({
+        url: "<?= base_url('/users/detail')?>/" + id,
+        type: "GET",
+        success: function(response){
+            // console.log(response);
+            $("#loadingDetail").hide();
+            $("#detailUsersContent").html(response);
+
         },
-        columns: [
-            { data: 'username' },
-            { data: 'fullname' },
-            { data: 'phone' },
-            { data: 'address' },
-            { data: 'title' },
-            { data: 'status' },
-            { data: 'action' }
-        ],
-        columnDefs: [
-            {
-                targets: [4,5],
-                orderable: false
-            }
-        ]
+        error:function(){
+
+            $("#loadingDetail").hide();
+
+            $("#detailUsersContent").html(`
+                <div class="alert alert-danger">
+                    Failed to load users detail.
+                </div>
+            `);
+
+        }
     });
+
+});
+
 </script>

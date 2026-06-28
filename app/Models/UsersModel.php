@@ -18,8 +18,10 @@ class UsersModel extends Model
         'city_id',
         'district_id',
         'village_id',
+        'province_id',
         'address',
         'title',
+        'driver_type',
         'active',
         'created_date',
         'modified_date',
@@ -43,5 +45,24 @@ class UsersModel extends Model
             ->getResultArray();
 
         return $result;
+    }
+
+    public function dataUsers($id) 
+    {
+        $program = session()->get('program');
+        $data = $this->db->table('usersgroupprogram a')
+                ->select('us.*, b.provinsi, c.kecamatan, d.kelurahan, g.group_id, g.name AS group, a.data_level, kt.kabupaten_kota')
+                ->join('users us', 'a.users_id = us.users_id', 'left')
+                ->join('tbl_provinsi b', 'us.province_id = b.id', 'left')
+                ->join('tbl_kecamatan c', 'us.district_id = c.id', 'left')
+                ->join('tbl_kelurahan d', 'us.village_id = d.id', 'left')
+                ->join('tbl_kabkot kt', 'us.city_id = kt.id')
+                ->join('group g', 'a.group_id = g.group_id')
+                ->where('us.users_id', $id)
+                ->where('a.program_id', $program)
+                ->get()->getRowArray();
+
+        return $data;
+
     }
 }

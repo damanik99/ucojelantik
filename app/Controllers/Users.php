@@ -27,6 +27,10 @@ class Users extends BaseController
     protected KecamatanModel $kecamatanModel;
     protected KelurahanModel $kelurahanModel;
 
+    private const GROUP_ADMIN  = 1;
+    private const DRIVER_GROUP = 2;
+    private const GROUP_QC     = 3;
+
     public function __construct()
     {
         $session = \Config\Services::session();
@@ -47,6 +51,7 @@ class Users extends BaseController
         $this->kecamatanModel = new KecamatanModel();
         $this->kelurahanModel = new KelurahanModel();
     }
+
 
     public function index()
     {
@@ -359,16 +364,18 @@ class Users extends BaseController
             $row['status_badge'] = $status;
 
             $row['action'] = '
-                <a href="'.base_url('/users/edit/'.$row['users_id']).'"
-                class="badge badge-pill badge-success">
+
+                <a href="javascript:void(0);"
+                class="btn bg-gray-dark btn-sm text-white mb-2 mb-xl-1 btnDetail" data-id="'.$row['users_id'].'"
+                data-original-title="View">
+                    <i class="fa fa-eye"></i>
+                </a>
+
+                <a href="'.base_url('/users/editusers/'.$row['users_id']).'"
+                class="btn bg-cyan btn-sm text-white mb-2 mb-xl-1">
                     <i class="fa fa-pencil"></i>
                 </a>
 
-                <a href="javascript:void(0)"
-                onclick="deleteData('.$row['users_id'].')"
-                class="badge badge-pill badge-danger">
-                    <i class="fa fa-trash"></i>
-                </a>
             ';
 
             $data[] = [
@@ -388,6 +395,43 @@ class Users extends BaseController
             "recordsFiltered" => $totalFiltered,
             "data"            => $data
         ]);
+    }
+
+    public function detail($id) 
+    {
+        $program_id = session()->get('program');
+        $companies = $this->db->table('company_program a')
+            ->select('
+                b.company_program_id,
+                c.*
+            ')
+            ->join('company_program b', 'a.company_program_id = b.company_program_id')
+            ->join('company c', 'b.company_id = c.company_id')
+            ->join('companytype d', 'b.company_type_id = d.type_id')
+            ->where('c.status_id', '15')
+            ->where('d.type_name', 'Supplier')
+            ->where('b.program_id', $program_id)
+            ->orderBy('c.company_name', 'ASC')
+            ->get()
+            ->getRowArray();
+
+        $provinces = $this->provinceModel
+            ->orderBy('provinsi', 'ASC')
+            ->findAll();
+        
+        $users = $this->users->dataUsers($id);
+        $driver = $this->db->table('driver')->where('users_id', $id)->get()->getRowArray();
+
+        $data = [
+            'title' => 'Detail Users',
+            'views' => $users,
+            'driverGroupId' => self::DRIVER_GROUP,
+            'companies' => $companies,
+            'provinces' => $provinces,
+            'driver' => $driver
+        ];
+        // var_dump($data);exit;
+        echo view('users/detail', $data);
     }
 
     //Get data region
@@ -421,6 +465,287 @@ class Users extends BaseController
         return $this->response->setJSON($data);
     }
     // end get region
+
+    public function editusers($id) 
+    {
+        $program_id = session()->get('program');
+
+        $userModel = new UsersModel();
+
+        $groupProgram = $this->users->getgroupProgram();
+        $groups = $this->group->findAll();
+        $users = $this->users->dataUsers($id);
+        // var_dump($users);exit;
+        $companies = $this->db->table('company_program a')
+            ->select('
+                b.company_program_id,
+                c.*
+            ')
+            ->join('company_program b', 'a.company_program_id = b.company_program_id')
+            ->join('company c', 'b.company_id = c.company_id')
+            ->join('companytype d', 'b.company_type_id = d.type_id')
+            ->where('c.status_id', '15')
+            ->where('d.type_name', 'Supplier')
+            ->where('b.program_id', $program_id)
+            ->orderBy('c.company_name', 'ASC')
+            ->get()
+            ->getResultArray();
+
+        $companiesx = $this->db->table('company_program a')
+            ->select('
+                b.company_program_id,
+                c.*
+            ')
+            ->join('company_program b', 'a.company_program_id = b.company_program_id')
+            ->join('company c', 'b.company_id = c.company_id')
+            ->join('companytype d', 'b.company_type_id = d.type_id')
+            ->where('c.status_id', '15')
+            ->where('d.type_name', 'Supplier')
+            ->where('b.program_id', $program_id)
+            ->orderBy('c.company_name', 'ASC')
+            ->get()
+            ->getRowArray();
+        
+        $provinces = $this->provinceModel
+            ->orderBy('provinsi', 'ASC')
+            ->findAll();
+
+        $driver = $this->db->table('driver')->where('users_id', $id)->get()->getRowArray();
+        $data_level = $this->db->table('usersgroupprogram')->where('users_id', $id)->get()->getRowArray();
+        // var_dump($driver);exit;
+        $data = [
+            'users' => $users,
+            'groups' => $groups,
+            'companies' => $companies,
+            'companiesx' => $companiesx,
+            'provinces' => $provinces,
+            'groupProgram' => $groupProgram,
+            'driver' => $driver,
+            'datalevel' => $data_level
+        ];
+
+        echo view('users/edit', $data);
+    }
+
+    public function update(int $userId)
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setJSON([
+                'status'  => false,
+                'message' => 'Invalid request.'
+            ]);
+        }
+
+        $db = db_connect();
+        $db->transBegin();
+
+        try {
+
+            $user = $this->users->find($userId);
+
+            if (!$user) {
+                throw new \Exception('User not found.');
+            }
+
+            $groupId = (int)$this->request->getPost('group_id');
+
+            $this->updateUser($userId, $user);
+
+            $this->updateUserGroup($userId, $groupId);
+
+            $this->syncDriver($userId, $groupId);
+
+            if ($db->transStatus() === false) {
+                throw new \Exception('Failed updating user.');
+            }
+
+            $db->transCommit();
+
+            return $this->response->setJSON([
+                'status' => true,
+                'message' => 'User updated successfully.'
+            ]);
+
+        } catch (\Throwable $e) {
+
+            $db->transRollback();
+
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => ENVIRONMENT === 'development'
+                    ? $e->getMessage()
+                    : 'Failed updating user.'
+            ]);
+        }
+    }
+
+    private function updateUser(int $userId, array $user): void
+    {
+        $fields = [
+
+            'username',
+            'fullname',
+            'phone',
+            'email',
+            'address',
+            'province_id',
+            'city_id',
+            'district_id',
+            'village_id',
+            'title',
+            'data_level',
+            'active'
+
+        ];
+
+        $updateData = $this->getChangedData($user, $fields);
+
+        if (!empty($this->request->getPost('password'))) {
+
+            $updateData['password'] = password_hash(
+                $this->request->getPost('password'),
+                PASSWORD_DEFAULT
+            );
+
+        }
+
+        if (empty($updateData)) {
+            return;
+        }
+
+        $updateData['modified_by'] = session()->get('users_id');
+
+        $this->users->update($userId, $updateData);
+    }
+
+    private function updateUserGroup(int $userId, int $groupId): void
+    {
+        $userGroup = $this->usersGroupProgram
+            ->where('users_id', $userId)
+            ->first();
+
+        if (!$userGroup) {
+
+            $this->usersGroupProgram->insert([
+
+                'users_id'    => $userId,
+                'group_id'   => $groupId,
+                'created_by' => session()->get('users_id')
+
+            ]);
+
+            return;
+        }
+
+        if ((int)$userGroup['group_id'] === $groupId) {
+            return;
+        }
+
+        $this->usersGroupProgram->update(
+            $userGroup['user_group_id'],
+            [
+                'group_id'    => $groupId,
+                'modified_by' => session()->get('users_id')
+            ]
+        );
+    }
+
+    private function syncDriver(int $userId, int $groupId): void
+    {
+        $driver = $this->driver
+            ->where('users_id', $userId)
+            ->first();
+
+        /**
+         * Bukan Driver
+         */
+        if ($groupId != self::DRIVER_GROUP) {
+
+            if ($driver) {
+
+                $this->driver->delete(
+                    $driver['driver_id']
+                );
+
+            }
+
+            return;
+        }
+
+        /**
+         * Driver
+         */
+        $fields = [
+
+            'company_program_id',
+            'driver_type',
+            'driver_name',
+            'license_number',
+            'license_type',
+            'license_expiry_date'
+
+        ];
+
+        /**
+         * Driver belum ada
+         */
+        if (!$driver) {
+
+            $insertData = [];
+
+            foreach ($fields as $field) {
+
+                $insertData[$field] =
+                    $this->request->getPost($field);
+
+            }
+
+            $insertData['users_id'] = $userId;
+            $insertData['created_by'] = session()->get('users_id');
+
+            $this->driver->insert($insertData);
+
+            return;
+        }
+
+        /**
+         * Driver sudah ada
+         */
+        $updateData = $this->getChangedData(
+            $driver,
+            $fields
+        );
+
+        if (empty($updateData)) {
+            return;
+        }
+
+        $updateData['modified_by'] = session()->get('users_id');
+
+        $this->driver->update(
+            $driver['driver_id'],
+            $updateData
+        );
+    }
+
+    private function getChangedData(array $oldData, array $fields): array
+    {
+        $changed = [];
+
+        foreach ($fields as $field) {
+
+            $newValue = $this->request->getPost($field);
+
+            if ((string)($oldData[$field] ?? '') !== (string)$newValue) {
+
+                $changed[$field] = $newValue;
+
+            }
+
+        }
+
+        return $changed;
+    }
 
     public function editprofile($id)
     {

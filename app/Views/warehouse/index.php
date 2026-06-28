@@ -97,6 +97,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -177,7 +178,7 @@ $(document).on('click', '.btnDetail', function () {
 
             $("#loadingDetail").hide();
 
-            $("#detailCompanyContent").html(`
+            $("#detailWareContent").html(`
                 <div class="alert alert-danger">
                     Failed to load company detail.
                 </div>
@@ -187,4 +188,5 @@ $(document).on('click', '.btnDetail', function () {
     });
 
 });
+
 </script>
