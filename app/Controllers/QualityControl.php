@@ -79,7 +79,7 @@ class QualityControl extends BaseController
 
             $photo = $this->request->getFile('photo');
 
-            $photoName = "";
+            $photoPath = "";
             if ($photo->isValid()) {
                 $extension = $photo->getExtension();
     
@@ -92,11 +92,13 @@ class QualityControl extends BaseController
                         true
                     );
                 }
-    
+                $uploadPath = 'uploads/qc/';
                 $photo->move(
                     ROOTPATH . 'public/upload/image/qc',
                     $photoName
                 );
+
+                $photoPath = $uploadPath . $photoName;
             }
             
             // get data shipment model
@@ -118,7 +120,7 @@ class QualityControl extends BaseController
                 'ffa'         => $this->request->getPost('ffa'),
                 'mi'          => $this->request->getPost('mi'),
                 'notes'       => $this->request->getPost('notes'),
-                'photo'       => $photoName,
+                'photo'       => $photoPath,
                 'created_by'  => session()->get('users_id')
             ]);
 
@@ -325,19 +327,13 @@ class QualityControl extends BaseController
                 if ($photo && $photo->isValid() && !$photo->hasMoved()) {
 
                     $extension = $photo->getExtension();
-
                     $randomCode = strtoupper(substr(bin2hex(random_bytes(4)), 0, 8));
-
                     $photoName = 'BYR' . date('Ymd') . $randomCode . '.' . $extension;
-
                     $uploadPath = 'uploads/qc/';
-
                     $photo->move(FCPATH . $uploadPath, $photoName);
 
-                    // simpan path ke database
                     $photoPath = $uploadPath . $photoName;
 
-                    // hapus foto lama
                     if (!empty($getDataQc['photo'])) {
 
                         $oldPhoto = FCPATH . $getDataQc['photo'];
