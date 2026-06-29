@@ -77,4 +77,14 @@ class QualityControlModel extends Model
         return $result;
     }
 
+    function getdataQc($id) 
+    {
+        return $this->db->table('quality_control a')
+            ->select('a.*, b.shipment_number')
+            ->join('shipment b', 'a.shipment_id = b.shipment_id')
+            ->where('qc_id', $id)
+            ->get()
+            ->getRowArray();
+    }
+
 }

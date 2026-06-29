@@ -56,6 +56,7 @@
                                         <th>M & I</th>
                                         <th>NOTES</th>
                                         <th>Created Date</th>
+                                        <th width="10%">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -99,7 +100,8 @@ $(document).ready(function () {
             { data: 'ffa' },
             { data: 'mi' },
             { data: 'notes' },
-            { data: 'created_date' }
+            { data: 'created_date' },
+            { data: 'action' }
         ]
     });
 });

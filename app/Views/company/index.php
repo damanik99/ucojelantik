@@ -4,7 +4,7 @@
 
 <!-- CSS -->
  <!--- FONT-ICONS CSS -->
-<link href="../../assets/css/icons.css" rel="stylesheet"/>
+<link href="<?= base_url() ?>/teamplate/assets/css/icons.css" rel="stylesheet"/>
 <!-- INTERNAL  DATA TABLE CSS-->
 <link href="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.bootstrap4.min.css" rel="stylesheet" />
 <link href="<?= base_url() ?>/teamplate/assets/plugins/datatable/responsivebootstrap4.min.css" rel="stylesheet" />

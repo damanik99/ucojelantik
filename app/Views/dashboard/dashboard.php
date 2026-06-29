@@ -1,6 +1,11 @@
 <!-- MAIN -->
 <?= $this->include('layout/main') ?>
 <!-- MAIN END -->
+ 
+<!-- INTERNAL  DATA TABLE CSS-->
+<link href="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.bootstrap4.min.css" rel="stylesheet" />
+<link href="<?= base_url() ?>/teamplate/assets/plugins/datatable/responsivebootstrap4.min.css" rel="stylesheet" />
+<link href="<?= base_url() ?>/teamplate/assets/plugins/datatable/fileexport/buttons.bootstrap4.min.css" rel="stylesheet" />
 
 <!-- CSS -->
 <!-- INTERNAL SELECT2 CSS -->
@@ -57,6 +62,19 @@
         /* Menambahkan jarak atas pada tombol selling */
     }
 }
+.pagess-headerdashboard {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    margin: 13px 0px;
+    -ms-flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0;
+    border-radius: 7px;
+    position: relative;
+    min-height: 50px;
+}
 </style>
 
 <!-- CSS END -->
@@ -64,15 +82,26 @@
 <!-- LAYOUT BODY -->
 <?= $this->include('layout/body') ?>
 <!-- LAYOUT BODY -->
-
+<?php /** @var string $programId */ ?>
 <!--app-content open-->
 <div class="app-content">
     <div class="side-app">
         <!-- PAGE-HEADER -->
-        <div class="page-header">
+        <div class="pagess-headerdashboard">
             <div>
-                <h1 class="page-title text-center">Hi! SELAMAT DATANG</h1>
+                <h1 class="page-title text-center">Hi! Welcome To Dashboard</h1>
             </div>
+        </div>
+        <?php if($programId == NULL || $programId == '') { ?>
+        <div class="alert alert-warning" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <i class="fa fa-exclamation mr-2" aria-hidden="true"></i> Warning!<br>
+            Program Not Set
+        </div>
+        <?php } ?>
+
+        <div class="row">
+            <?= $this->include('dashboard/shipmenttracking')?>
         </div>
         
     </div>
@@ -81,6 +110,36 @@
 <?= $this->include('layout/footers') ?>
 <!-- FOOTER END -->
 
+<!-- INTERNAL  DATA TABLE JS-->
+<script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/jquery.dataTables.min.js"></script>
+<script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
+<script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.responsive.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> -->
 
-<script src="<?= base_url() ?>/teamplate/assets/plugins/input-mask/jquery.maskedinput.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('#datashipmenttracking').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "<?= base_url('shipmenttracking/datatables') ?>",
+            type: "POST"
+        },
+        columns: [
+            { data: 'shipment_number' },
+            { data: 'purchase_order_number', defaultContent: '-' },
+            { data: 'supplier' },
+            { data: 'buyer' },
+            { data: 'driver_name' },
+            { data: 'plate_number' },
+            { data: 'qty_checkin' },
+            { data: 'qty_checkout' },
+            { data: 'departure_at' },
+            { data: 'arrival_at' },
+            { data: 'status_badge', orderable: false },
+            { data: 'action', orderable: false, searchable: false }
+        ]
+    });
+});
+</script>
+

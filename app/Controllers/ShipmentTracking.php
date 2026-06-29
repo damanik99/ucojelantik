@@ -37,6 +37,214 @@ class ShipmentTracking extends BaseController
         return view('ShipmentTracking/index', $data);
     }
 
+    public function datatables()
+    {
+        $request = service('request');
+        $program = session()->get('program');
+
+        $draw   = $request->getPost('draw');
+        $start  = (int) $request->getPost('start');
+        $length = (int) $request->getPost('length');
+        $search = $request->getPost('search')['value'] ?? '';
+
+        $baseQuery = "
+            FROM shipment s
+
+            INNER JOIN company_program cpsp
+                ON s.supplier_company_program_id = cpsp.company_program_id
+
+            INNER JOIN company_program cpbp
+                ON s.buyer_company_program_id = cpbp.company_program_id
+
+            INNER JOIN company supplier
+                ON cpsp.company_id = supplier.company_id
+
+            INNER JOIN company buyer
+                ON cpbp.company_id = buyer.company_id
+
+            INNER JOIN driver d
+                ON s.driver_id = d.driver_id
+
+            INNER JOIN vehicle v
+                ON s.vehicle_id = v.vehicle_id
+
+            INNER JOIN program p
+                ON cpsp.program_id = p.program_id
+
+            LEFT JOIN (
+                SELECT st1.*
+                FROM shipment_tracking st1
+                INNER JOIN (
+                    SELECT shipment_id,
+                        MAX(tracking_id) AS last_tracking_id
+                    FROM shipment_tracking
+                    GROUP BY shipment_id
+                ) x
+                ON st1.tracking_id = x.last_tracking_id
+            ) last_tracking
+                ON s.shipment_id = last_tracking.shipment_id
+
+            LEFT JOIN status sts
+                ON last_tracking.status_id = sts.status_id
+
+            LEFT JOIN (
+                SELECT
+                    shipment.shipment_id,
+                    SUM(shipment.qty_checkin) AS qty_checkin,
+                    SUM(shipment.qty_checkout) AS qty_checkout
+                FROM shipment_tracking
+                JOIN shipment ON shipment_tracking.shipment_id = shipment.shipment_id
+                GROUP BY shipment.shipment_id
+            ) qty
+                ON qty.shipment_id = s.shipment_id
+
+            LEFT JOIN purchase_order po
+                ON s.purchase_order_id = po.purchase_order_id
+
+            WHERE p.program_id = ?
+        ";
+
+        $params = [$program];
+
+        $filter = "";
+
+        if (!empty($search)) {
+
+            $filter .= "
+                AND (
+                    s.shipment_number LIKE ?
+                    OR po.po_number LIKE ?
+                    OR supplier.company_name LIKE ?
+                    OR buyer.company_name LIKE ?
+                    OR d.driver_name LIKE ?
+                    OR v.plate_number LIKE ?
+                    OR sts.status_name LIKE ?
+                )
+            ";
+
+            for ($i = 0; $i < 7; $i++) {
+                $params[] = "%{$search}%";
+            }
+        }
+
+        $totalRecords = $this->db
+            ->query("SELECT COUNT(*) cnt {$baseQuery}", [$program])
+            ->getRow()
+            ->cnt;
+
+        $totalFiltered = $totalRecords;
+
+        if (!empty($search)) {
+
+            $totalFiltered = $this->db
+                ->query(
+                    "SELECT COUNT(*) cnt {$baseQuery} {$filter}",
+                    $params
+                )
+                ->getRow()
+                ->cnt;
+        }
+
+        $columns = [
+            's.shipment_number',
+            'po.po_number',
+            'supplier.company_name',
+            'buyer.company_name',
+            'd.driver_name',
+            'v.plate_number',
+            'qty.qty_checkin',
+            'qty.quantity_checkout',
+            's.departure_at',
+            's.arrival_at',
+            'sts.status_name'
+        ];
+
+        $orderColumn = $columns[$request->getPost('order')[0]['column'] ?? 0];
+        $orderDir = $request->getPost('order')[0]['dir'] ?? 'DESC';
+
+        $sql = "
+            SELECT
+                s.*,
+
+                po.po_number,
+
+                supplier.company_name AS supplier,
+
+                buyer.company_name AS buyer,
+
+                d.driver_name,
+
+                v.plate_number,
+
+                qty.qty_checkin,
+
+                qty.qty_checkout,
+
+                sts.status_name,
+
+                sts.status_code
+
+            {$baseQuery}
+
+            {$filter}
+
+            ORDER BY {$orderColumn} {$orderDir}
+
+            LIMIT ?, ?
+        ";
+
+        $params[] = $start;
+        $params[] = $length;
+
+        $query = $this->db->query($sql, $params);
+
+        $data = [];
+
+        foreach ($query->getResultArray() as $row) {
+
+            switch (strtoupper($row['status_code'])) {
+
+                case 'PENDING':
+                    $badge = '<span class="badge badge-warning">'.$row['status_name'].'</span>';
+                    break;
+
+                case 'CHECKIN':
+                    $badge = '<span class="badge badge-info">'.$row['status_name'].'</span>';
+                    break;
+
+                case 'CHECKOUT':
+                    $badge = '<span class="badge badge-primary">'.$row['status_name'].'</span>';
+                    break;
+
+                case 'DELIVERED':
+                    $badge = '<span class="badge badge-success">'.$row['status_name'].'</span>';
+                    break;
+
+                default:
+                    $badge = '<span class="badge badge-secondary">'.$row['status_name'].'</span>';
+            }
+
+            $row['status_badge'] = $badge;
+
+            $row['action'] = '
+                <a href="javascript:void(0)"
+                    class="btn bg-gray-dark btn-sm text-white btnDetail"
+                    data-id="'.$row['shipment_id'].'">
+                    <i class="fa fa-eye"></i>
+                </a>
+            ';
+
+            $data[] = $row;
+        }
+
+        return $this->response->setJSON([
+            'draw' => intval($draw),
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $totalFiltered,
+            'data' => $data
+        ]);
+    }
+
     public function create($shipmentId = null)
     {
         

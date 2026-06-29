@@ -118,7 +118,7 @@ class QualityControl extends BaseController
                 'ffa'         => $this->request->getPost('ffa'),
                 'mi'          => $this->request->getPost('mi'),
                 'notes'       => $this->request->getPost('notes'),
-                'photo'       => '/upload/image/qc/' . $photoName,
+                'photo'       => $photoName,
                 'created_by'  => session()->get('users_id')
             ]);
 
@@ -268,19 +268,14 @@ class QualityControl extends BaseController
                     </span>';
             }
 
-            // $row['action'] = '
+            $row['action'] = '
 
-            //     <a href="'.base_url('/qualitycontrol/view/'.$row['qc_id']).'"
-            //     class="badge badge-pill badge-info">
-            //         <i class="fa fa-eye"></i>
-            //     </a>
+                <a href="'.base_url('/qualitycontrol/edit/'.$row['qc_id']).'"
+                class="badge badge-pill badge-success">
+                    <i class="fa fa-pencil"></i>
+                </a>
 
-            //     <a href="'.base_url('/qualitycontrol/edit/'.$row['qc_id']).'"
-            //     class="badge badge-pill badge-success">
-            //         <i class="fa fa-pencil"></i>
-            //     </a>
-
-            // ';
+            ';
 
             $data[] = $row;
         }
@@ -291,5 +286,117 @@ class QualityControl extends BaseController
             "recordsFiltered" => $totalFiltered,
             "data" => $data
         ]);
+    }
+
+    public function edit($id)
+    {
+        $companyType     = $this->companyType->where('status', 'active')->findAll();
+        $getDataShipment = $this->qcModel->getDataShipment();
+        $getDataQc       = $this->qcModel->getdataQc($id);
+
+        if ($this->request->getMethod() === 'post') {
+
+            $validation = \Config\Services::validation();
+
+            $rules = [
+                'type_id'     => 'required',
+                'shipment_id' => 'required',
+                'ffa'         => 'required|decimal',
+                'mi'          => 'required|decimal',
+                'result'      => 'required'
+            ];
+
+            if (!$this->validate($rules)) {
+
+                return $this->response->setJSON([
+                    'status' => false,
+                    'errors' => $validation->getErrors()
+                ]);
+            }
+
+            $this->db->transBegin();
+
+            try {
+
+                $photoPath = $getDataQc['photo'];
+
+                $photo = $this->request->getFile('photo');
+
+                if ($photo && $photo->isValid() && !$photo->hasMoved()) {
+
+                    $extension = $photo->getExtension();
+
+                    $randomCode = strtoupper(substr(bin2hex(random_bytes(4)), 0, 8));
+
+                    $photoName = 'BYR' . date('Ymd') . $randomCode . '.' . $extension;
+
+                    $uploadPath = 'uploads/qc/';
+
+                    $photo->move(FCPATH . $uploadPath, $photoName);
+
+                    // simpan path ke database
+                    $photoPath = $uploadPath . $photoName;
+
+                    // hapus foto lama
+                    if (!empty($getDataQc['photo'])) {
+
+                        $oldPhoto = FCPATH . $getDataQc['photo'];
+
+                        if (file_exists($oldPhoto)) {
+                            unlink($oldPhoto);
+                        }
+                    }
+                }
+
+                $updateData = [
+                    'shipment_id' => $this->request->getPost('shipment_id'),
+                    'type_id'     => $this->request->getPost('type_id'),
+                    'ffa'         => $this->request->getPost('ffa'),
+                    'mi'          => $this->request->getPost('mi'),
+                    'result'      => $this->request->getPost('result'),
+                    'notes'       => $this->request->getPost('notes'),
+                    'photo'       => $photoPath,
+                    'modified_by' => session()->get('username'),
+                    'modified_at' => date('Y-m-d H:i:s')
+                ];
+
+                $this->qcModel->update($id, $updateData);
+
+                if ($this->db->transStatus() === false) {
+
+                    $this->db->transRollback();
+
+                    return $this->response->setJSON([
+                        'status' => false,
+                        'message' => 'Failed to update data.'
+                    ]);
+                }
+
+                $this->db->transCommit();
+
+                return $this->response->setJSON([
+                    'status' => true,
+                    'message' => 'Quality Control updated successfully.'
+                ]);
+
+            } catch (\Throwable $e) {
+
+                $this->db->transRollback();
+
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ]);
+            }
+        }
+
+        $data = [
+            'ttle'        => 'Edit Quality Control',
+            'companyType' => $companyType,
+            'shipments'   => $getDataShipment,
+            'qc'          => $getDataQc
+        ];
+
+        return view('qualitycontrol/edit', $data);
     }
 }
