@@ -270,7 +270,7 @@ class QualityControl extends BaseController
 
             $row['action'] = '
 
-                <a href="'.base_url('/qualitycontrol/edit/'.$row['qc_id']).'"
+                <a href="'.base_url('/QualityControl/edit/'.$row['qc_id']).'"
                 class="badge badge-pill badge-success">
                     <i class="fa fa-pencil"></i>
                 </a>
