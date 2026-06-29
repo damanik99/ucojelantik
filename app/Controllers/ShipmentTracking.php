@@ -165,23 +165,14 @@ class ShipmentTracking extends BaseController
         $sql = "
             SELECT
                 s.*,
-
                 po.po_number,
-
                 supplier.company_name AS supplier,
-
                 buyer.company_name AS buyer,
-
                 d.driver_name,
-
                 v.plate_number,
-
                 qty.qty_checkin,
-
                 qty.qty_checkout,
-
                 sts.status_name,
-
                 sts.status_code
 
             {$baseQuery}

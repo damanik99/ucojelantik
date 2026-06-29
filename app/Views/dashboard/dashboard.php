@@ -122,7 +122,7 @@ $(document).ready(function () {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "<?= base_url('shipmenttracking/datatables') ?>",
+            url: "<?= base_url('ShipmentTracking/datatables') ?>",
             type: "POST"
         },
         columns: [
