@@ -17,11 +17,12 @@
                                 <th>Driver</th>
                                 <th>Vehicle</th>
                                 <th>Quantity Checkin</th>
+                                <th>Unit Checkin</th>
                                 <th>Quantity Checkout</th>
+                                <th>Unit Checkout</th>
                                 <th>Departure At</th>
                                 <th>Arrival At</th>
                                 <th>Status</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                     </table>

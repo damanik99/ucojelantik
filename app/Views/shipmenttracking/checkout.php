@@ -116,10 +116,10 @@
                                 </div>
                                 <div class="col-md-12">
                                     <label class="form-label">Unit</label>
-                                    <select name="unit" class="form-control select2" >
+                                    <select name="unit_checkout" class="form-control select2" >
                                         <option value="">Pilih</option>
                                         <option value="kg">kg</option>
-                                        <option value="kg">Liter</option>
+                                        <option value="liter">Liter</option>
                                     </select>
                                 </div>
                             </div>

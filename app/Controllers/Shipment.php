@@ -269,15 +269,23 @@ class Shipment extends BaseController
             ]);
         }
 
-        $data['supplier'] = $this->companyType->getCompanyByType('SUPPLIER', $program_id);
-        $data['buyer']    = $this->companyType->getCompanyByType('BUYER', $program_id);
-        $data['driver']   = (new DriverModel())->findAll();
-        $data['vehicle']  = (new VehicleModel())->findAll();
+        $supplier = $this->companyType->getCompanyByType('SUPPLIER', $program_id);
+        $buyer   = $this->companyType->getCompanyByType('BUYER', $program_id);
+        // $driver  = (new DriverModel())->findAll();
+        $vehicle  = (new VehicleModel())->findAll();
         // $data['po']       = (new PurchaseOrderModel())->findAll();
         
-        $data['status'] = (new StatusModel())
-            ->where('module', 'SHIPMENT')
-            ->findAll();
+        $status = (new StatusModel())->where('module', 'SHIPMENT')->findAll();
+
+        $dataDriver = $this->db->table('driver')->get()->getResultArray();
+
+        $data = [
+            'driver' => $dataDriver,
+            'status' => $status,
+            'supplier' => $supplier,
+            'buyer' => $buyer,
+            'vehicle' =>  $vehicle
+        ];
 
         return view('shipment/create', $data);
     }

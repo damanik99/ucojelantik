@@ -133,11 +133,13 @@ $(document).ready(function () {
             { data: 'driver_name' },
             { data: 'plate_number' },
             { data: 'qty_checkin' },
+            { data: 'unit_checkin' },
             { data: 'qty_checkout' },
+            { data: 'unit_checkout' },
             { data: 'departure_at' },
             { data: 'arrival_at' },
-            { data: 'status_badge', orderable: false },
-            { data: 'action', orderable: false, searchable: false }
+            { data: 'status_badge', orderable: false }
+            // { data: 'action', orderable: false, searchable: false }
         ]
     });
 });

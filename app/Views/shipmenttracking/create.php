@@ -104,15 +104,15 @@
                                         readonly>
                                 </div>
                                 <div class="col-md-12">
-                                    <label class="form-label">quantity</label>
+                                    <label class="form-label">Volume</label>
                                     <input type="text" name="qty_checkin" class="form-control">
                                 </div>
                                 <div class="col-md-12">
-                                    <label class="form-label">quantity</label>
-                                    <select name="unit" class="form-control select2" >
+                                    <label class="form-label">unit</label>
+                                    <select name="unit_checkin" class="form-control select2" >
                                         <option value="">Pilih</option>
                                         <option value="kg">kg</option>
-                                        <option value="kg">Liter</option>
+                                        <option value="liter">Liter</option>
                                     </select>
                                 </div>
                             </div>

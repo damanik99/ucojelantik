@@ -90,8 +90,8 @@ class ShipmentTracking extends BaseController
             LEFT JOIN (
                 SELECT
                     shipment.shipment_id,
-                    SUM(shipment.qty_checkin) AS qty_checkin,
-                    SUM(shipment.qty_checkout) AS qty_checkout
+                    qty_checkin,
+                    qty_checkout
                 FROM shipment_tracking
                 JOIN shipment ON shipment_tracking.shipment_id = shipment.shipment_id
                 GROUP BY shipment.shipment_id
@@ -153,7 +153,9 @@ class ShipmentTracking extends BaseController
             'd.driver_name',
             'v.plate_number',
             'qty.qty_checkin',
-            'qty.quantity_checkout',
+            'unit_checkin',
+            'qty.qty_checkout',
+            'unit_checkout',
             's.departure_at',
             's.arrival_at',
             'sts.status_name'
@@ -173,7 +175,9 @@ class ShipmentTracking extends BaseController
                 qty.qty_checkin,
                 qty.qty_checkout,
                 sts.status_name,
-                sts.status_code
+                sts.status_code,
+                unit_checkout,
+                unit_checkin
 
             {$baseQuery}
 
@@ -217,13 +221,13 @@ class ShipmentTracking extends BaseController
 
             $row['status_badge'] = $badge;
 
-            $row['action'] = '
-                <a href="javascript:void(0)"
-                    class="btn bg-gray-dark btn-sm text-white btnDetail"
-                    data-id="'.$row['shipment_id'].'">
-                    <i class="fa fa-eye"></i>
-                </a>
-            ';
+            // $row['action'] = '
+            //     <a href="javascript:void(0)"
+            //         class="btn bg-gray-dark btn-sm text-white btnDetail"
+            //         data-id="'.$row['shipment_id'].'">
+            //         <i class="fa fa-eye"></i>
+            //     </a>
+            // ';
 
             $data[] = $row;
         }
@@ -307,7 +311,7 @@ class ShipmentTracking extends BaseController
                 $this->shipment->update($shipmentId, [
                     'status_id'     => $statusShipment['status_id'],
                     'qty_checkin'   => $this->request->getPost('qty_checkin'),
-                    'unit'          => $this->request->getPost('unit'),
+                    'unit_checkin'  => $this->request->getPost('unit_checkin'),
                     'modified_by'   => session()->get('users_id'),
                     'modified_date' => date('Y-m-d H:i:s')
                 ]);
@@ -538,7 +542,7 @@ class ShipmentTracking extends BaseController
                 */
                 $this->shipment->update($shipmentId, [
                     'qty_checkout' => $this->request->getPost('qtycheckout'),
-                    'unit'         => $this->request->getPost('unit'),
+                    'unit_checkout'=> $this->request->getPost('unit_checkout'),
                     'arrival_at'   => date('Y-m-d H:i:s'),
                     'status_id'    => $statusShipment['status_id'],
                     'modified_by'  => session()->get('users_id'),

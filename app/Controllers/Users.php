@@ -666,9 +666,7 @@ class Users extends BaseController
                 $this->driver->delete(
                     $driver['driver_id']
                 );
-
             }
-
             return;
         }
 
@@ -683,7 +681,6 @@ class Users extends BaseController
             'license_number',
             'license_type',
             'license_expiry_date'
-
         ];
 
         /**
@@ -692,7 +689,6 @@ class Users extends BaseController
         if (!$driver) {
 
             $insertData = [];
-
             foreach ($fields as $field) {
 
                 $insertData[$field] =
