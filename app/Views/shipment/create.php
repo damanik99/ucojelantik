@@ -134,6 +134,11 @@
                                         <label class="form-label">Vehicle</label>
                                         <select name="vehicle_id" id="vehicle_id" class="form-control select2-show-search">
                                             <option value="">Select Vehicle</option>
+                                            <?php foreach ($vehicle as $row) : ?>
+                                                <option value="<?= $row['vehicle_id']; ?>">
+                                                    <?= $row['plate_number'].' - '.$row['brand']; ?>
+                                                </option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
