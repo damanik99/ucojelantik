@@ -132,7 +132,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-label">Vehicle</label>
-                                        <select name="vehicle_id" id="vehicle_id" class="form-control select2-show-search">
+                                        <select name="vehicle_id" class="form-control select2-show-search">
                                             <option value="">Select Vehicle</option>
                                             <?php foreach ($vehicle as $row) : ?>
                                                 <option value="<?= $row['vehicle_id']; ?>">
