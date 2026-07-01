@@ -388,7 +388,7 @@ class ShipmentTracking extends BaseController
                 $photoName = 'BYR' . date('Ymd') . $randomCode . '.' . $extension;
 
                 $photo->move(
-                    ROOTPATH . 'public/upload/image/shipmenttracking',
+                    FCPATH . 'upload/image/shipmenttracking',
                     $photoName
                 );
 
@@ -485,7 +485,7 @@ class ShipmentTracking extends BaseController
 
                 $fileName = $photo->getRandomName();
 
-                $uploadPath = ROOTPATH . 'public/image/shipmenttracking';
+                $uploadPath = FCPATH . 'upload/image/shipmenttracking';
 
                 if (!is_dir($uploadPath)) {
                     mkdir($uploadPath, 0775, true);
