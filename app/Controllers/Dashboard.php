@@ -92,7 +92,6 @@ class DashBoard extends BaseController
         $driverId = session()->get('title');
         $data['shipment'] = $shipmentModel->getActiveShipmentDriver($driverId);
         
-        
         return view('driver/home', $data);
     }
 
