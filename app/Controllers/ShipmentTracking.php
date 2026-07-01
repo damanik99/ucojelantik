@@ -280,7 +280,7 @@ class ShipmentTracking extends BaseController
                 }
 
                 $photo->move(
-                    ROOTPATH . 'public/upload/image/shipmenttracking',
+                    FCPATH . 'upload/image/shipmenttracking',
                     $fileName
                 );
 
