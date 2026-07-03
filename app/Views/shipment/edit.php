@@ -111,8 +111,14 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-label">Driver <span class="text-danger">*</span></label>
-                                        <select name="driver_id" id="driver_id" class="form-control select2-show-search" required>
+                                        <select name="driver_id" class="form-control select2-show-search" required>
                                             <option value="">--Select Driver--</option>
+                                            <?php foreach ($driver as $row) : ?>
+                                                <option value="<?= $row['driver_id']; ?>"
+                                                        <?= $row['driver_name'] == $edit['driver_name'] ? 'Selected' : ''; ?>>
+                                                    <?= $row['driver_name']; ?>
+                                                </option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -120,8 +126,14 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-label">Vehicle</label>
-                                        <select name="vehicle_id" id="vehicle_id" class="form-control select2-show-search">
+                                        <select name="vehicle_id" class="form-control select2-show-search">
                                             <option value="">Select Vehicle</option>
+                                            <?php foreach ($vehicle as $row) : ?>
+                                                <option value="<?= $row['vehicle_id']; ?>"
+                                                        <?= $row['plate_number'] == $edit['plate_number'] ? 'Selected' : ''; ?>>
+                                                    <?= $row['plate_number'].' - '.$row['brand']; ?>
+                                                </option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -274,14 +286,13 @@ function loadSupplierData(company_program_id)
     }
 }
 
-// Ketika supplier berubah
 $('#supplier_company_program_id').on('change', function () {
 
     loadSupplierData($(this).val());
 
 });
 
-// Ketika halaman edit pertama kali dibuka
+
 $(document).ready(function () {
 
     let company_program_id = $('#supplier_company_program_id').val();

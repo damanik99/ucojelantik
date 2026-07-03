@@ -199,7 +199,7 @@ class Shipment extends BaseController
     public function detailShipment($id)
     {
         $dataShipment = $this->shipment->getDetailShipment($id);
-        // var_dump($dataShipment);exit;   
+        
         $data = [
             'views' => $dataShipment,
         ];
@@ -209,7 +209,7 @@ class Shipment extends BaseController
 
     public function create()
     {
-        $program_id = session()->get('program');                
+        $program_id = session()->get('program');              
         if ($this->request->getMethod() == 'post') {
             
             $validation = \Config\Services::validation();
@@ -271,9 +271,9 @@ class Shipment extends BaseController
 
         $supplier = $this->companyType->getCompanyByType('SUPPLIER', $program_id);
         $buyer   = $this->companyType->getCompanyByType('BUYER', $program_id);
-        // $driver  = (new DriverModel())->findAll();
+        
         $vehicle  = (new VehicleModel())->findAll();
-        // $data['po']       = (new PurchaseOrderModel())->findAll();
+        // $data['po'] = (new PurchaseOrderModel())->findAll();
         
         $status = (new StatusModel())->where('module', 'SHIPMENT')->findAll();
 

@@ -64,16 +64,13 @@
                             <div class="row"> 
                                 <div class="col-md-12">
                                     <label class="form-label">Buyer</label>
-                                    <input type="text" class="form-control" value="<?= $shipmentTrack['buyer'] ?>" readonly>
+                                    <input type="text" class="form-control" name="buyer" value="<?= $shipmentTrack['buyer'] ?>" readonly>
                                 </div>
                                 <div class="col-12 mb-2">
                                     <label class="form-label">Lokasi GPS</label>
 
                                     <div class="input-group">
-                                        <input type="text"
-                                            id="location_display"
-                                            class="form-control"
-                                            readonly
+                                        <input type="text" id="location_display" class="form-control" readonly
                                             placeholder="Klik Refresh Lokasi">
                                         <div class="input-group-append">
                                             <button type="button"
@@ -88,35 +85,41 @@
                                 <div class="col-6">
                                     <label class="form-label">Latitude</label>
 
-                                    <input type="text"
-                                        id="latitude_display"
-                                        class="form-control"
-                                        readonly>
+                                    <input type="text" id="latitude_display" class="form-control" readonly>
                                 </div>
 
                                 <div class="col-6">
                                     <label class="form-label">Longitude</label>
 
-                                    <input type="text"
-                                        id="longitude_display"
-                                        class="form-control"
-                                        readonly>
+                                    <input type="text" id="longitude_display" class="form-control" readonly>
                                 </div>
+
                                 <div class="col-md-12">
                                     <label class="form-label">FFA</label>
                                     <input type="text" name="ffa" class="form-control">
                                 </div>
+
                                 <div class="col-md-12">
                                     <label class="form-label">M&I</label>
                                     <input type="text" name="mi" class="form-control">
                                 </div>
+
+                                <div class="col-md-12">
+                                    <label class="form-label">Hasil <span class="text-danger">*</span></label>
+                                    <select name="result" class="form-control" required>
+                                        <option value="">Pilih</option>
+                                        <option value="in_spec">IN SPEC</option>
+                                        <option value="out_spec">OUT SPEC</option>
+                                    </select>
+                                </div>
+
                                 <div class="col-md-12">
                                     <label class="form-label">Volume</label>
-                                    <input type="text" name="qtycheckout" class="form-control">
+                                    <input type="text" name="qtycheckout" class="form-control" required>
                                 </div>
                                 <div class="col-md-12">
                                     <label class="form-label">Unit</label>
-                                    <select name="unit_checkout" class="form-control select2" >
+                                    <select name="unit_checkout" class="form-control select2" required>
                                         <option value="">Pilih</option>
                                         <option value="kg">kg</option>
                                         <option value="liter">Liter</option>
@@ -137,17 +140,13 @@
                                 <textarea class="form-control" rows="4" name="notes"
                                     placeholder="Contoh: Berangkat dari gudang supplier"></textarea>
                             </div>
-
                             <!-- BUTTON -->
                             <div class="form-group mb-0">
-                                <button type="submit"
-                                        id="btnSubmit"
-                                        class="btn btn-primary btn-block">
+                                <button type="submit" id="btnSubmit" class="btn btn-primary btn-block">
                                     <i class="fe fe-check-circle"></i>
                                     CHECK OUT
                                 </button>
                             </div>
-
                         </form>
 
                     </div>
@@ -176,17 +175,13 @@ $('#photo').on('change', function () {
     if (!file) {
         return;
     }
-
     const reader = new FileReader();
 
     reader.onload = function (e) {
-
         $('#previewImage').attr('src', e.target.result);
-
         $('#previewImage').removeClass('d-none');
 
     };
-
     reader.readAsDataURL(file);
 
 });
@@ -217,15 +212,10 @@ $('#btnLocation').click(function() {
 
                 const data = await response.json();
 
-                
-
                 if (data.display_name) {
-
                     $('#location_display').val(data.display_name);
                     $('#address').val(data.display_name ?? '');
-
                 } else {
-
                     $('#location_display').val(lat + ', ' + lon);
                 }
 
@@ -236,7 +226,6 @@ $('#btnLocation').click(function() {
             }
 
         },
-
         function(error) {
 
             Swal.fire({
@@ -246,15 +235,12 @@ $('#btnLocation').click(function() {
             });
 
         },
-
         {
             enableHighAccuracy: true,
             timeout: 10000,
             maximumAge: 0
         }
-
     );
-
 });
 
 // Save Shipment

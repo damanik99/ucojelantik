@@ -14,6 +14,10 @@
 <link href="<?= base_url() ?>/teamplate/assets/plugins/scroll-bar/jquery.mCustomScrollbar.css" rel="stylesheet" />
 <!--PERFECT SCROLL CSS-->
 <link href="<?= base_url() ?>/teamplate/assets/plugins/p-scroll/perfect-scrollbar.css" rel="stylesheet" />
+
+<!-- INTERNAL GALLERY CSS -->
+<link href="<?= base_url() ?>/teamplate/assets/plugins/gallery/gallery.css" rel="stylesheet">
+
 <style>
 .gear-btn {
     position: absolute;
@@ -75,6 +79,24 @@
     position: relative;
     min-height: 50px;
 }
+
+/* galery Image*/
+#shipmentGallery{
+    column-count:4;
+    column-gap:12px;
+}
+
+#shipmentGallery .gallery-item{
+    break-inside:avoid;
+    margin-bottom:12px;
+}
+
+#shipmentGallery img{
+    width:100%;
+    height:auto;
+    display:block;
+    border-radius:8px;
+}
 </style>
 
 <!-- CSS END -->
@@ -103,7 +125,7 @@
         <div class="row">
             <?= $this->include('dashboard/shipmenttracking')?>
         </div>
-        
+        <?= $this->include('dashboard/modalimage/modal')?>
     </div>
 </div>
 <!-- FOOTER -->
@@ -114,7 +136,21 @@
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/jquery.dataTables.min.js"></script>
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
 <script src="<?= base_url() ?>/teamplate/assets/plugins/datatable/dataTables.responsive.min.js"></script>
+
+<!-- INTERNAL GALLERY JS -->
+<!-- <script src="<?= base_url() ?>/teamplate/assets/plugins/gallery/picturefill.js"></script>
+<script src="<?= base_url() ?>/teamplate/assets/plugins/gallery/lightgallery.js"></script>
+<script src="<?= base_url() ?>/teamplate/assets/plugins/gallery/lightgallery-1.js"></script>
+<script src="<?= base_url() ?>/teamplate/assets/plugins/gallery/lg-pager.js"></script>
+<script src="<?= base_url() ?>/teamplate/assets/plugins/gallery/lg-autoplay.js"></script>
+<script src="<?= base_url() ?>/teamplate/assets/plugins/gallery/lg-fullscreen.js"></script>
+<script src="<?= base_url() ?>/teamplate/assets/plugins/gallery/lg-zoom.js"></script>
+<script src="<?= base_url() ?>/teamplate/assets/plugins/gallery/lg-hash.js"></script>
+<script src="<?= base_url() ?>/teamplate/assets/plugins/gallery/lg-share.js"></script> -->
+
 <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css">
 
 <script>
 $(document).ready(function () {
@@ -126,6 +162,7 @@ $(document).ready(function () {
             type: "POST"
         },
         columns: [
+            { data: 'action', orderable: false, searchable: false },
             { data: 'shipment_number' },
             { data: 'purchase_order_number', defaultContent: '-' },
             { data: 'supplier' },
@@ -143,5 +180,64 @@ $(document).ready(function () {
         ]
     });
 });
+
+$(document).on('click', '.btnImage', function () {
+
+    let id = $(this).data('id');
+
+    $("#detailimage").html("");
+    $("#loadingDetailImage").show();
+
+    $("#modalImage").modal("show");
+
+    $.ajax({
+        url: "<?= base_url('/shipmenttracking/detailimage')?>/" + id,
+        type: "GET",
+        success: function(response){
+
+            $("#loadingDetailImage").hide();
+            $("#detailimage").html(response);
+
+            if (typeof initShipmentGallery === "function") {
+                initShipmentGallery();
+            }
+
+        },
+        error:function(){
+
+            $("#loadingDetailImage").hide();
+
+            $("#detailimage").html(`
+                <div class="alert alert-danger">
+                    Failed to load image detail.
+                </div>
+            `);
+
+        }
+    });
+
+});
+
+</script>
+
+<script type="module">
+
+import PhotoSwipeLightbox from "https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js";
+
+window.initShipmentGallery = function () {
+
+    const gallery = document.querySelector('#shipmentGallery');
+
+    if (!gallery) return;
+
+    const lightbox = new PhotoSwipeLightbox({
+        gallery: '#shipmentGallery',
+        children: 'a',
+        pswpModule: () => import("https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js")
+    });
+
+    lightbox.init();
+};
+
 </script>
 

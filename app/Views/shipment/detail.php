@@ -39,17 +39,12 @@
 
             <tr>
                 <th>QTY Check In</th>
-                <td><?= $views['qty_checkin']; ?></td>
+                <td><?= $views['qty_checkin']; ?> <?= $views['unit_checkin']; ?></td>
             </tr>
 
             <tr>
                 <th>QTY Check Out</th>
-                <td><?= $views['qty_checkout']; ?></td>
-            </tr>
-
-            <tr>
-                <th>Unit</th>
-                <td><?= $views['unit']; ?></td>
+                <td><?= $views['qty_checkout']; ?> <?= $views['unit_checkout']; ?></td>
             </tr>
 
             <tr>

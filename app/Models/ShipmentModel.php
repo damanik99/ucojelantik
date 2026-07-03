@@ -52,17 +52,16 @@ class ShipmentModel extends Model
         $month = date('n');
         $year  = date('y');
 
-        $prefix = '/SJ/' . $monthRoman[$month] . '/' . $year;
+        $suffix = '/SJ/' . $monthRoman[$month] . '/' . $year;
 
         $last = $this->select('shipment_number')
-            ->like('shipment_number', $prefix, 'before')
-            ->orderBy('shipment_id', 'DESC')
-            ->first();
-
+                ->orderBy('shipment_id', 'DESC')
+                ->first();
+ 
         if ($last) {
 
             $parts = explode('/', $last['shipment_number']);
-            $number = (int)$parts[0] + 1;
+            $number = (int) $parts[0] + 1;
 
         } else {
 
@@ -70,7 +69,7 @@ class ShipmentModel extends Model
 
         }
 
-        return sprintf('%03d', $number) . $prefix;
+        return sprintf('%03d', $number) . $suffix;
     }
 
     public function getActiveShipmentDriver($driverId)

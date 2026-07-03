@@ -40,7 +40,7 @@ class QualityControl extends BaseController
         $companyType = $this->companyType->where('status', 'active')->findAll();
 
         $getDataShipment = $this->qcModel->getDataShipment();
-        
+        // var_dump($getDataShipment);exit;
         $data = [
             'shipments' => $getDataShipment,
             'companyType' => $companyType
@@ -74,9 +74,6 @@ class QualityControl extends BaseController
 
         try 
         {
-            $typeId = $this->request->getPost('type_id');
-            $shipmentId = $this->request->getPost('shipment_id');
-
             $photo = $this->request->getFile('photo');
 
             $photoPath = "";
@@ -92,7 +89,7 @@ class QualityControl extends BaseController
                         true
                     );
                 }
-                $uploadPath = 'uploads/qc/';
+                $uploadPath = 'uploads/image/qc/';
                 $photo->move(
                     ROOTPATH . 'public/upload/image/qc',
                     $photoName
@@ -100,22 +97,18 @@ class QualityControl extends BaseController
 
                 $photoPath = $uploadPath . $photoName;
             }
-            
-            // get data shipment model
-            $getDataShipment = $this->shipment->getDetailShipment($shipmentId);
 
-            $getTypeId = $this->companyType->where('type_id', $typeId)->get()->getRowArray();
-            $qc_type = "";
-            if ($getTypeId['type_id'] == '1') {
-                $qc_type = $getTypeId['type_name'];
-            } else {
-                $qc_type = $getTypeId['type_name'];
-            }
+            $company = $this->request->getPost('type_id');
+            // var_dump($company);exit;
+            // $expl = explode(' - ', $companytype);
+            
+            // $company = trim($expl[0]);
+            // $type = trim($expl[1]);
 
             $this->qcModel->insert([
                 'shipment_id' => $this->request->getPost('shipment_id'),
-                'company_name'=> $getDataShipment['supplier'],
-                'qc_type'     => $qc_type, 
+                'company_name'=> $company,
+                'qc_type'     => 'Supplier',
                 'result'      => $this->request->getPost('result'),
                 'ffa'         => $this->request->getPost('ffa'),
                 'mi'          => $this->request->getPost('mi'),
@@ -293,8 +286,8 @@ class QualityControl extends BaseController
     public function edit($id)
     {
         $companyType     = $this->companyType->where('status', 'active')->findAll();
-        $getDataShipment = $this->qcModel->getDataShipment();
         $getDataQc       = $this->qcModel->getdataQc($id);
+        $getDataShipment = $this->qcModel->getDataShipmentEdit($getDataQc['shipment_id']);
 
         if ($this->request->getMethod() === 'post') {
 
@@ -343,7 +336,7 @@ class QualityControl extends BaseController
                         }
                     }
                 }
-
+                
                 $updateData = [
                     'shipment_id' => $this->request->getPost('shipment_id'),
                     'type_id'     => $this->request->getPost('type_id'),
@@ -394,5 +387,12 @@ class QualityControl extends BaseController
         ];
 
         return view('qualitycontrol/edit', $data);
+    }
+
+    public function getType($id) //company type
+    {
+        $getDataType = $this->qcModel->getCompanytype($id);
+
+        return $this->response->setJSON($getDataType);
     }
 }

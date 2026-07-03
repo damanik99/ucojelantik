@@ -71,15 +71,11 @@
                                     <label class="form-label">Lokasi GPS</label>
 
                                     <div class="input-group">
-                                        <input type="text"
-                                            id="location_display"
-                                            class="form-control"
+                                        <input type="text" id="location_display" class="form-control"
                                             readonly
                                             placeholder="Klik Refresh Lokasi">
                                         <div class="input-group-append">
-                                            <button type="button"
-                                                    id="btnLocation"
-                                                    class="btn btn-light border">
+                                            <button type="button" id="btnLocation" class="btn btn-light border">
                                                 <i class="fe fe-refresh-cw"></i>
                                             </button>
                                         </div>
@@ -89,24 +85,20 @@
                                 <div class="col-6">
                                     <label class="form-label">Latitude</label>
 
-                                    <input type="text"
-                                        id="latitude_display"
-                                        class="form-control"
-                                        readonly>
+                                    <input type="text" id="latitude_display" class="form-control" readonly>
                                 </div>
 
                                 <div class="col-6">
                                     <label class="form-label">Longitude</label>
 
-                                    <input type="text"
-                                        id="longitude_display"
-                                        class="form-control"
-                                        readonly>
+                                    <input type="text" id="longitude_display" class="form-control" readonly>
                                 </div>
+
                                 <div class="col-md-12">
                                     <label class="form-label">Volume</label>
-                                    <input type="text" name="qty_checkin" class="form-control">
+                                    <input type="text" name="qty_checkin" class="form-control" required>
                                 </div>
+
                                 <div class="col-md-12">
                                     <label class="form-label">unit</label>
                                     <select name="unit_checkin" class="form-control select2" >
@@ -124,23 +116,16 @@
 
                             <!-- CATATAN -->
                             <div class="form-group mb-4">
-                                <label class="form-label font-weight-bold">
-                                    Catatan (Opsional)
-                                </label>
-
+                                <label class="form-label font-weight-bold">Note (Opsional)</label>
                                 <textarea class="form-control" rows="4" name="notes" placeholder="Contoh: Berangkat dari gudang supplier"></textarea>
                             </div>
 
                             <!-- BUTTON -->
                             <div class="form-group mb-0">
-                                <button type="submit"
-                                        id="btnSubmit"
-                                        class="btn btn-primary btn-block">
-                                    <i class="fe fe-check-circle"></i>
-                                    SIMPAN CHECK-IN
+                                <button type="submit" id="btnSubmit" class="btn btn-primary btn-block">
+                                    <i class="fe fe-check-circle"></i>SIMPAN CHECK-IN
                                 </button>
                             </div>
-
                         </form>
 
                     </div>

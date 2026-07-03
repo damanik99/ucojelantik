@@ -45,21 +45,11 @@
 
                         <form id="qcForm" enctype="multipart/form-data">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <label class="form-label">Company Type<span class="text-danger">*</span></label>
-                                    <select id="type_id" name="type_id" class="form-control select2" required>
-                                        <option value="">Pilih Jenis</option>
-                                        <?php foreach ($companyType as $row) : ?>
-                                        <option value="<?= $row['type_id']; ?>"><?= $row['type_name']; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label">Shipment <span class="text-danger">*</span></label>
-                                    <select name="shipment_id" class="form-control select2" required>
-
-                                        <option value="">Pilih Shipment</option>
+                                    <select name="shipment_id" id="shipment_id" class="form-control select2-show-search" required>
+                                        <option value="">Select Shipment</option>
                                         <?php foreach ($shipments as $row) : ?>
                                             <option value="<?= $row['shipment_id']; ?>">
                                                 <?= $row['shipment_number']; ?>
@@ -72,25 +62,31 @@
                                 </div>
 
                                 <div class="col-md-6">
+                                    <label class="form-label">Supplier</label>
+                                    <input id="type_id" type="text" name="type_id" placeholder="Get Name Supplier" class="form-control" required readonly>
+                                </div>
+
+                                <!-- <div class="col-md-6">
+                                    <label class="form-label">Company Type<span class="text-danger">*</span></label>
+                                    <select id="type_id" name="type_id" class="form-control select2" required>
+                                        <option value="">Pilih Jenis</option>
+                                    </select>
+                                </div> -->
+
+                                <div class="col-md-6">
                                     <label class="form-label">FFA (%) <span class="text-danger">*</span></label>
-                                    <input type="number"
-                                        step="0.01"
-                                        name="ffa"
-                                        class="form-control" required>
+                                    <input type="number" step="0.01" name="ffa" class="form-control" required>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label">M&I (%) <span class="text-danger">*</span></label>
-                                    <input type="number"
-                                        step="0.01"
-                                        name="mi"
-                                        class="form-control" required>
+                                    <input type="number" step="0.01" name="mi" class="form-control" required>
                                 </div>
 
                                 <div class="col-md-12">
                                     <label class="form-label">Hasil <span class="text-danger">*</span></label>
                                     <select name="result" class="form-control" required>
-                                        <option value="">Pilih</option>
+                                        <option value="">Select</option>
                                         <option value="in_spec">IN SPEC</option>
                                         <option value="out_spec">OUT SPEC</option>
                                     </select>
@@ -105,6 +101,7 @@
                                     <label class="form-label">Notes</label>
                                     <textarea name="notes" rows="4" class="form-control"></textarea>
                                 </div>
+
                             </div>
                             <div class="text-center mt-5">
                                 <a href="<?= base_url('/Qualitycontrol') ?>" class="btn btn-default-light">
@@ -120,9 +117,7 @@
                     </div>
                 </div>
             </div>
-            <!-- COL END -->
         </div>
-        <!-- ROW-1 CLOSED -->
     </div>
 
 </div>
@@ -153,18 +148,59 @@ toastr.success("<?php echo session()->getFlashdata('success'); ?>");
 
 <script>
 
+$('#shipment_id').on('change', function() {
+
+    let shipmentId = parseInt($(this).val());
+
+    if (shipmentId) {
+        $('#type_id').html('Loading');
+
+        $.ajax({
+            url: '<?= base_url('QualityControl/getType/') ?>/' + shipmentId, // Sesuaikan dengan URL route/backend Anda
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                
+                if (response && response.supplier) {
+                    $('#type_id').val(response.supplier);
+                } else {
+                    $('#type_id').val('Nama tidak ditemukan');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Gagal mengambil data supplier: ", error);
+                $('#type_id').val('Gagal memuat data');
+            }
+        });
+    } else {
+        $('#type_id').val('');
+    }
+});
+
+// $('#shipment_id').on('change', function() {
+
+//     let shipmentId = parseInt($(this).val());
+//     console.log(shipmentId);
+
+//     $('#type_id').html('<option value="">Loading...</option>');
+
+//     $.get("<?//= base_url('QualityControl/getType/') ?>/" + shipmentId, function(response) {
+
+//         let option = '<option value="">-- Select Company Type --</option>';
+
+//         option += '<option value="'+response.supplier+ ' - ' + 'Supplier'+ '">' + response.supplier + ' - ' + 'SUPPLIER' + '</option>';
+//         option += '<option value="'+response.buyer + ' - ' + 'Buyer'+ '">' + response.buyer + ' - ' + 'BUYER' + '</option>';
+
+//         $('#type_id').html(option);
+
+//     });
+// });
+
 $('#qcForm').submit(function(e){
 
     e.preventDefault();
 
-    let formData = new FormData(this);
-
-
-    console.log('=== FORM DATA ===');
-
-    for (let pair of formData.entries()) {
-        console.log(pair[0] + ':', pair[1]);
-    }    
+    let formData = new FormData(this);  
                                           
     $.ajax({
         url: "<?= base_url('QualityControl/save') ?>",
@@ -199,10 +235,7 @@ $('#qcForm').submit(function(e){
                     title: 'Success',
                     text: response.message
                 }).then(() => {
-
-                    window.location.href =
-                        "<?= base_url('/QualityControl') ?>";
-
+                    window.location.href = "<?= base_url('/QualityControl') ?>";
                 });
 
             }else{

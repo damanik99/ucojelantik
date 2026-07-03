@@ -10,6 +10,7 @@
                         class="table table-bordered border-t0 key-buttons text-nowrap w-100">
                         <thead>
                             <tr>
+                                <th>Image</th>
                                 <th>Shipment Number</th>
                                 <th>Purchase Order</th>
                                 <th>Supplier</th>

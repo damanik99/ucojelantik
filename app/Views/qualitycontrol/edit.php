@@ -46,27 +46,15 @@
 
                         <form id="qcForm" enctype="multipart/form-data">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <label class="form-label">Company Type<span class="text-danger">*</span></label>
-                                    <select id="type_id" name="type_id" class="form-control select2" required>
-                                        <option value="">Pilih Jenis</option>
-                                        <?php foreach ($companyType as $row) : ?>
-                                        <option 
-                                            value="<?= $row['type_id']; ?>"
-                                            <?= $row['type_name'] == $qc['qc_type'] ? 'selected' : ''; ?>><?= $row['type_name']; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label">Shipment <span class="text-danger">*</span></label>
-                                    <select name="shipment_id" class="form-control select2" required>
-
+                                    <select name="shipment_id" id="shipment_id" class="form-control select2" required>
                                         <option value="">Pilih Shipment</option>
                                         <?php foreach ($shipments as $row) : ?>
                                             <option 
                                                 value="<?= $row['shipment_id']; ?>"
-                                                <?= $row['shipment_id'] == $qc['shipment_id'] ? 'selected' : ''; ?>>
+                                                <?= $row['shipment_number'] == $qc['shipment_number'] ? 'selected' : ''; ?>>
                                                 <?= $row['shipment_number']; ?>
                                                 <?php if(!empty($row['departure_at'])) : ?>
                                                     (<?= date('d-m-Y', strtotime($row['departure_at'])); ?>)
@@ -77,19 +65,25 @@
                                 </div>
 
                                 <div class="col-md-6">
+                                    <label class="form-label">Supplier</label>
+                                    <input id="type_id" type="text" name="type_id" placeholder="Get Name Supplier" class="form-control" required readonly>
+                                </div>
+
+                                <!-- <div class="col-md-6">
+                                    <label class="form-label">Company Type<span class="text-danger">*</span></label>
+                                    <select id="type_id" name="type_id" class="form-control select2" required>
+                                        <option value="">Pilih Jenis</option>
+                                    </select>
+                                </div> -->
+
+                                <div class="col-md-6">
                                     <label class="form-label">FFA (%) <span class="text-danger">*</span></label>
-                                    <input type="number"
-                                        step="0.01"
-                                        name="ffa"
-                                        class="form-control" value="<?= $qc['ffa'] ?>" required>
+                                    <input type="number" step="0.01" name="ffa" class="form-control" value="<?= $qc['ffa'] ?>" required>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label">M&I (%) <span class="text-danger">*</span></label>
-                                    <input type="number"
-                                        step="0.01"
-                                        name="mi"
-                                        class="form-control" value="<?= $qc['mi'] ?>" required>
+                                    <input type="number" step="0.01" name="mi" class="form-control" value="<?= $qc['mi'] ?>" required>
                                 </div>
 
                                 <div class="col-md-12">
@@ -111,6 +105,7 @@
                                     <textarea name="notes" rows="4" class="form-control"><?= $qc['notes'] ?></textarea>
                                 </div>
                             </div>
+
                             <div class="text-center mt-5">
                                 <a href="<?= base_url('/Qualitycontrol') ?>" class="btn btn-default-light">
                                     <i class="fa fa-window-close"></i>
@@ -121,6 +116,7 @@
                                     Save
                                 </button>
                             </div>
+
                         </form>
                     </div>
                 </div>
@@ -157,6 +153,97 @@ toastr.success("<?php echo session()->getFlashdata('success'); ?>");
 </script>
 
 <script>
+
+// $('#shipment_id').on('change', function() {
+
+//     let shipmentId = parseInt($(this).val());
+//     console.log(shipmentId);
+
+//     $('#type_id').html('<option value="">Loading...</option>');
+
+//     $.get("<?//= base_url('QualityControl/getType/') ?>/" + shipmentId, function(response) {
+
+//         let option = '<option value="">-- Select Company Type --</option>';
+
+//         option += '<option value="'+response.supplier+ ' - ' + 'Supplier'+ '">' + response.supplier + ' - ' + 'SUPPLIER' + '</option>';
+//         option += '<option value="'+response.buyer + ' - ' + 'Buyer'+ '">' + response.buyer + ' - ' + 'BUYER' + '</option>';
+
+//         $('#type_id').html(option);
+
+//     });
+// });
+
+// $('#shipment_id').on('change', function () {
+
+//     loadType($(this).val());
+
+// });
+
+// function loadType(shipmentId )
+// {
+//     $('#type_id').html('<option value="">Loading...</option>');
+
+//     if (shipmentId != '') {
+
+//         // Driver
+//         $.get("<?//= base_url('QualityControl/getType/') ?>/" + shipmentId, function(response){
+            
+//             let selecteds = (response.supplier == "<?//= $qc['qc_type']; ?>") ? 'selected' : '';
+//             let selectedb = (response.buyer == "<?//= $qc['qc_type']; ?>") ? 'selected' : '';
+//             console.log(selectedb);
+//             console.log(selecteds);
+//             let option = '<option value="">-- Select Company Type --</option>';
+
+//             option += '<option value="'+response.supplier+'" '+selecteds+'>'+response.supplier+'</option>';
+//             option += '<option value="'+response.buyer+'" '+selectedb+'>'+response.buyer+'</option>';
+
+//             $('#type_id').html(option);
+
+//         });
+
+//     } else {
+
+//         $('#type_id').html('<option value="">-- Select Company IT --</option>');
+//     }
+// }
+
+$(document).ready(function() {
+    
+    function fetchSupplier(shipmentId) {
+        if (shipmentId) {
+            $.ajax({
+                url: '<?= base_url('QualityControl/getType/') ?>/' + shipmentId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response && response.supplier) {
+                        $('#type_id').val(response.supplier);
+                    } else {
+                        $('#type_id').val('Nama tidak ditemukan');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Gagal mengambil data supplier: ", error);
+                    $('#type_id').val('Gagal memuat data');
+                }
+            });
+        } else {
+            $('#type_id').val('');
+        }
+    }
+
+    // 2. Kebutuhan CREATE: Jalankan fungsi ketika user MENGUBAH pilihan dropdown
+    $('#shipment_id').on('change', function() {
+        let shipmentId = parseInt($(this).val());
+        fetchSupplier(shipmentId);
+    });
+
+    // 3. Kebutuhan EDIT: Jalankan fungsi OTOMATIS saat halaman pertama kali selesai dimuat
+    let currentShipmentId = parseInt($('#shipment_id').val());
+    if (currentShipmentId) {
+        fetchSupplier(currentShipmentId);
+    }
+});
 
 $('#qcForm').submit(function(e){
 

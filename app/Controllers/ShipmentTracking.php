@@ -127,10 +127,8 @@ class ShipmentTracking extends BaseController
             }
         }
 
-        $totalRecords = $this->db
-            ->query("SELECT COUNT(*) cnt {$baseQuery}", [$program])
-            ->getRow()
-            ->cnt;
+        $totalRecords = $this->db->query("SELECT COUNT(*) cnt {$baseQuery}", [$program])
+            ->getRow()->cnt;
 
         $totalFiltered = $totalRecords;
 
@@ -221,13 +219,12 @@ class ShipmentTracking extends BaseController
 
             $row['status_badge'] = $badge;
 
-            // $row['action'] = '
-            //     <a href="javascript:void(0)"
-            //         class="btn bg-gray-dark btn-sm text-white btnDetail"
-            //         data-id="'.$row['shipment_id'].'">
-            //         <i class="fa fa-eye"></i>
-            //     </a>
-            // ';
+            $row['action'] = '
+                <a href="javascript:void(0)"
+                    class="btn bg-gray-dark btn-sm text-white btnImage" data-id="'.$row['shipment_id'].'">
+                    <i class="fa fa-image"></i>
+                </a>
+            ';
 
             $data[] = $row;
         }
@@ -267,6 +264,10 @@ class ShipmentTracking extends BaseController
 
                 if (!$this->request->getPost('latitude')) {
                     throw new \Exception('Lokasi GPS belum diperoleh.');
+                }
+
+                if (!$this->request->getPost('qty_checkin')) {
+                    throw new \Exception('Volume Tidak Boleh Kosong ');
                 }
 
                 $fileName = $photo->getRandomName();
@@ -464,6 +465,14 @@ class ShipmentTracking extends BaseController
                     throw new \Exception('Status CHECKOUT tidak ditemukan.');
                 }
 
+                if (!$this->request->getPost('ffa')) {
+                    throw new \Exception('FFA Tidak boleh kosong');
+                }
+
+                if (!$this->request->getPost('mi')) {
+                    throw new \Exception('M&I Tidak boleh kosong');
+                }
+
                 $statusShipment = $this->status
                     ->where('module', 'SHIPMENT')
                     ->where('status_code', 'SCMPL')
@@ -525,11 +534,12 @@ class ShipmentTracking extends BaseController
                 */
                 $this->qualityControl->insert([
                     'shipment_id' => $shipmentId,
-                    'qc_type'     => 'OUTGOING',
+                    'company_name'=> $this->request->getPost('buyer'),
+                    'qc_type'     => 'Buyer',
                     'result'      => $this->request->getPost('result'),
                     'ffa'         => $this->request->getPost('ffa'),
                     'mi'          => $this->request->getPost('mi'),
-                    'photo'       => '/image/shipmenttracking/' . $fileName,
+                    'photo'       => 'upload/image/qc/' . $fileName,
                     'notes'       => $this->request->getPost('notes'),
                     'status_id'   => $statusTracking['status_id'],
                     'created_by'  => session()->get('users_id')
@@ -580,5 +590,18 @@ class ShipmentTracking extends BaseController
                 ]);
             }
         }
+    }
+
+    public function detailimage($id)
+    {
+        $photo = $this->db->table('shipment_tracking')
+                ->select('photo')
+                ->where('shipment_id', $id)->get()->getResultArray();
+
+        $data = [
+            'photo' => $photo
+        ];
+
+        return view('dashboard/modalimage/viewimage', $data);
     }
 }
