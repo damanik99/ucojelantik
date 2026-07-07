@@ -11,7 +11,7 @@ list($width, $height) = getimagesize($imagePath);
 $imageUrl = base_url('upload/'.$row['photo']);
 ?>
     <div class="gallery-item">
-        <a href="<?= base_url('upload/'.$row['photo']) ?>"
+        <a href="<?= base_url('upload'.$row['photo']) ?>"
             data-pswp-width="<?= $width ?>"
             data-pswp-height="<?= $height ?>">
 

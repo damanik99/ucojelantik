@@ -191,7 +191,7 @@ $(document).on('click', '.btnImage', function () {
     $("#modalImage").modal("show");
 
     $.ajax({
-        url: "<?= base_url('/shipmenttracking/detailimage')?>/" + id,
+        url: "<?= base_url('/ShipmentTracking/detailimage')?>/" + id,
         type: "GET",
         success: function(response){
 
