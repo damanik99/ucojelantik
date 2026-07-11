@@ -116,7 +116,7 @@
         </form>
         <?php
         $db = \Config\Database::connect();
-        $parentmenu = $db->query("SELECT * FROM menu WHERE parent_id IS NULL OR parent_id = ' '");
+        $parentmenu = $db->query("SELECT * FROM menu WHERE parent_id IS NULL OR parent_id = ' ' ORDER BY sequence ASC ");
 
         $menuview ='<li class="slide">
                         <a class="side-menu__item" href='.base_url('Dashboard').'>
@@ -135,7 +135,7 @@
                     LEFT JOIN page c ON a.page_id = c.page_id
                     LEFT JOIN action d ON a.action_id = d.action_id
                     WHERE a.parent_id = '$menu->menu_id'
-                    ORDER BY a.sequence
+                    ORDER BY a.sequence DESC
                 ");
             } else {
                 $cek_parent = $db->query("
